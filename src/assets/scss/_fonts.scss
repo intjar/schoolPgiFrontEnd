@@ -1,0 +1,132 @@
+@font-face {
+    font-family: 'Montserrat';
+    src: url('~/assets/fonts/montserrat/Montserrat-SemiBold.eot');
+    src: url('~/assets/fonts/montserrat/Montserrat-SemiBold.eot?#iefix') format('embedded-opentype'),
+        url('~/assets/fonts/montserrat/Montserrat-SemiBold.woff2') format('woff2'),
+        url('~/assets/fonts/montserrat/Montserrat-SemiBold.woff') format('woff'),
+        url('~/assets/fonts/montserrat/Montserrat-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('~/assets/fonts/montserrat/Montserrat-Regular.eot');
+    src: url('~/assets/fonts/montserrat/Montserrat-Regular.eot?#iefix') format('embedded-opentype'),
+        url('~/assets/fonts/montserrat/Montserrat-Regular.woff2') format('woff2'),
+        url('~/assets/fonts/montserrat/Montserrat-Regular.woff') format('woff'),
+        url('~/assets/fonts/montserrat/Montserrat-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('~/assets/fonts/montserrat/Montserrat-Thin.eot');
+    src: url('~/assets/fonts/montserrat/Montserrat-Thin.eot?#iefix') format('embedded-opentype'),
+        url('~/assets/fonts/montserrat/Montserrat-Thin.woff2') format('woff2'),
+        url('~/assets/fonts/montserrat/Montserrat-Thin.woff') format('woff'),
+        url('~/assets/fonts/montserrat/Montserrat-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('~/assets/fonts/montserrat/Montserrat-Bold.eot');
+    src: url('~/assets/fonts/montserrat/Montserrat-Bold.eot?#iefix') format('embedded-opentype'),
+        url('~/assets/fonts/montserrat/Montserrat-Bold.woff2') format('woff2'),
+        url('~/assets/fonts/montserrat/Montserrat-Bold.woff') format('woff'),
+        url('~/assets/fonts/montserrat/Montserrat-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('~/assets/fonts/montserrat/Montserrat-ExtraBold.eot');
+    src: url('~/assets/fonts/montserrat/Montserrat-ExtraBold.eot?#iefix') format('embedded-opentype'),
+        url('~/assets/fonts/montserrat/Montserrat-ExtraBold.woff2') format('woff2'),
+        url('~/assets/fonts/montserrat/Montserrat-ExtraBold.woff') format('woff'),
+        url('~/assets/fonts/montserrat/Montserrat-ExtraBold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('~/assets/fonts/montserrat/Montserrat-ExtraLight.eot');
+    src: url('~/assets/fonts/montserrat/Montserrat-ExtraLight.eot?#iefix') format('embedded-opentype'),
+        url('~/assets/fonts/montserrat/Montserrat-ExtraLight.woff2') format('woff2'),
+        url('~/assets/fonts/montserrat/Montserrat-ExtraLight.woff') format('woff'),
+        url('~/assets/fonts/montserrat/Montserrat-ExtraLight.ttf') format('truetype');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('~/assets/fonts/montserrat/Montserrat-Medium.eot');
+    src: url('~/assets/fonts/montserrat/Montserrat-Medium.eot?#iefix') format('embedded-opentype'),
+        url('~/assets/fonts/montserrat/Montserrat-Medium.woff2') format('woff2'),
+        url('~/assets/fonts/montserrat/Montserrat-Medium.woff') format('woff'),
+        url('~/assets/fonts/montserrat/Montserrat-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('~/assets/fonts/montserrat/Montserrat-Light.eot');
+    src: url('~/assets/fonts/montserrat/Montserrat-Light.eot?#iefix') format('embedded-opentype'),
+        url('~/assets/fonts/montserrat/Montserrat-Light.woff2') format('woff2'),
+        url('~/assets/fonts/montserrat/Montserrat-Light.woff') format('woff'),
+        url('~/assets/fonts/montserrat/Montserrat-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brandon Grotesque';
+    src: url('~/assets/fonts/brandon/BrandonGrotesque-Light.eot');
+    src: url('~/assets/fonts/brandon/BrandonGrotesque-Light.eot?#iefix') format('embedded-opentype'),
+        url('~/assets/fonts/brandon/BrandonGrotesque-Light.woff2') format('woff2'),
+        url('~/assets/fonts/brandon/BrandonGrotesque-Light.woff') format('woff'),
+        url('~/assets/fonts/brandon/BrandonGrotesque-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brandon Grotesque';
+    src: url('~/assets/fonts/brandon/BrandonGrotesque-Medium.eot');
+    src: url('~/assets/fonts/brandon/BrandonGrotesque-Medium.eot?#iefix') format('embedded-opentype'),
+        url('~/assets/fonts/brandon/BrandonGrotesque-Medium.woff2') format('woff2'),
+        url('~/assets/fonts/brandon/BrandonGrotesque-Medium.woff') format('woff'),
+        url('~/assets/fonts/brandon/BrandonGrotesque-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brandon Grotesque';
+    src: url('~/assets/fonts/brandon/BrandonGrotesque-Bold.eot');
+    src: url('~/assets/fonts/brandon/BrandonGrotesque-Bold.eot?#iefix') format('embedded-opentype'),
+        url('~/assets/fonts/brandon/BrandonGrotesque-Bold.woff2') format('woff2'),
+        url('~/assets/fonts/brandon/BrandonGrotesque-Bold.woff') format('woff'),
+        url('~/assets/fonts/brandon/BrandonGrotesque-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+

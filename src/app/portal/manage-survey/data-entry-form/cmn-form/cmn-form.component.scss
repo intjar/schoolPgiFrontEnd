@@ -1,0 +1,47 @@
+@import '../../../../../assets/scss/variables';
+
+.form-select[readonly] {
+  pointer-events: none;
+}
+ng-select[disabled] {
+  pointer-events: none;
+ .ng-select-container{
+    background-color: $disabled;
+  }
+}
+
+
+.uploaded-file{
+  .download-img, .delete-img{
+    text-decoration: none;
+    img{
+      height: 15px;
+    }
+  }
+  .delete-img{
+    img{
+      height: 18px;
+    }
+  }
+  span{
+    color:$black;
+    font-size: .75em;
+    font-weight: 600;
+  }
+}
+
+
+.file-upload-pending{
+  margin: 0 !important;
+  color: $black !important;
+  font-size: 0.75em !important ;
+  font-weight: 500 !important ;
+}
+
+.multiselect-option {
+  display: block;
+  color: $black;
+  font-size: 0.875em;
+  font-weight: 500;
+  word-break: break-word;
+}

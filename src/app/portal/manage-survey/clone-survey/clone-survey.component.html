@@ -1,0 +1,1016 @@
+<div class="container-fluid p-4" *ngIf="!isShowCreateSurvey">
+  <div class="row">
+    <div class="col-md-12">
+      <!-- <div class="top-wrap">
+                <h2 class="heading-grey">Clone Survey</h2>
+                <div class="breadcrumb-wrap"  id="focusForm">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a>Dashboard</a></li>
+                            <li class="breadcrumb-item"><a>Manage Survey</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                Create/Clone Survey
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div> -->
+      <app-breadcrumb
+        [breadcrums]="breadcrums"
+        (back)="backToSurvey()"
+        [showBack]="true"
+      ></app-breadcrumb>
+    </div>
+    <div class="col-md-12 my-4">
+      <div class="card-wrap">
+        <div class="card-form">
+          <h3 class="title-grey">Clone This Survey</h3>
+          <div class="common-form py-4">
+            <form [formGroup]="cloneSurveyForm">
+              <div class="row g-3">
+                <div class="col-md-12">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Survey Name <span class="char-red">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      formControlName="surveyname"
+                      surveyValidate
+                      maxlength="100"
+                      minlength="3"
+                      placeholder="Enter Survey Name"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (cloneSurveyForm.controls['surveyname']?.errors?.['required'] || this.cloneSurveyForm?.get('surveyname')?.value?.trim().length == 0)"
+                    >
+                      Please Enter Survey Name.
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="cloneSurveyForm?.get('surveyname')?.errors?.['invalidInput']"
+                    >
+                      Please Enter Valid Survey Name.
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="cloneSurveyForm?.get('surveyname')?.errors?.['minlength']"
+                    >
+                      Minimum length should be 3
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="cloneSurveyForm?.get('surveyname')?.errors?.['startwithSpaceError']"
+                    >
+                      Starting Space is not allowed
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="cloneSurveyForm?.get('surveyname')?.errors?.['maxlength']"
+                    >
+                      Maximum length should be 100
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-7">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Description <span class="char-red">*</span></label
+                    >
+                    <textarea
+                      class="form-control"
+                      placeholder="Enter Description"
+                      rows="3"
+                      maxlength="500"
+                      formControlName="description"
+                    ></textarea>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (cloneSurveyForm.controls['description']?.errors?.['required'] || this.cloneSurveyForm?.get('description')?.value?.trim().length == 0)"
+                    >
+                      Please Enter Description.
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="cloneSurveyForm.get('description')?.errors?.['description'] || cloneSurveyForm?.get('description')?.errors?.['pattern']"
+                    >
+                      Please Enter Valid Description.
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="cloneSurveyForm?.get('description')?.errors?.['minlength']"
+                    >
+                      Minimum length should be 3
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="cloneSurveyForm?.get('description')?.errors?.['maxlength']"
+                    >
+                      Maximum length should be 500
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="cloneSurveyForm?.get('description')?.errors?.['startwithSpaceError']"
+                    >
+                      Starting Space is not allowed
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-5">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="mb-3">
+                        <label class="form-label"
+                          >Select Year <span class="char-red">*</span></label
+                        >
+                        <ng-select
+                          formControlName="year"
+                          placeholder="Select Year"
+                          (change)="selectYear($event)"
+                        >
+                          <ng-option
+                            *ngFor="let year of selectYearArr"
+                            [value]="year"
+                            >{{ year?.yearCode }}</ng-option
+                          >
+                        </ng-select>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="isSubmitted && (cloneSurveyForm.controls['year']?.errors?.['required'])"
+                        >
+                          Please Select Year
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <label class="form-label"
+                        >Active Duration <span class="char-red">*</span></label
+                      >
+                    </div>
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <div class="input-group calender-input-group">
+                          <input
+                            class="form-control"
+                            onkeydown="return false"
+                            matInput
+                            [matDatepicker]="startDate"
+                            (dateChange)="dateChange()"
+                            placeholder="Select Start Date"
+                            formControlName="startDate"
+                            [min]="startMinDate"
+                          />
+                          <span class="input-group-text">
+                            <mat-datepicker-toggle
+                              matSuffix
+                              [for]="startDate"
+                            ></mat-datepicker-toggle
+                          ></span>
+                          <mat-datepicker #startDate></mat-datepicker>
+                        </div>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="isSubmitted && (cloneSurveyForm.controls['startDate']?.errors?.['required'])"
+                        >
+                          Please Select Start Date
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <div class="input-group calender-input-group">
+                          <input
+                            class="form-control"
+                            onkeydown="return false"
+                            matInput
+                            [matDatepicker]="endDate"
+                            placeholder="Select End Date"
+                            formControlName="endDate"
+                            [min]="endMinDate"
+                          />
+                          <span class="input-group-text">
+                            <mat-datepicker-toggle
+                              matSuffix
+                              [for]="endDate"
+                            ></mat-datepicker-toggle
+                          ></span>
+                          <mat-datepicker #endDate></mat-datepicker>
+                        </div>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="isSubmitted && (cloneSurveyForm.controls['endDate']?.errors?.['required'])"
+                        >
+                          Please Select End Date.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Approval Level <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="approvalLevel"
+                      placeholder="Select Approval Level"
+                      (change)="approvalLevel($event)"
+                    >
+                      <ng-option
+                        *ngFor="let data of dataEntryLevelArr"
+                        [value]="data"
+                        >{{ data?.level_name }}</ng-option
+                      >
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (cloneSurveyForm.controls['approvalLevel']?.errors?.['required'])"
+                    >
+                      Please Select Approval Level
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Reviewer Level <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="reviewerlevel"
+                      bindLabel="viewer"
+                      placeholder="Select Reviewer Level"
+                      (change)="reviewerLevel($event,'change')"
+                      [multiple]="true"
+                    >
+                      <ng-option
+                        *ngFor="let data of dataEntryLevelArr"
+                        [value]="data"
+                        >{{ data?.level_name }}</ng-option
+                      >
+
+                      <ng-template
+                        ng-multi-label-tmp
+                        let-items="items"
+                        let-clear="clear"
+                      >
+                        <div
+                          class="ng-value"
+                          *ngFor="
+                            let item of items | slice : 0 : 1;
+                            let j = index
+                          "
+                        >
+                          <span
+                            class="ng-value-label"
+                            title="{{ items[j]?.level_name }}"
+                            >{{ items[j]?.level_name }}</span
+                          >
+                          <span
+                            class="ng-value-icon right"
+                            (click)="
+                              clear(item); deleteItems(items[j], 'reviewer')
+                            "
+                            aria-hidden="true"
+                            >×</span
+                          >
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 1">
+                          <span
+                            class="ng-value-label"
+                            title="{{ showTitle(items, 'reviewerlevel') }}"
+                            >+ {{ items.length - 1 }} more</span
+                          >
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (cloneSurveyForm.controls['reviewerlevel']?.errors?.['required'])"
+                    >
+                      Please Select Reviewer Level
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Viewer Level <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="viewerlevel"
+                      bindLabel="viewer"
+                      placeholder="Select Viewer Level"
+                      (change)="viewerLevel($event, 'change')"
+                      [multiple]="true"
+                    >
+                      <ng-option
+                        *ngFor="let data of dataEntryLevelArr"
+                        [value]="data"
+                        >{{ data?.level_name }}</ng-option
+                      >
+
+                      <ng-template
+                        ng-multi-label-tmp
+                        let-items="items"
+                        let-clear="clear"
+                      >
+                        <div
+                          class="ng-value"
+                          *ngFor="
+                            let item of items | slice : 0 : 1;
+                            let j = index
+                          "
+                        >
+                          <span
+                            class="ng-value-label"
+                            title="{{ items[j]?.level_name }}"
+                            >{{ items[j]?.level_name }}</span
+                          >
+                          <span
+                            class="ng-value-icon right"
+                            (click)="
+                              clear(item); deleteItems(items[j], 'viewer')
+                            "
+                            aria-hidden="true"
+                            >×</span
+                          >
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 1">
+                          <span
+                            class="ng-value-label"
+                            title="{{ showTitle(items, 'viewerlevel') }}"
+                            >+ {{ items.length - 1 }} more</span
+                          >
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (cloneSurveyForm.controls['viewerlevel']?.errors?.['required'])"
+                    >
+                      Please Select Viewer Level
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Data Entry Level <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="dataEntry"
+                      placeholder="Select Data Entry Level"
+                      (change)="dataEntryLevel($event, 'change')"
+                    >
+                      <ng-option
+                        *ngFor="let data of dataEntryLevelArr"
+                        [value]="data"
+                        >{{ data?.level_name }}</ng-option
+                      >
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (cloneSurveyForm.controls['dataEntry']?.errors?.['required'])"
+                    >
+                      Please Select Data Entry Level
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Approval Role <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="approvalRole"
+                      placeholder="Select Approval Role"
+                      (change)="approvalRole($event)"
+                    >
+                      <ng-option
+                        *ngFor="let approval of approvalRoleArr"
+                        [value]="approval"
+                        >{{ approval?.name }}</ng-option
+                      >
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (cloneSurveyForm.controls['approvalRole']?.errors?.['required'])"
+                    >
+                      Please Select Approval Role
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Reviewer Role <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="reviewerRole"
+                      placeholder="Select Reviewer Role"
+                      [multiple]="true"
+                      (change)="reviewerRole($event)"
+                    >
+                      <ng-option
+                        *ngFor="let reviewer of reviewerRoleArr"
+                        [value]="reviewer"
+                        >{{ reviewer?.name }}</ng-option
+                      >
+
+                      <ng-template
+                        ng-multi-label-tmp
+                        let-items="items"
+                        let-clear="clear"
+                      >
+                        <div
+                          class="ng-value"
+                          *ngFor="
+                            let item of items | slice : 0 : 1;
+                            let j = index
+                          "
+                        >
+                          <span
+                            class="ng-value-label"
+                            title="{{ items[j]?.name }}"
+                            >{{ items[j]?.name }}</span
+                          >
+                          <span
+                            class="ng-value-icon right"
+                            (click)="clear(item); deleteItems(item, 'reviewer')"
+                            aria-hidden="true"
+                            >×</span
+                          >
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 1">
+                          <span
+                            class="ng-value-label"
+                            title="{{ showTitle(items, 'reviewerrole') }}"
+                            >+ {{ items.length - 1 }} more</span
+                          >
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (cloneSurveyForm.controls['reviewerRole']?.errors?.['required'])"
+                    >
+                      Please Select Reviewer Role
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Viewer Role <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="viewerRole"
+                      placeholder="Select Viewer Role"
+                      [multiple]="true"
+                      (change)="viewerRole($event)"
+                    >
+                      <ng-option
+                        *ngFor="let viewer of viewerRoleArr"
+                        [value]="viewer"
+                        >{{ viewer?.name }}</ng-option
+                      >
+
+                      <ng-template
+                        ng-multi-label-tmp
+                        let-items="items"
+                        let-clear="clear"
+                      >
+                        <div
+                          class="ng-value"
+                          *ngFor="
+                            let item of items | slice : 0 : 1;
+                            let j = index
+                          "
+                        >
+                          <span
+                            class="ng-value-label"
+                            title="{{ items[j]?.name }}"
+                            >{{ items[j]?.name }}</span
+                          >
+                          <span
+                            class="ng-value-icon right"
+                            (click)="clear(item); deleteItems(item, 'viewer')"
+                            aria-hidden="true"
+                            >×</span
+                          >
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 1">
+                          <span
+                            class="ng-value-label"
+                            title="{{ showTitle(items, 'viewerrole') }}"
+                            >+ {{ items.length - 1 }} more</span
+                          >
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (cloneSurveyForm.controls['viewerRole']?.errors?.['required'])"
+                    >
+                      Please Select Viewer Role
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Data Entry Role <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="dataEntryRole"
+                      placeholder="Select Data Entry Role"
+                      (change)="dataEntryRole($event)"
+                    >
+                      <ng-option
+                        *ngFor="let data of dataEntryRoleArr"
+                        [value]="data"
+                        >{{ data?.name }}</ng-option
+                      >
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (cloneSurveyForm.controls['dataEntryRole']?.errors?.['required'])"
+                    >
+                      Please Select Data Entry Role
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Select Status <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="status"
+                      placeholder="Select Status"
+                    >
+                      <ng-option
+                        *ngFor="let val of statusValue"
+                        [value]="val"
+                        >{{ val }}</ng-option
+                      >
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && cloneSurveyForm.controls['status']?.errors?.['required'] "
+                    >
+                      Please Select Status
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Procedure Name
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter Procedure Name"
+                      formControlName="procedureName"
+                      maxlength="100"
+                      minlength="3"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="cloneSurveyForm?.get('procedureName')?.errors?.['minlength']"
+                    >
+                      Minimum length should be 3
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="cloneSurveyForm?.get('procedureName')?.errors?.['maxlength']"
+                    >
+                      Maximum length should be 100
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="cloneSurveyForm?.get('procedureName')?.errors?.['startwithSpaceError']"
+                    >
+                      Starting Space is not allowed.
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-5">
+                  <div class="d-flex mt-40">
+                    <div class="common-form">
+                      <div class="form-check map-check">
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          (click)="approvalSelected($event)"
+                          [checked]="reviewMandatory == 1"
+                        />
+                        <label class="form-check-label">
+                          Mandatory Review required before approval
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card-table">
+          <div class="card-table-top">
+            <div class="row">
+              <div class="col-md-7">
+                <div class="common-form">
+                  <div class="row g-3">
+                    <div class="col-md-7">
+                      <div class="search-wrap">
+                        <div class="input-group">
+                          <span class="material-icons-round input-group-text">
+                            search
+                          </span>
+                          <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="searchValue"
+                            (keyup.enter)="filterData('filter')"
+                            placeholder="Enter Keyword"
+                            [minlength]="3"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <div class="advance-filter">
+                        <div class="btn-wrap">
+                          <button
+                            class="btn-org"
+                            [disabled]="!searchValue"
+                            (click)="filterData('filter')"
+                          >
+                            Search
+                          </button>
+                          <button
+                            class="btn-org-bdr ms-3"
+                            (click)="searchValue = ''; filterData('clear')"
+                          >
+                            Clear
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="view-wrap">
+                  <div class="row g-3 justify-content-end">
+                    <div class="col-auto">
+                      <div class="export-wrap">
+                        <div class="btn-export me-3">Export</div>
+                        <button
+                          class="btn-adobe me-3"
+                          (click)="printData('pdf')"
+                          [disabled]="dataSource.filteredData.length == 0"
+                        >
+                          <img
+                            src="assets/images/adobe.svg"
+                            alt="adobe"
+                            class="img-fluid"
+                          />
+                        </button>
+                        <button class="btn-xml" (click)="printData('csv')" [disabled]="dataSource.filteredData.length == 0">
+                          <img
+                            src="assets/images/xml.svg"
+                            alt="xml"
+                            class="img-fluid"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="common-table">
+            <div class="table-container table-responsive">
+              <table
+                class="table table-striped"
+                matSort
+                mat-table
+                [dataSource]="dataSource"
+              >
+                <ng-container matColumnDef="sn">
+                  <th mat-header-cell *matHeaderCellDef>S.No</th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ viewtable.pageIndex * viewtable.pageSize + (i + 1) }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="domain">
+                  <th mat-header-cell *matHeaderCellDef>Domain</th>
+                  <td mat-cell *matCellDef="let element" class="word-break">
+                    {{ element?.domainName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="subDomain">
+                  <th mat-header-cell *matHeaderCellDef>Sub Domain</th>
+                  <td mat-cell *matCellDef="let element" class="word-break">
+                    {{
+                      element?.subDomainName == null
+                        ? "NA"
+                        : element?.subDomainName
+                    }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="question">
+                  <th mat-header-cell *matHeaderCellDef>Question</th>
+                  <td mat-cell *matCellDef="let element" class="word-break">
+                    {{ element?.question }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="subquestions">
+                  <th mat-header-cell *matHeaderCellDef>Sub Questions</th>
+                  <td mat-cell *matCellDef="let element">
+                    <ng-container>
+                      <button
+                        data-bs-toggle="modal"
+                        data-bs-target="#viewSubQuestionModal"
+                        class="table-btn table-btn-org mt-2"
+                        [disabled]="element?.subQuestionName == ''"
+                        (click)="subQuestion(element)"
+                      >
+                        View Sub Questions
+                      </button>
+                    </ng-container>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap" *ngIf="element?.isDeleted == 0">
+                      <a class="table-btn table-btn-active">Active</a>
+                    </div>
+                    <div class="btn-wrap" *ngIf="element?.isDeleted == 1">
+                      <a class="table-btn table-btn-inactive">Inactive</a>
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>Action</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div
+                      class="btn-wrap"
+                    >
+                      <button
+                        class="delete-btn"
+                        type="button"
+                        id="remove"
+                        (click)="deleteItem(element)"
+                      >
+                        <span class="material-icons-round"> close </span>
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="noRecord">
+                                <td class="text-center" mat-footer-cell [attr.colspan]="7" *matFooterCellDef>No records found.</td>
+                              </ng-container>                                       -->
+                <ng-container matColumnDef="noRecord">
+                  <td
+                    class="text-center"
+                    mat-footer-cell
+                    [attr.colspan]="7"
+                    *matFooterCellDef
+                  >
+                    <app-no-record-found
+                      [height]="'400px'"
+                    ></app-no-record-found>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="loading">
+                  <td
+                    class="text-center"
+                    mat-footer-cell
+                    [attr.colspan]="7"
+                    *matFooterCellDef
+                  >
+                    <app-loader [height]="'400px'"></app-loader>
+                  </td>
+                </ng-container>
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedColumns; sticky: true"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                ></tr>
+                <tr
+                  mat-footer-row
+                  [hidden]="!isLoading"
+                  *matFooterRowDef="['loading']"
+                ></tr>
+                <tr
+                  mat-footer-row
+                  [hidden]="isLoading || dataSource.filteredData.length > 0"
+                  *matFooterRowDef="['noRecord']"
+                ></tr>
+              </table>
+            </div>
+            <!-- <mat-paginator #viewtable [pageSizeOptions]="[10, 20]" hidePageSize="true"
+                        aria-label="Select page of periodic elements"[hidden]="dataSource.filteredData.length == 0" showFirstLastButtons>
+                      </mat-paginator> -->
+
+            <mat-paginator
+              [pageSize]="10"
+              [hidePageSize]="true"
+              [hidden]="dataSource.filteredData.length == 0"
+              [showFirstLastButtons]="true"
+              [length]="totalCount"
+              [pageIndex]="pageNumber"
+              (page)="handlePageEvent($event)"
+            >
+            </mat-paginator>
+          </div>
+        </div>
+
+        <div
+          class="d-flex justify-content-end"
+          *appShowRoleBaseActions="['Clone Survey', 'edit']"
+        >
+          <div class="btn-wrap mt-30">
+            <button class="btn-org me-3" type="button" (click)="onSubmit()">
+              Clone & Save
+            </button>
+            <button
+              class="btn-org-bdr"
+              type="button"
+              (click)="onCancle(); scroll($event, 'commonScrollTo')"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal Start-->
+
+<app-popup *ngIf="isShowPopup" (popup)="removeRecord($event)"></app-popup>
+
+<!-- Delete Modal End-->
+<!-- View Sub Question Modal Start-->
+<div
+  class="modal common-modal fade"
+  tabindex="-1"
+  role="dialog"
+  id="viewSubQuestionModal"
+  aria-labelledby="viewSubQuestionModalLabel"
+  aria-hidden="true"
+  [ngStyle]="{ display: displayStyle }"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Sub Questions</h4>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          <span class="material-icons-round">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="scrollbar-y pe-3">
+          <div *ngIf="subQuestionArr != ''; else other_content">
+            <div class="bdr-grey" *ngFor="let data of subQuestionArr">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="modal-body-content mb-4">
+                    <h3 class="modal-title-grey">Sub Question</h3>
+                    <p class="modal-desc-black">{{ data?.subQuestName }}</p>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="modal-body-content mb-lg-0 mb-md-4">
+                    <h3 class="modal-title-grey">Sub Question Type</h3>
+                    <p class="modal-desc-black">
+                      {{
+                        data?.subQuestType == null ? "NA" : data?.subQuestType
+                      }}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="modal-body-content mb-lg-0 mb-md-4">
+                    <h3 class="modal-title-grey">Sub Question Code</h3>
+                    <p class="modal-desc-black">{{ data?.subQuestCode }}</p>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="modal-body-content mb-lg-0 mb-md-4">
+                    <h3 class="modal-title-grey">Sub Question Status</h3>
+                    <p
+                      class="status"
+                      [ngClass]="{
+                        active: data?.subQuestStatus == true,
+                        inactive: data?.subQuestStatus == false
+                      }"
+                    >
+                      {{ data?.subQuestStatus == true ? "Active" : "Inactive" }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #other_content>Sub Question Record is empty</ng-template>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="btn-wrap m-0 col-md-5">
+          <button
+            type="button"
+            class="btn-org me-3"
+            data-bs-dismiss="modal"
+            (click)="closePopup()"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- View Sub Question Modal End-->
+<create-survey *ngIf="isShowCreateSurvey"></create-survey>
+
+<!-----------------------------PDF Start Here=------------------------------------->
+<ng-container *ngIf="pdfOpen">
+  <div class="padding-main-divcls" id="print-pdf">
+    <table class="table table-bordered">
+      <thead>
+        <tr colspan="40">
+          <th colspan="40">
+            <header style="height: 80px">
+              <div
+                class="d-flex header-height justify-content-between align-items-center"
+              >
+                <img src="assets/images/ministry-logo.svg" [height]="50" />
+                <img src="assets/images/pgi-logo.svg" [height]="50" />
+              </div>
+            </header>
+          </th>
+        </tr>
+        <tr colspan="40">
+          <th colspan="40">
+            <div class="d-flex">
+              <ng-container
+                *ngFor="let breadcrums of breadcrums.links; let last = last"
+              >
+                <span class="bread-span"
+                  >{{ breadcrums?.link }} {{ !last ? "/" : "" }}
+                </span>
+              </ng-container>
+            </div>
+          </th>
+        </tr>
+        <tr class="header-table">
+          <ng-container>
+            <th>S.No</th>
+            <th>Domain</th>
+            <th>Sub Domain</th>
+            <th>Question</th>
+            <th>Status</th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let items of cloneSurveyAlldata; let i = index">
+          <tr>
+            <td>{{ i + 1 }}</td>
+            <td>{{ items?.domainName }}</td>
+            <td>{{ items?.subDomainName ? items?.subDomainName : "NA" }}</td>
+            <td>{{ items?.question }}</td>
+            <td>{{ items?.isDeleted ? "Inactive" : "Active" }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
+<ng-container *ngIf="isGenerating">
+  <div
+    class="position-fixed full-page-loader h-100 d-flex justify-content-center align-items-center top-0 start-0"
+  >
+    <app-loader [height]="'400px'"></app-loader>
+  </div>
+</ng-container>

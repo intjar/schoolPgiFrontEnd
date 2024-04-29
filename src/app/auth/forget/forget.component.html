@@ -1,0 +1,241 @@
+<div class="login-wrap">
+    <div class="logo-wrap">
+        <div class="logo-left me-2">
+            <img src="assets/images/ministry-logo.svg" alt="ministry-logo" class="img-fluid" />
+        </div>
+        <div class="logo-right text-end">
+            <img src="assets/images/pgi-logo.svg" alt="pgi-logo" class="img-fluid" />
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-5 col-xxl-5">
+                <div class="forget-password" *ngIf="isShowForgetPass">
+                    <div class="login-card">
+                        <h2 class="heading-black">
+                            Forgot Password
+                        </h2>
+                        <p class="desc-black">
+                            We will send you an OTP to your Email ID.
+                        </p>
+
+
+                        <div class="login-form">
+                            <form #f="ngForm" [formGroup]="forgetForm" (ngSubmit)="sendOTP()">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="input-group mb-4">
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" formControlName="emailID" placeholder="Email ID" appEmail>
+                                                <label>Email ID</label>
+                                            </div>
+                                            <div class="input-group-text">
+                                                <img src="assets/images/email.svg" alt="email" class="img-fluid" />
+                                            </div>
+                                            <div class="invalid-feedback"
+                                            *ngIf="f.submitted && (forgetForm.controls['emailID']?.errors?.['required'] || this.forgetForm?.get('emailID')?.value?.trim().length == 0)">
+                                              Please enter email
+                                            </div>
+                                            <div class="invalid-feedback" *ngIf="forgetForm.get('emailID').errors?.email || forgetForm.get('emailID').errors?.pattern">
+                                                Email address is invalid
+                                            </div>
+                                            <div class="invalid-feedback" *ngIf="!forgetForm.controls['emailID']?.errors?.['required'] && forgetForm?.get('emailID')?.errors?.['invalidInput']">
+                                                Email address is invalid
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-group mb-4 captcha-group">
+                                            <div class="form-floating">
+                                                <span id="captcha" class="captcha-no"></span>
+                                            </div>
+                                            <a  class="input-group-text" (click)="createCaptcha(true,false)">
+                                                <img src="assets/images/refresh.svg" alt="refresh-icon" class="img-fluid" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-group mb-4 captcha-input">
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" OnlyNumber formControlName="captcha" placeholder="Security Text" maxlength="6" (keyup)="inputCaptcha()">
+                                                <label>Security Text</label>
+                                            </div>
+                                            <div class="invalid-feedback"
+                                            *ngIf="f.submitted && (forgetForm.controls['captcha']?.errors?.['required'] || this.forgetForm?.get('captcha')?.value?.trim().length == 0) || isValidCaptcha">
+                                             {{captchaErrormsg}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="btn-wrap">
+                                            <button class="btn-org" type="submit" [disabled]="forgotOtpSend || forgetForm.invalid">
+                                              <div class="d-flex justify-content-center align-items-center">
+                                                <div class="spinner-border text-light me-2" role="status" *ngIf="forgotOtpSend"></div>
+                                                <span>Send OTP</span>
+                                              </div>
+                                              </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="btn-wrap justify-content-center mt-4">
+                            <button (click)="backtologin()"  class="btn-org-link" type="submit">Back to login</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="otp-verification" *ngIf="isShowOTP">
+                    <div class="login-card">
+                        <h2 class="heading-black">
+                            Verify OTP
+                        </h2>
+                        <p class="desc-black">
+                            Check Your Inbox an OTP sent to <strong>{{userName}}</strong>
+                        </p>
+
+
+                        <div class="login-form">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                      <div class="input-group mb-4">
+                                            <ng-otp-input class="ng-otp-input" (onInputChange)="onOtpChange($event)" [config]="config"  #ngOtpInput ></ng-otp-input>
+                                            <div class="invalid-feedback" *ngIf="isSubmitted">
+                                                {{otpMsg}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="btn-wrap d-flex justify-content-end mb-4">
+                                            <button class="btn-org-link border-0" (click)="resendOTP()" type="submit" *ngIf="countNew == 0 && otpSend && !loadingResend" >Resend OTP</button>
+
+                                            <div class="d-flex  align-items-center spinner-container" *ngIf="loadingResend">
+                                              <div class="spinner-border spinner-resend" role="status" >
+                                              </div>
+                                              <span class="ps-2">Resend OTP</span>
+                                            </div>
+
+
+                                            <span class="invalid-feedback" *ngIf="countNew > 0 && !loadingResend" style="text-align: center;" >Resend OTP In {{countNew | formatTimeCounter}} </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="btn-wrap">
+                                            <button class="btn-org" (click)="VerifyOTP()" type="submit" [disabled]="verifyOtpSend">
+                                              <div class="d-flex justify-content-center align-items-center">
+                                                <div class="spinner-border text-light me-2" role="status" *ngIf="verifyOtpSend"></div>
+                                                <span>Verify OTP</span>
+                                              </div>
+
+
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="btn-wrap justify-content-center mt-4">
+                            <button (click)="backtologin()"  class="btn-org-link" type="submit">Back to login</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reset-password" *ngIf="isResetPassword">
+                    <div class="login-card">
+                        <h2 class="heading-black">
+                            Change Password
+                        </h2>
+                        <p class="desc-black">
+                            You have verified your account. Please enter new Password
+                        </p>
+                        <div class="login-form">
+                            <form #f="ngForm" [formGroup]="ressetForm" (ngSubmit)="ressetPassForm()">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="input-group mb-4">
+                                            <div class="form-floating">
+                                                <input [type]="viewPassword" appBlockcopypaste maxlength="20" type="password" (blur)="checkPass()" class="form-control" formControlName="newpassword" placeholder="New Password" >
+                                                <label>New Password</label>
+                                            </div>
+                                            <a *ngIf="viewPassword == 'password'" class="input-group-text">
+                                                <img src="assets/images/eye-close.svg" alt="eye-icon" class="img-fluid"
+                                                    (click)="passwordView()" />
+                                            </a>
+                                            <a *ngIf="viewPassword == 'text'" class="input-group-text">
+                                                <img src="assets/images/eye.svg" alt="eye-icon" class="img-fluid"
+                                                    (click)="passwordView()" />
+                                            </a>
+                                            <div class="invalid-feedback"
+                                            *ngIf="f.submitted && (ressetForm.controls['newpassword']?.errors?.['required'] || this.ressetForm?.get('newpassword')?.value?.trim().length == 0)">
+                                               Please Enter Password
+                                            </div>
+
+                                            <div class="invalid-feedback"
+                                            *ngIf=" (ressetForm.controls['newpassword']?.errors?.['invalid'] && !ressetForm.controls['newpassword']?.errors?.['required'])">
+                                            Password must be atleast 8 characters long. It must contain 1 uppercase letter, 1 lowercase letter, 1 special character, and 1 number
+                                            </div>
+                                        </div>
+                                        <div class="input-group mb-4">
+                                            <div class="form-floating">
+                                                <input [type]="Confpassword" appBlockcopypaste maxlength="20" type="password" class="form-control" formControlName="confirmpassword" placeholder="Confirm Password">
+                                                <label>Confirm Password</label>
+                                            </div>
+                                            <a *ngIf="Confpassword == 'password'" class="input-group-text">
+                                                <img src="assets/images/eye-close.svg" alt="eye-icon" class="img-fluid"
+                                                    (click)="passwordView2()" />
+                                            </a>
+                                            <a *ngIf="Confpassword == 'text'" class="input-group-text">
+                                                <img src="assets/images/eye.svg" alt="eye-icon" class="img-fluid"
+                                                    (click)="passwordView2()" />
+                                            </a>
+                                            <div class="invalid-feedback"
+                                            *ngIf="f.submitted && (ressetForm.controls['confirmpassword']?.errors?.['required'] || this.ressetForm?.get('confirmpassword')?.value?.trim().length == 0)">
+                                               Please Enter Confirm Password
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="btn-wrap">
+                                            <button class="btn-org" type="submit">
+                                              <div class="d-flex justify-content-center align-items-center">
+                                                <div class="spinner-border text-light me-2" role="status" *ngIf="isLoading"></div>
+                                                <span>Change Password</span>
+                                              </div>
+
+
+
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="btn-wrap justify-content-center mt-4">
+                            <button (click)="backtologin()"  class="btn-org-link" type="submit">Back to login</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-12">
+                <div class="copyright-text">
+                    <p>
+                        © 2023, Department of School Education & Literacy, Ministry of Education
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="alert" [class.visible]="isVisible"> {{msg}} </div> -->

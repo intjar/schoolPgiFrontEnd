@@ -1,0 +1,38 @@
+@import '../../../assets/scss/variables';
+
+.invalid-feedback{
+    display: block;
+    font-size: 0.75em;
+    font-weight: 500;
+}
+
+.alert {
+    top: 8rem;
+    opacity: 0;
+    z-index: 1000;
+    &.visible{
+        opacity: 1;
+    }
+}
+.spinner{
+  &-container{
+    span{
+      color: $disableBtn;
+    }
+  }
+  &-resend{
+    color: $disableBtn;
+  }
+
+}
+
+
+.btn-wrap{
+  button:disabled{
+    background-color: $disableBtn;
+    &:hover{
+      background-color: $disableBtn;
+    }
+  }
+
+}

@@ -1,0 +1,144 @@
+<div class="dashboard-card-wrap">
+    <div class="row g-3">
+        <div class="col-md-3">
+            <div class="dashboard-card card-purple-bg">
+                <div class="dashboard-card-head">
+                    <div class="content-left">
+                        <div class="card-icon card-icon-purple flex-shrink-0">
+                            <img src="assets/images/total-survey.svg" alt="total-survey" class="img-fluid" />
+                        </div>
+                        <h2 class="heading flex-grow-1" (click)="getSurveyStatusList('')" [ngClass]="{'cursor-pointer': getSession?.roleId ==1}">
+                            Total Survey
+                        </h2>
+                    </div>
+                    <div class="content-right">
+                        <span class="total-number" (click)="getSurveyStatusList('')" [ngClass]="{'cursor-pointer': getSession?.roleId ==1}">
+                            {{data?.totalSurvey}}
+                        </span>
+                    </div>
+                </div>
+                <div class="dashboard-card-body">
+                    <div class="card-list">
+                        <ul>
+                            <li>
+                                <h3 class="title">
+                                    Active
+                                </h3>
+                                <p class="number">
+                                    {{data?.activeSurvey}}
+                                </p>
+                            </li>
+                            <li>
+                                <h3 class="title">
+                                    Completed
+                                </h3>
+                                <p class="number" (click)="getSurveyStatusList('Completed')" [ngClass]="{'cursor-pointer': getSession?.roleId ==1}">
+                                    {{data?.completeSurvey}}
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="row g-3">
+                <div class="col-md-6" *ngIf="getSession?.uid == 1">
+                    <div class="dashboard-card card-org-bg dashboard-card-active-survey">
+                        <div class="dashboard-card-head">
+                            <div class="content-left">
+                                <div class="card-icon card-icon-red flex-shrink-0">
+                                    <img src="assets/images/notify.svg" alt="notify" class="img-fluid" />
+                                </div>
+                                <h2 class="heading flex-grow-1" (click)="getSurveyStatusList('Notified to TPD')" [ngClass]="{'cursor-pointer': getSession?.roleId ==1}">
+                                    Notify to TPD
+                                </h2>
+                            </div>
+                            <div class="content-right">
+                                <span class="total-number" (click)="getSurveyStatusList('Notified to TPD')" [ngClass]="{'cursor-pointer': getSession?.roleId ==1}">
+                                    {{data?.pendingForNotifiedToTPD}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" *ngIf="getSession?.uid != 1">
+                    <div class="dashboard-card card-org-bg dashboard-card-active-survey">
+                        <div class="dashboard-card-head">
+                            <div class="content-left">
+                                <div class="card-icon card-icon-green flex-shrink-0">
+                                    <img src="assets/images/review.svg" alt="notify" class="img-fluid" />
+                                </div>
+                                <h2 class="heading flex-grow-1" (click)="getSurveyStatusList('users_list')" [ngClass]="{'cursor-pointer': getSession?.roleId ==1}">
+                                    Total no of user under the instance
+                                </h2>
+                            </div>
+                            <div class="content-right">
+                                <span class="total-number" (click)="getSurveyStatusList('users_list')" [ngClass]="{'cursor-pointer': getSession?.roleId ==1}">
+                                    {{data?.totalNoOfChildUsers}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="dashboard-card card-green-bg dashboard-card-active-survey">
+                        <div class="dashboard-card-head">
+                            <div class="content-left">
+                                <div class="card-icon card-icon-green flex-shrink-0">
+                                    <img src="assets/images/review.svg" alt="review" class="img-fluid" />
+                                </div>
+                                <h2 class="heading flex-grow-1" (click)="getSurveyStatusList('Pending for Review')" [ngClass]="{'cursor-pointer': getSession?.roleId ==1}">
+                                    Pending for Review
+                                </h2>
+                            </div>
+                            <div class="content-right">
+                                <span class="total-number" (click)="getSurveyStatusList('Pending for Review')" [ngClass]="{'cursor-pointer': getSession?.roleId ==1}">
+                                    {{data?.pendingForReview}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="dashboard-card card-org-bg dashboard-card-active-survey">
+                        <div class="dashboard-card-head">
+                            <div class="content-left">
+                                <div class="card-icon card-icon-org flex-shrink-0">
+                                    <img src="assets/images/data-entry.svg" alt="data-entry" class="img-fluid" />
+                                </div>
+                                <h2 class="heading flex-grow-1" (click)="getSurveyStatusList('Pending for Data Entry')" [ngClass]="{'cursor-pointer': getSession?.roleId ==1}">
+                                    Pending for Data Entry
+                                </h2>
+                            </div>
+                            <div class="content-right">
+                                <span class="total-number" (click)="getSurveyStatusList('Pending for Data Entry')" [ngClass]="{'cursor-pointer': getSession?.roleId ==1}">
+                                    {{data?.pendingForDataEntry}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="dashboard-card card-blue-bg dashboard-card-active-survey">
+                        <div class="dashboard-card-head">
+                            <div class="content-left">
+                                <div class="card-icon card-icon-blue flex-shrink-0">
+                                    <img src="assets/images/approve.svg" alt="approve" class="img-fluid" />
+                                </div>
+                                <h2 class="heading flex-grow-1" (click)="getSurveyStatusList('Pending for Approve')" [ngClass]="{'cursor-pointer': getSession?.roleId ==1}">
+                                    Pending for Approve
+                                </h2>
+                            </div>
+                            <div class="content-right">
+                                <span class="total-number" (click)="getSurveyStatusList('Pending for Approve')" [ngClass]="{'cursor-pointer': getSession?.roleId ==1}">
+                                    {{data?.pendingForApprove}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

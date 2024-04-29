@@ -1,0 +1,1290 @@
+<div
+  class="container-fluid p-4"
+  *ngIf="!isShowMapQuestion && !isShowAssignSurvey && !isShowCloneSurvey  && !isShowViewSurvey"
+>
+  <div class="row">
+    <div class="col-md-12">
+      <!-- <div class="top-wrap">
+        <h2 class="heading-grey">Manage Survey</h2>
+        <div class="breadcrumb-wrap">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a>Dashboard</a></li>
+              <li class="breadcrumb-item"><a>Manage Survey</a></li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Survey List
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div> -->
+      <app-breadcrumb [breadcrums]="breadcrums"></app-breadcrumb>
+    </div>
+    <div class="col-md-12 my-4">
+      <div class="card-wrap" id="focusForm">
+        <div
+          class="card-form"
+          *appShowRoleBaseActions="[
+            'Create Survey',
+            ['create', 'edit', 'view']
+          ]"
+        >
+          <h3 class="title-grey">{{ surverMSG }}</h3>
+          <div class="common-form py-4">
+            <form [formGroup]="createSurveyForm">
+              <div class="row g-3">
+                <div class="col-md-12">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Survey Name <span class="char-red">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter Survey Name"
+                      formControlName="surveyname"
+                      surveyValidate
+                      maxlength="100"
+                      minlength="3"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (createSurveyForm.controls['surveyname']?.errors?.['required'] || this.createSurveyForm?.get('surveyname')?.value?.trim().length == 0)"
+                    >
+                      Please Enter Survey Name.
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="createSurveyForm?.get('surveyname')?.errors?.['invalidInput']"
+                    >
+                      Please Enter Valid Survey Name.
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="createSurveyForm?.get('surveyname')?.errors?.['minlength']"
+                    >
+                      Minimum length should be 3
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="createSurveyForm?.get('surveyname')?.errors?.['maxlength']"
+                    >
+                      Maximum length should be 100
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="createSurveyForm?.get('surveyname')?.errors?.['startwithSpaceError']"
+                    >
+                      Starting Space is not allowed.
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-7">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Description <span class="char-red">*</span></label
+                    >
+                    <textarea
+                      class="form-control"
+                      rows="3"
+                      maxlength="500"
+                      placeholder="Enter Description"
+                      formControlName="description"
+                    ></textarea>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (createSurveyForm.controls['description']?.errors?.['required'] || this.createSurveyForm?.get('description')?.value?.trim().length == 0)"
+                    >
+                      Please Enter Description.
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="createSurveyForm.get('description')?.errors?.['description'] || createSurveyForm?.get('description')?.errors?.['pattern']"
+                    >
+                      Please Enter Valid Description.
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="createSurveyForm?.get('description')?.errors?.['minlength']"
+                    >
+                      Minimum length should be 3
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="createSurveyForm?.get('description')?.errors?.['maxlength']"
+                    >
+                      Maximum length should be 500
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="createSurveyForm?.get('description')?.errors?.['startwithSpaceError']"
+                    >
+                      Starting Space is not allowed
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-5">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="mb-3">
+                        <label class="form-label"
+                          >Select Year <span class="char-red">*</span></label
+                        >
+                        <ng-select
+                          formControlName="year"
+                          placeholder="Select Year"
+                          (change)="selectYear($event)"
+                        >
+                          <ng-option
+                            *ngFor="let year of selectYearArr"
+                            [value]="year"
+                            >{{ year?.yearCode }}</ng-option
+                          >
+                        </ng-select>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="isSubmitted && (createSurveyForm.controls['year']?.errors?.['required'])"
+                        >
+                          Please Select Year
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <label class="form-label"
+                        >Active Duration <span class="char-red">*</span></label
+                      >
+                    </div>
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <div class="input-group calender-input-group">
+                          <input
+                            class="form-control"
+                            onkeydown="return false"
+                            matInput
+                            [matDatepicker]="startDate"
+                            (dateChange)="dateChange()"
+                            placeholder="Select Start Date"
+                            formControlName="startDate"
+                            [min]="startMinDate"
+                          />
+                          <span class="input-group-text">
+                            <mat-datepicker-toggle
+                              matSuffix
+                              [for]="startDate"
+                            ></mat-datepicker-toggle
+                          ></span>
+                          <mat-datepicker #startDate></mat-datepicker>
+                        </div>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="isSubmitted && (createSurveyForm.controls['startDate']?.errors?.['required'])"
+                        >
+                          Please Select Start Date.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <div class="input-group calender-input-group">
+                          <input
+                            class="form-control"
+                            onkeydown="return false"
+                            matInput
+                            [matDatepicker]="endDate"
+                            placeholder="Select End Date"
+                            formControlName="endDate"
+                            [min]="endMinDate"
+                          />
+                          <span class="input-group-text">
+                            <mat-datepicker-toggle
+                              matSuffix
+                              [for]="endDate"
+                            ></mat-datepicker-toggle
+                          ></span>
+                          <mat-datepicker #endDate></mat-datepicker>
+                        </div>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="isSubmitted && (createSurveyForm.controls['endDate']?.errors?.['required'])"
+                        >
+                          Please Select End Date.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Approval Level <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="approvalLevel"
+                      placeholder="Select Approval Level"
+                      (change)="approvalLevel($event)"
+                    >
+                      <ng-option
+                        *ngFor="let data of dataEntryLevelArr"
+                        [value]="data"
+                        >{{ data?.level_name }}</ng-option
+                      >
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (createSurveyForm.controls['approvalLevel']?.errors?.['required'])"
+                    >
+                      Please Select Approval Level
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Reviewer Level <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="reviewerlevel"
+                      bindLabel="viewer"
+                      placeholder="Select Reviewer Level"
+                      (change)="reviewerLevel($event, 'change')"
+                      [multiple]="true"
+                    >
+                      <ng-option
+                        *ngFor="let data of dataEntryLevelArr"
+                        [value]="data"
+                        >{{ data?.level_name }}</ng-option
+                      >
+
+                      <ng-template
+                        ng-multi-label-tmp
+                        let-items="items"
+                        let-clear="clear"
+                      >
+                        <div
+                          class="ng-value"
+                          *ngFor="
+                            let item of items | slice : 0 : 1;
+                            let j = index
+                          "
+                        >
+                          <span
+                            class="ng-value-label"
+                            title="{{ items[j]?.level_name }}"
+                            >{{ items[j]?.level_name }}</span
+                          >
+                          <span
+                            class="ng-value-icon right"
+                            (click)="
+                              clear(item); deleteItems(items[j], 'reviewer')
+                            "
+                            aria-hidden="true"
+                            >×</span
+                          >
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 1">
+                          <span
+                            class="ng-value-label"
+                            title="{{ showTitle(items, 'reviewerlevel') }}"
+                            >+ {{ items.length - 1 }} more</span
+                          >
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (createSurveyForm.controls['reviewerlevel']?.errors?.['required'])"
+                    >
+                      Please Select Reviewer Level
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Viewer Level <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="viewerlevel"
+                      bindLabel="viewer"
+                      placeholder="Select Viewer Level"
+                      (change)="viewerLevel($event, 'change')"
+                      [multiple]="true"
+                    >
+                      <ng-option
+                        *ngFor="let data of dataEntryLevelArr"
+                        [value]="data"
+                        >{{ data?.level_name }}</ng-option
+                      >
+
+                      <ng-template
+                        ng-multi-label-tmp
+                        let-items="items"
+                        let-clear="clear"
+                      >
+                        <div
+                          class="ng-value"
+                          *ngFor="
+                            let item of items | slice : 0 : 1;
+                            let j = index
+                          "
+                        >
+                          <span
+                            class="ng-value-label"
+                            title="{{ items[j]?.level_name }}"
+                            >{{ items[j]?.level_name }}</span
+                          >
+                          <span
+                            class="ng-value-icon right"
+                            (click)="
+                              clear(item); deleteItems(items[j], 'viewer')
+                            "
+                            aria-hidden="true"
+                            >×</span
+                          >
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 1">
+                          <span
+                            class="ng-value-label"
+                            title="{{ showTitle(items, 'viewerlevel') }}"
+                            >+ {{ items.length - 1 }} more</span
+                          >
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (createSurveyForm.controls['viewerlevel']?.errors?.['required'])"
+                    >
+                      Please Select Viewer Level
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="mb-3">
+                        <label class="form-label"
+                          >Data Entry Level
+                          <span class="char-red">*</span></label
+                        >
+                        <ng-select
+                          formControlName="dataEntry"
+                          placeholder="Select Data Entry Level"
+                          (change)="dataEntryLevel($event)"
+                        >
+                          <ng-option
+                            *ngFor="let data of dataEntryLevelArr"
+                            [value]="data"
+                            >{{ data?.level_name }}</ng-option
+                          >
+                        </ng-select>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="isSubmitted && (createSurveyForm.controls['dataEntry']?.errors?.['required'])"
+                        >
+                          Please Select Data Entry Level
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Approval Role <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="approvalRole"
+                      placeholder="Select Approval Role"
+                      (change)="approvalRole($event)"
+                    >
+                      <ng-option
+                        *ngFor="let approval of approvalRoleArr"
+                        [value]="approval"
+                        >{{ approval?.name }}</ng-option
+                      >
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (createSurveyForm.controls['approvalRole']?.errors?.['required'])"
+                    >
+                      Please Select Approval Role
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Reviewer Roles <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="reviewerRole"
+                      placeholder="Select Reviewer Role"
+                      [multiple]="true"
+                      (change)="reviewerRole($event)"
+                    >
+                      <ng-option
+                        *ngFor="let reviewer of reviewerRoleArr"
+                        [value]="reviewer"
+                        >{{ reviewer?.name }}</ng-option
+                      >
+
+                      <ng-template
+                        ng-multi-label-tmp
+                        let-items="items"
+                        let-clear="clear"
+                      >
+                        <div
+                          class="ng-value"
+                          *ngFor="
+                            let item of items | slice : 0 : 1;
+                            let j = index
+                          "
+                        >
+                          <span
+                            class="ng-value-label"
+                            title="{{ items[j]?.name }}"
+                            >{{ items[j]?.name }}</span
+                          >
+                          <span
+                            class="ng-value-icon right"
+                            (click)="clear(item)"
+                            aria-hidden="true"
+                            >×</span
+                          >
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 1">
+                          <span
+                            class="ng-value-label"
+                            title="{{ showTitle(items, 'reviewerrole') }}"
+                            >+ {{ items.length - 1 }} more</span
+                          >
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (createSurveyForm.controls['reviewerRole']?.errors?.['required'])"
+                    >
+                      Please Select Reviewer Role
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Viewer Roles <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="viewerRole"
+                      placeholder="Select Viewer Role"
+                      [multiple]="true"
+                      (change)="viewerRole($event)"
+                    >
+                      <ng-option
+                        *ngFor="let viewer of viewerRoleArr"
+                        [value]="viewer"
+                        >{{ viewer?.name }}</ng-option
+                      >
+
+                      <ng-template
+                        ng-multi-label-tmp
+                        let-items="items"
+                        let-clear="clear"
+                      >
+                        <div
+                          class="ng-value"
+                          *ngFor="
+                            let item of items | slice : 0 : 1;
+                            let j = index
+                          "
+                        >
+                          <span
+                            class="ng-value-label"
+                            title="{{ items[j]?.name }}"
+                            >{{ items[j]?.name }}</span
+                          >
+                          <span
+                            class="ng-value-icon right"
+                            (click)="clear(item)"
+                            aria-hidden="true"
+                            >×</span
+                          >
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 1">
+                          <span
+                            class="ng-value-label"
+                            title="{{ showTitle(items, 'viewerrole') }}"
+                            >+ {{ items.length - 1 }} more</span
+                          >
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (createSurveyForm.controls['viewerRole']?.errors?.['required'])"
+                    >
+                      Please Select Viewer Role
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Data Entry Role <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="dataEntryRole"
+                      placeholder="Select Data Entry Role"
+                      (change)="dataEntryRole($event)"
+                    >
+                      <ng-option
+                        *ngFor="let data of dataEntryRoleArr"
+                        [value]="data"
+                        >{{ data?.name }}</ng-option
+                      >
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (createSurveyForm.controls['dataEntryRole']?.errors?.['required'])"
+                    >
+                      Please Select Data Entry Role
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Select Status <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="status"
+                      placeholder="Select Status"
+                    >
+                      <ng-option
+                        *ngFor="let val of statusValue"
+                        [value]="val"
+                        >{{ val }}</ng-option
+                      >
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && createSurveyForm.controls['status']?.errors?.['required'] "
+                    >
+                      Please Select Status
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Procedure Name
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter Procedure Name"
+                      formControlName="procedureName"
+                      maxlength="100"
+                      minlength="3"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="createSurveyForm?.get('procedureName')?.errors?.['minlength']"
+                    >
+                      Minimum length should be 3
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="createSurveyForm?.get('procedureName')?.errors?.['maxlength']"
+                    >
+                      Maximum length should be 100
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="createSurveyForm?.get('procedureName')?.errors?.['startwithSpaceError']"
+                    >
+                      Starting Space is not allowed.
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="d-flex mt-40">
+                    <div class="common-form">
+                      <div class="form-check map-check">
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          (click)="approvalSelected($event)"
+                          [checked]="approvalStatus == 1"
+                        />
+                        <label class="form-check-label">
+                          Mandatory Review required before approval
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="col-md-3"
+                  *appShowRoleBaseActions="[
+                    'Create Survey',
+                    ['create', 'edit']
+                  ]"
+                >
+                  <div class="d-flex justify-content-end">
+                    <div class="btn-wrap mt-30">
+                      <ng-container *ngIf="isShowButton">
+                        <ng-container
+                          *appShowRoleBaseActions="['Create Survey', 'create']"
+                        >
+                          <button
+                            *ngIf="isShowButton"
+                            class="btn-org me-3"
+                            (click)="onSubmit('save')"
+                          >
+                            Save
+                          </button>
+                          <button
+                            type="button"
+                            class="btn-org-bdr"
+                            (click)="onCancle()"
+                          >
+                            Reset
+                          </button>
+                        </ng-container>
+                      </ng-container>
+                      <ng-container *ngIf="!isShowButton">
+                        <ng-container
+                          *appShowRoleBaseActions="['Create Survey', 'edit']"
+                        >
+                          <button
+                            *ngIf="!isShowButton"
+                            class="btn-org me-3"
+                            (click)="onSubmit('update')"
+                          >
+                            Update
+                          </button>
+                          <button
+                            type="button"
+                            class="btn-org-bdr"
+                            (click)="onCancle()"
+                          >
+                            Reset
+                          </button>
+                        </ng-container>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div
+          class="card-table"
+          *appShowRoleBaseActions="[
+            'Create Survey',
+            ['edit', 'view', 'delete']
+          ]"
+        >
+          <div class="card-table-top">
+            <div class="common-form">
+              <div class="row g-3">
+                <div class="col-md-12">
+                  <div class="d-flex align-items-center justify-content-end">
+                    <div class="export-wrap">
+                      <div class="btn-export me-3">Export</div>
+                      <button
+                        class="btn-adobe me-3"
+                        (click)="printData('pdf')"
+                        [disabled]="dataSource.filteredData.length == 0"
+                      >
+                        <img
+                          src="assets/images/adobe.svg"
+                          alt="adobe"
+                          class="img-fluid"
+                        />
+                      </button>
+                      <button
+                        class="btn-xml"
+                        (click)="printData('csv')"
+                        [disabled]="dataSource.filteredData.length == 0"
+                      >
+                        <img
+                          src="assets/images/xml.svg"
+                          alt="xml"
+                          class="img-fluid"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <app-financial-year-dropdown
+                    (financialYear)="getFinancialYear($event)"
+                  ></app-financial-year-dropdown>
+                </div>
+                <div class="col-md-8">
+                  <div class="search-wrap d-flex align-items-center">
+                    <div class="input-group">
+                      <span class="material-icons-round input-group-text">
+                        search
+                      </span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="searchValue"
+                        (keyup.enter)="filterData('filter')"
+                        placeholder="Enter Keyword"
+                        [minlength]="3"
+                      />
+                    </div>
+                    <div class="btn-wrap">
+                      <button
+                        class="btn-org ms-3"
+                        [disabled]="!searchValue"
+                        (click)="filterData('filter')"
+                      >
+                        Search
+                      </button>
+                      <button
+                        class="btn-org-bdr ms-3"
+                        (click)="filterData('clear')"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="common-table">
+            <div class="table-container table-responsive">
+              <table
+                class="table table-striped"
+                mat-table
+                [dataSource]="dataSource"
+              >
+                <ng-container matColumnDef="sn">
+                  <th mat-header-cell *matHeaderCellDef>S.No</th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ viewtable.pageIndex * viewtable.pageSize + (i + 1) }}
+                  </td>
+                </ng-container>
+                <!-- class="ellipse-text" -->
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>Survey Name</th>
+                  <td mat-cell *matCellDef="let element" class="word-break">
+                    {{ element?.surveyName }}
+                    <div class="btn-wrap mt-2">
+                      <button
+                        [disabled]="element.isMappedQuest"
+                        (click)="
+                          mapQuestion(element); scroll($event, 'commonScrollTo')
+                        "
+                        class="table-btn table-btn-org me-2"
+                        *appShowRoleBaseActions="[
+                          'Map Question',
+                          ['edit', 'view', 'create', 'delete']
+                        ]"
+                      >
+                        Map Question
+                      </button>
+                      <button
+                        (click)="
+                          cloneSurvey(element); scroll($event, 'commonScrollTo')
+                        "
+                        class="table-btn table-btn-org"
+                        *appShowRoleBaseActions="[
+                          'Clone Survey',
+                          ['edit', 'view', 'delete']
+                        ]"
+                      >
+                        Clone Survey
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="description">
+                  <th mat-header-cell *matHeaderCellDef>Description</th>
+                  <td mat-cell *matCellDef="let element">
+                    <p class="ellipse-text" [title]="element.surveyDescription">
+                      {{ element?.surveyDescription }}
+                    </p>
+                  </td>
+                </ng-container> -->
+                <ng-container matColumnDef="year">
+                  <th mat-header-cell *matHeaderCellDef>Year</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.yearCode }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="duration">
+                  <th mat-header-cell *matHeaderCellDef>Active Duration</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.surveyStartDate | date : "dd-MM-yyyy" }} to
+                    {{ element?.surveyEndDate | date : "dd-MM-yyyy" }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap" *ngIf="element?.status == 1">
+                      <a class="table-btn table-btn-green">Active</a>
+                    </div>
+                    <div class="btn-wrap" *ngIf="element?.status == 0">
+                      <a class="table-btn table-btn-red">Inactive</a>
+                    </div>
+                    <div class="btn-wrap" *ngIf="element?.status == 2">
+                      <a class="table-btn table-btn-red">Deleted</a>
+                    </div>
+                    <div class="btn-wrap" *ngIf="element?.status == 3">
+                      <a class="table-btn table-btn-brown">Created</a>
+                    </div>
+                    <div class="btn-wrap" *ngIf="element?.status == 4">
+                      <a class="table-btn table-btn-purple">Expired</a>
+                    </div>
+                    <div class="btn-wrap" *ngIf="element?.status == 5">
+                      <a class="table-btn table-btn-blue">Completed</a>
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>Action</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap more-action">
+                      <button
+                        id="view"
+                        class="me-3"
+                        (click)="
+                        viewSurvey(element);
+                        scroll($event, 'commonScrollTo')
+                      "
+                        *appShowRoleBaseActions="['Create Survey', 'view']"
+                      >
+                        <img
+                          src="assets/images/view-user.svg"
+                          alt="icon"
+                          class="img-fluid"
+                        />
+                      </button>
+                      <button
+                        id="edit"
+                        class="me-3"
+                        [disabled]="element.isMappedQuest"
+                        (click)="
+                          edit(element); scroll($event, 'commonScrollTo')
+                        "
+                        *appShowRoleBaseActions="['Create Survey', 'edit']"
+                      >
+                        <img
+                          src="assets/images/edit-user.svg"
+                          alt="icon"
+                          class="img-fluid"
+                        />
+                      </button>
+                      <button
+                        id="remove"
+                        [disabled]="!element.status || element.isMappedQuest"
+                        (click)="remove(element)"
+                        type="button"
+                        *appShowRoleBaseActions="['Create Survey', 'delete']"
+                      >
+                        <img
+                          src="assets/images/remove.svg"
+                          alt="icon"
+                          class="img-fluid"
+                        />
+                      </button>
+                      <button
+                        id="analysis"
+                        (click)="callProcedureConfirmation(element)"
+                        type="button"
+                        *appShowRoleBaseActions="['Execute Store Procedure', 'view']"
+                      >
+                        <img
+                          src="assets/images/analysis.svg"
+                          alt="icon"
+                          class="img-fluid"
+                        />
+                      </button>
+                    </div>
+                    <div class="btn-wrap mt-2">
+                      <button
+                        [disabled]="!element.status || element.isNotified"
+                        class="table-btn table-btn-org me-2"
+                        (click)="
+                          assignSurvey(element);
+                          scroll($event, 'commonScrollTo')
+                        "
+                        *appShowRoleBaseActions="['Notify Survey', 'edit']"
+                      >
+                        Notify Survey
+                      </button>
+                      <button
+                        class="table-btn table-btn-org"
+                        [disabled]="!element.status || element.isNotifiedTpd"
+                        (click)="notifyTpd(element)"
+                        *appShowRoleBaseActions="['Notify TPD', 'edit']"
+                      >
+                        Notify TPD
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="noRecord">
+                  <td
+                    class="text-center"
+                    mat-footer-cell
+                    [attr.colspan]="10"
+                    *matFooterCellDef
+                  >
+                    <app-no-record-found
+                      [height]="'400px'"
+                    ></app-no-record-found>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="loading">
+                  <td
+                    class="text-center"
+                    mat-footer-cell
+                    [attr.colspan]="10"
+                    *matFooterCellDef
+                  >
+                    <app-loader [height]="'400px'"></app-loader>
+                  </td>
+                </ng-container>
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedColumns; sticky: true"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                ></tr>
+                <tr
+                  mat-footer-row
+                  [hidden]="!isLoading"
+                  *matFooterRowDef="['loading']"
+                ></tr>
+                <tr
+                  mat-footer-row
+                  [hidden]="isLoading || dataSource.filteredData.length > 0"
+                  *matFooterRowDef="['noRecord']"
+                ></tr>
+              </table>
+            </div>
+
+            <mat-paginator
+              #viewtable
+              [pageSize]="10"
+              [showFirstLastButtons]="true"
+              [length]="totalCount"
+              [pageIndex]="pageNumber"
+              (page)="handlePageEvent($event)"
+              [hidePageSize]="true"
+              [hidden]="dataSource.filteredData.length == 0"
+            >
+            </mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal Start-->
+
+<app-popup *ngIf="isShowPopup" (popup)="removeRecord($event)"></app-popup>
+<app-notify-popup
+  *ngIf="isShowNotifiedTpdPopup"
+  (popup)="notifyTPDSurvey($event)"
+  [modalText]="modalText"
+  [modelHeadingText]="modelHeadingText"
+></app-notify-popup>
+<!-- Delete Modal End-->
+
+<!-- View Survey Modal Start-->
+<ng-container *ngIf="viewButtonModal">
+  <div
+    class="modal common-modal fade show"
+    tabindex="-1"
+    role="dialog"
+    id="viewButtonModal"
+    aria-labelledby="viewButtonModalLabel"
+    aria-hidden="true"
+    [ngStyle]="{ display: displayStyle }"
+    role="dialog"
+    data-backdrop="true"
+  >
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Survey Details</h4>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            (click)="closeViewModal()"
+          >
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="scrollbar-y pe-3">
+            <ng-container *ngIf="selectedViewData?.length > 0">
+              <div class="row" *ngFor="let data of selectedViewData">
+                <div class="col-md-12">
+                  <div class="modal-body-content mb-4">
+                    <h3 class="modal-title-grey">Survey Name</h3>
+                    <p class="modal-desc-black">{{ data?.surveyName }}</p>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="modal-body-content mb-4">
+                    <h3 class="modal-title-grey">Description</h3>
+                    <p class="modal-desc-black">{{ data?.surveyDescription }}</p>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="modal-body-content mb-4">
+                    <h3 class="modal-title-grey">Approval Level</h3>
+                    <p class="modal-desc-black">
+                      {{ data?.approverLevelId?.levelName }}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="modal-body-content mb-4">
+                    <h3 class="modal-title-grey">Reviewer Level</h3>
+                    <p class="modal-desc-black">
+                      {{ popupReviewerLevel(data?.reviewerLevelId) }}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="modal-body-content mb-4">
+                    <h3 class="modal-title-grey">Viewer Level</h3>
+                    <p class="modal-desc-black">
+                      {{ popupViewerLevel(data?.viewerLevelId) }}
+                    </p>
+                  </div>
+                </div>
+  
+                <div class="col-md-3">
+                  <div class="modal-body-content mb-4">
+                    <h3 class="modal-title-grey">Data Entry Level</h3>
+                    <p class="modal-desc-black">
+                      {{ data?.deoLevelId?.levelName }}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="modal-body-content mb-4">
+                    <h3 class="modal-title-grey">Approval Role</h3>
+                    <p class="modal-desc-black">
+                      {{ data?.approverRoleId?.name }}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="modal-body-content mb-4">
+                    <h3 class="modal-title-grey">Reviewer Roles</h3>
+                    <p class="modal-desc-black">
+                      {{ popupReviewerRole(data?.reviewerRole) }}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="modal-body-content mb-4">
+                    <h3 class="modal-title-grey">Viewer Roles</h3>
+                    <p class="modal-desc-black">
+                      {{ popupViewerRole(data?.viewerRole) }}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="modal-body-content mb-4">
+                    <h3 class="modal-title-grey">Data Entry Role</h3>
+                    <p class="modal-desc-black">{{ data?.deoRoleId?.name }}</p>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="modal-body-content mb-4">
+                    <h3 class="modal-title-grey">Year</h3>
+                    <p class="modal-desc-black">{{ data?.yearCode }}</p>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="modal-body-content mb-4">
+                    <h3 class="modal-title-grey">Active Duration</h3>
+                    <p class="modal-desc-black">
+                      {{ data?.surveyStartDate | date : "dd-MM-yyyy" }} to
+                      {{ data?.surveyEndDate | date : "dd-MM-yyyy" }}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="modal-body-content mb-4">
+                    <h3 class="modal-title-grey">Survey Status</h3>
+                    <p
+                      class="status"
+                      [ngClass]="{
+                        active: data?.status == 1,
+                        inactive: data?.status == 0
+                      }"
+                    >
+                      {{ data?.status == 1 ? "Active" : "Inactive" }}
+                    </p>
+                  </div>
+                </div>
+                <div *ngFor="let item of heading" [hidden]="item?.question == 0">
+                  <div class="col-md-12">
+                    <div class="modal-body-content mb-4">
+                      <h3 class="modal-title-grey">
+                        {{ item?.domainName }}
+                      </h3>
+                      <p
+                        class="modal-desc-black"
+                        *ngFor="let ques of item?.question; let i = index"
+                      >
+                        {{ i + 1 + ")" }} {{ ques }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <!-- <view-mapped-questions [result]="resultPopup" [unique]="dataUniqueArray" [popup]="true"
+                *ngIf="dataUniqueArray?.[0] != undefined" [formDataEntry]="true"
+                [domainObjectArray]="domainObjectArray" ></view-mapped-questions> -->
+          </div>
+          
+        </div>
+        <div class="modal-footer">
+          <div class="btn-wrap m-0 col-md-5">
+            <button
+              type="button"
+              class="btn-org me-3"
+              data-bs-dismiss="modal"
+              (click)="closeViewModal()"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    _ngcontent-boi-c151=""
+    class="modal-backdrop fade show ng-tns-c151-7"
+  ></div>
+</ng-container>
+
+<!-- <div class="alert" [class.visible]="isVisible"> {{msg}} </div> -->
+<!-- View Survey Modal End-->
+
+<!-----------------------------PDF Start Here=------------------------------------->
+<ng-container *ngIf="pdfOpen">
+  <div class="padding-main-divcls" id="print-pdf">
+    <table class="table table-bordered">
+      <thead>
+        <tr colspan="40">
+          <th colspan="40">
+            <header style="height: 80px">
+              <div
+                class="d-flex header-height justify-content-between align-items-center"
+              >
+                <img src="assets/images/ministry-logo.svg" [height]="50" />
+                <img src="assets/images/pgi-logo.svg" [height]="50" />
+              </div>
+            </header>
+          </th>
+        </tr>
+        <tr colspan="40">
+          <th colspan="40">
+            <div class="d-flex">
+              <ng-container
+                *ngFor="let breadcrums of breadcrums.links; let last = last"
+              >
+                <span class="bread-span"
+                  >{{ breadcrums?.link }} {{ !last ? "/" : "" }}
+                </span>
+              </ng-container>
+            </div>
+          </th>
+        </tr>
+        <tr class="header-table">
+          <ng-container>
+            <th>S.No</th>
+            <th>Survey Name</th>
+            <th>Description</th>
+            <th>Year</th>
+            <th>Active Duration</th>
+            <th>Status</th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let items of printDataSource; let i = index">
+          <ng-container>
+            <tr>
+              <td>{{ i + 1 }}</td>
+              <td>{{ items?.surveyName }}</td>
+              <td>{{ items?.surveyDescription }}</td>
+              <td>{{ items?.yearCode }}</td>
+              <td>
+                {{ items?.surveyStartDate | date : "dd-MM-yyyy" }} to
+                {{ items?.surveyEndDate | date : "dd-MM-yyyy" }}
+              </td>
+              <td>{{ items?.status ? "Active" : "Inactive" }}</td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
+<ng-container *ngIf="isGenerating">
+  <div
+    class="position-fixed full-page-loader h-100 d-flex justify-content-center align-items-center top-0 start-0"
+  >
+    <app-loader [height]="'400px'"></app-loader>
+  </div>
+</ng-container>
+
+<map-question
+  *ngIf="isShowMapQuestion"
+  [mapQuestionId]="mapQuestionId"
+  (backClick)="isShowMapQuestion = false; backButtonClick()"
+></map-question>
+<app-notify-survey
+  *ngIf="isShowAssignSurvey"
+  [assignSurveyId]="assignSurveyId"
+  (backClick)="isShowAssignSurvey = false; backButtonClick()"
+  [isNotifyTpd]="isNotifyTpd"
+></app-notify-survey>
+
+<clone-survey
+  *ngIf="isShowCloneSurvey"
+  [cloneSurveyArr]="cloneSurveyArr"
+  (backClick)="isShowCloneSurvey = false; backButtonClick()"
+></clone-survey>
+
+<view-survey
+  *ngIf="isShowViewSurvey"
+  [assignSurveyId]="assignSurveyId"
+  (backClick)="isShowViewSurvey = false; backButtonClick()"
+></view-survey>
+
+<app-notify-popup
+  *ngIf="showProcedurePopup"
+  (popup)="callProcedureApi($event)"
+  [modalText]="modalProcedureText"
+  [modelHeadingText]="modelProcedureHeadingText"
+></app-notify-popup>

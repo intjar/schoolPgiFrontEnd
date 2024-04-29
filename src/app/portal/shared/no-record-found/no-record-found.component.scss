@@ -1,0 +1,13 @@
+@import '../../../../assets/scss/variables';
+
+.no-data-found {
+    text-align: center;
+    p {
+        font-size: 0.75em;
+        font-weight: bold;
+        letter-spacing: 0.06px;
+        color: $grey_19;
+        margin: 0;
+        padding: 10px 0;
+    }
+}

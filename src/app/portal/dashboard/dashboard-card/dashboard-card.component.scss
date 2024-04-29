@@ -1,0 +1,153 @@
+@import '../../../../assets/scss/variables';
+
+.dashboard-card {
+    box-shadow: inset 0px 0px 6px #00000029, 0px 0px 14px #0000000D;
+    border-radius: 8px;
+    background-position: bottom right;
+    background-repeat: no-repeat;
+    height: 100%;
+    &.card-org-bg{
+        background-image: url('../../../../assets/images/card-org-bg.png');
+    }
+    &.card-blue-bg{
+        background-image: url('../../../../assets/images/card-blue-bg.png');
+    }
+    &.card-green-bg{
+        background-image: url('../../../../assets/images/card-green-bg.png');
+    }
+    &.card-purple-bg{
+        background-image: url('../../../../assets/images/card-purple-bg.png');
+    }
+    &-wrap{
+        .heading-black {
+            font-size: 1.25em;
+        } 
+    }
+    &-head {
+        padding: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .content{
+            &-left{
+                display: flex;
+                align-items: center;
+                .card-icon {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 5px;
+                    margin-right: 10px;
+                    border-radius: 50%;
+                    width: 40px;
+                    height: 40px;
+                    &-purple{
+                        background: $light-purple-bg;
+                    }
+                    &-red{
+                        background: $light-red-bg;
+                    }
+                    &-green{
+                        background: $light-green-bg;
+                    }
+                    &-org{
+                        background: $light-orange-bg;
+                    }
+                    &-blue{
+                        background: $light-blue-bg;
+                    }
+                    img{
+                        height: 20px;
+                    }
+                }
+                .heading {
+                    font-size: 1.25em;
+                    font-weight: 500;
+                    font-family: "Brandon Grotesque";
+                    letter-spacing: 0px;
+                    color: $black;
+                    margin: 0;
+                    line-height: 1.5;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical;
+                    white-space: normal;
+                    overflow: hidden;
+                    
+                    @media (max-width:1360px) {
+                        font-size: 1.125em;
+                    }
+                }
+            }
+            &-right{
+                .total-number{
+                    font-size: 1.125em;
+                    font-weight: bold;
+                    line-height: 1.2;
+                    color: $black;
+                    margin: 0;
+                }
+            }
+        }
+        
+        .content-right{
+            .total-number{
+                font-size: 1.125em;
+                font-weight: bold;
+                line-height: 1.2;
+                color: $black;
+                margin: 0;
+            }
+        }
+    }
+    &-body{
+        border-top: 0.5px solid rgb(171, 171, 171, 0.5);
+        .title {
+            font-size: 0.875em;
+            line-height: 18px;
+            letter-spacing: 0px;
+            color: $black;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            white-space: normal;
+            overflow: hidden;
+            @media (max-width:1360px) {
+                font-size: 0.75em;
+            }
+        }
+        .number {
+            font-size: 1.5em;
+            font-family: "Brandon Grotesque";
+            font-weight: bold;
+            line-height: 1.2;
+            color: $black;
+            margin: 0;
+            @media (max-width:1360px) {
+                font-size: 1.25em;
+            }
+        }
+        .card-list{
+            ul {
+                margin: 0;
+                display: flex;
+                align-items: center;
+                padding: 15px;
+                justify-content: center;
+                @media (max-width:1360px) {
+                    padding: 15px;
+                }
+                li {
+                    text-align: center;
+                    padding: 0 15px;
+                }
+            }
+        }
+    }
+    &-active-survey{
+        .dashboard-card-head{
+            border-bottom: none;
+            padding: 15px;
+        }
+    }
+}

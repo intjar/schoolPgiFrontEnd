@@ -1,0 +1,115 @@
+@import '../../../assets/scss/variables';
+
+.notification{
+    &-tab {
+        border: 1px solid $grey_10;
+        border-radius: 14px;
+        padding: 0 20px;
+        .nav{
+            &-tabs {
+                padding: 15px;
+                border-bottom: 1px solid rgba(171, 171, 171, 0.5);
+            }
+            &-link {
+                letter-spacing: 0px;
+                color: $black;
+                font-size: 0.875em;
+                font-weight: 500;
+                border: 1px solid transparent;
+                padding: 2px 10px;
+                margin-right: 10px;
+                position: relative;
+                &.active {
+                    border-radius: 4px;
+                    background-color: $light_brown;
+                    border: 1px solid transparent;
+                }
+                &:hover {
+                    border: 1px solid transparent;
+                }
+                .counter {
+                    position: absolute;
+                    top: -8px;
+                    right: -2px;
+                    border: 0.5px solid $white;
+                    border-radius: 50%;
+                    background: $orange;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    letter-spacing: 0px;
+                    color: $white;
+                    font-size: 0.75em;
+                    font-weight: 500;
+                    padding: 8px;
+                    width: 15px;
+                    height: 15px;
+                }
+            }
+        }
+    }
+    &-content{
+        ul {
+            list-style: none;
+            padding: 0;
+            li {
+                padding: 10px 15px;
+                border-bottom: 1px solid rgba(171, 171, 171, 0.5);
+                &.readable {
+                    background: $white;
+                }
+                
+                &.unreadable {
+                    background: $grey-background;
+                }
+                .user{
+                    &-avatar{
+                        position: relative;
+                        img {
+                            height: 40px;
+                        }
+                        .active{
+                            position: absolute;
+                            background: $green;
+                            display: block;
+                            width: 12px;
+                            height: 12px;
+                            border-radius: 50%;
+                            top: 0;
+                            left: 0;
+                        }
+                    }
+                    &-detail{
+                        margin: 0;
+                        line-height: 1.2;
+                        .time {
+                            letter-spacing: 0px;
+                            color: $grey_9;
+                            font-size: 0.75em;
+                            display: block;
+                            margin-top: 5px;
+                        }
+                    }
+                    &-name {
+                        letter-spacing: 0px;
+                        color: $black;
+                        margin: 0;
+                        font-size: 0.813em;
+                        font-weight: bold;
+                    }
+                }
+                
+            }
+        }
+
+        button{
+
+            background: transparent;
+            border: none;
+
+            &::after{
+                display: none;
+            }
+        }
+    }
+}

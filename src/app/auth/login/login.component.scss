@@ -1,0 +1,12 @@
+@import '../../../assets/scss/variables';
+
+
+.btn-wrap{
+  button:disabled{
+    background-color: $disableBtn;
+    &:hover{
+      background-color: $disableBtn;
+    }
+  }
+
+}

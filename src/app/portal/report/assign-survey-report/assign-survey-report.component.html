@@ -1,0 +1,310 @@
+<div class="report-wrap">
+  <div class="container-fluid p-4">
+    <div class="row">
+      <div class="col-md-12">
+        <app-breadcrumb [breadcrums]="breadcrums"></app-breadcrumb>
+      </div>
+      <div class="col-md-12 my-4">
+        <div class="card-wrap">
+          <div class="card-table m-0">
+            <div class="card-table-top">
+              <div class="common-form">
+                <div class="row g-3">
+                  <div class="col-md-12 d-flex align-items-center justify-content-end">
+                    <div class="export-wrap">
+                      <div class="btn-export me-3">Export</div>
+                      <button class="btn-adobe me-3" (click)="printData('pdf')" [disabled]="dataSource.filteredData.length == 0">
+                        <img src="assets/images/adobe.svg" alt="adobe" class="img-fluid" />
+                      </button>
+                      <button class="btn-xml" (click)="printData('csv')" [disabled]="dataSource.filteredData.length == 0">
+                        <img src="assets/images/xml.svg" alt="xml" class="img-fluid" />
+                      </button>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <ng-select placeholder="Select Level" (change)="applyFilter($event, 'level')" name="dataLevelModel"
+                      [(ngModel)]="dataLevelModel">
+                      <ng-option *ngFor="let level of dataEntryLevelArr"
+                        [value]="level">{{level?.level_name}}</ng-option>
+
+                      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                        <div class="ng-value" *ngFor="let item of items | slice:0:1 ;let j = index;">
+                          <span class="ng-value-label" title="{{items[j]?.level_name}}">{{items[j]?.level_name}}</span>
+                          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 1">
+                          <span class="ng-value-label" title="{{showTitle(items,'dataentrylevel')}}">+ {{items.length -
+                            1}} more</span>
+                        </div>
+                      </ng-template>
+
+                    </ng-select>
+                  </div>
+                  <div class="col-md-3">
+                    <ng-select placeholder="Select Instance" [(ngModel)]="instanceModel" name="instanceModel">
+                      <ng-option *ngFor="let inst of instanceArr" [value]="inst">{{inst?.instanceName}}</ng-option>
+                      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                        <div class="ng-value" *ngFor="let item of items | slice:0:1 ;let j = index;">
+                          <span class="ng-value-label"
+                            title="{{items[j]?.instanceName}}">{{items[j]?.instanceName}}</span>
+                          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 1">
+                          <span class="ng-value-label" title="{{showTitle(items,'instance')}}">+ {{items.length - 1}}
+                            more</span>
+                        </div>
+                      </ng-template>
+
+                    </ng-select>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="search-wrap d-flex align-items-center">
+                      <div class="input-group">
+                        <span class="material-icons-round input-group-text">
+                          search
+                        </span>
+                        <input type="text" class="form-control" [(ngModel)]="searchValue"
+                          (keyup.enter)="filterData('filter')" placeholder="Enter Keyword" [minlength]="3" />
+                      </div>
+                      <div class="btn-wrap">
+                        <button class="btn-org ms-3" (click)="filterData('filter')">
+                          Search
+                        </button>
+                        <button class="btn-org-bdr ms-3" (click)="filterData('clear')">
+                          Clear
+                        </button>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="common-table">
+              <div class="table-container table-responsive">
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                  <!--- Note that these columns can be defined in any order.
+                        The actual rendered columns are set as a property on the row definition" -->
+
+                  <!-- Position Column -->
+                  <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef [style.display]="'none'">S.No</th>
+                    <td mat-cell *matCellDef="let element; let i = index">
+                      {{ viewtable.pageIndex * viewtable.pageSize + (i + 1) }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="survey_name">
+                    <th mat-header-cell *matHeaderCellDef [style.display]="'none'">Survey Name</th>
+                    <ng-container *matCellDef="let element">
+                      <td mat-cell  [attr.rowspan]="element?.survey_name_rowspan" *ngIf="element?.survey_name_rowspan > 0">
+                        <button class="td-link" (click)="surveyNameClick(element?.survey_id)">{{element.survey_name}}</button>
+                      </td>
+                    </ng-container>
+                  </ng-container>
+
+                  <!-- Level Name Column -->
+                  <ng-container matColumnDef="level_name">
+                    <th mat-header-cell *matHeaderCellDef [style.display]="'none'">Level Name</th>
+                    <td mat-cell *matCellDef="let element">
+                      {{element.level_name}}
+                    </td>
+                  </ng-container>
+
+                  <!-- Assigned Column -->
+                  <ng-container matColumnDef="de_assigned">
+                    <th mat-header-cell *matHeaderCellDef>Assigned</th>
+                    <td mat-cell *matCellDef="let element">{{element.de_assigned}}</td>
+                  </ng-container>
+
+                  <!-- Symbol Column -->
+                  <ng-container matColumnDef="de_pending">
+                    <th mat-header-cell *matHeaderCellDef>Pending</th>
+                    <td mat-cell *matCellDef="let element">{{element.de_pending}}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="de_in_progress">
+                    <th mat-header-cell *matHeaderCellDef> In Progress </th>
+                    <td mat-cell *matCellDef="let element">{{element?.de_in_progress}}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="de_submitted">
+                    <th mat-header-cell *matHeaderCellDef> Submitted </th>
+                    <td mat-cell *matCellDef="let element">{{element?.de_submitted}}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="review_assigned">
+                    <th mat-header-cell *matHeaderCellDef>Assigned</th>
+                    <td mat-cell *matCellDef="let element">{{element?.review_assigned}}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="review_pending">
+                    <th mat-header-cell *matHeaderCellDef> Pending </th>
+                    <td mat-cell *matCellDef="let element">{{element?.review_pending}}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="reviewed">
+                    <th mat-header-cell *matHeaderCellDef> Reviewed </th>
+                    <td mat-cell *matCellDef="let element">{{element?.reviewed}}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="approve_assigned">
+                    <th mat-header-cell *matHeaderCellDef> Assigned </th>
+                    <td mat-cell *matCellDef="let element">{{element?.approve_assigned}}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="approve_pending">
+                    <th mat-header-cell *matHeaderCellDef> Pending </th>
+                    <td mat-cell *matCellDef="let element">{{element?.approve_pending}}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="approved">
+                    <th mat-header-cell *matHeaderCellDef> Approved </th>
+                    <td mat-cell *matCellDef="let element">{{element?.approved}}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="1">
+                    <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2">S.No</th>
+                  </ng-container>
+                  <ng-container matColumnDef="2">
+                    <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2">Survey Name</th>
+                  </ng-container>
+                  <ng-container matColumnDef="3">
+                    <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2">Level Name</th>
+                  </ng-container>
+                  <ng-container matColumnDef="4">
+                    <th mat-header-cell *matHeaderCellDef [attr.colspan]="4" class="center">
+                      Data Entry
+                    </th>
+                  </ng-container>
+                  <ng-container matColumnDef="5">
+                    <th mat-header-cell *matHeaderCellDef [attr.colspan]="3" class="center">
+                      Reviewer
+                    </th>
+                  </ng-container>
+                  <ng-container matColumnDef="6">
+                    <th mat-header-cell *matHeaderCellDef [attr.colspan]="3" class="center">
+                      Approver
+                    </th>
+                  </ng-container>
+                  <ng-container matColumnDef="noRecord">
+                    <td class="text-center" mat-footer-cell [attr.colspan]="10" *matFooterCellDef>
+                      <app-no-record-found [height]="'400px'"></app-no-record-found>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="loading">
+                    <td class="text-center" mat-footer-cell [attr.colspan]="10" *matFooterCellDef>
+                      <app-loader [height]="'400px'"></app-loader>
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="['1','2','3','4','5','6']"></tr>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  <tr mat-footer-row [hidden]="!isLoading" *matFooterRowDef="['loading']"></tr>
+                  <tr mat-footer-row [hidden]="isLoading || dataSource.filteredData.length > 0"
+                    *matFooterRowDef="['noRecord']"></tr>
+                </table>
+              </div>
+              <mat-paginator [pageSize]="10" [showFirstLastButtons]="true" [length]="totalCount"
+                [pageIndex]="pageNumber" (page)="handlePageEvent($event)" [hidePageSize]="true">
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-----------------------------PDF Start Here=------------------------------------->
+<ng-container *ngIf="pdfOpen">
+  <div class="padding-main-divcls" id="print-pdf">
+    <table class="table table-bordered">
+      <thead>
+        <tr colspan="40">
+          <th colspan="40">
+            <header style="height: 80px">
+              <div class="d-flex header-height justify-content-between align-items-center">
+                <img src="assets/images/ministry-logo.svg" [height]="50" />
+                <img src="assets/images/pgi-logo.svg" [height]="50" />
+              </div>
+            </header>
+          </th>
+        </tr>
+        <tr colspan="40">
+          <th colspan="40">
+            <div class="d-flex">
+              <ng-container *ngFor="let breadcrums of breadcrums.links; let last = last">
+                <span class="bread-span">{{ breadcrums?.link }} {{ !last ? "/" : "" }}
+                </span>
+              </ng-container>
+            </div>
+          </th>
+        </tr>
+        <tr class="header-table">
+          <thead>
+            <tr>
+              <th rowspan="2" class="text-start">S.No.</th>
+              <th rowspan="2">Assigned Survey</th>
+              <th rowspan="2">Level Name</th>
+              <th colspan="4">Data Entry - School Level</th>
+              <th colspan="3">Reviewer - Block, District</th>
+              <th colspan="4">Approver - National</th>
+            </tr>
+            <tr>
+              <th class="text-start">Assigned</th>
+              <th>Pending</th>
+              <th>In progress</th>
+              <th>Submitted</th>
+              <th>Assigned</th>
+              <th>Pending</th>
+              <th>Reviewed</th>
+              <th>Assigned</th>
+              <th>Pending</th>
+              <th>Approved</th>
+            </tr>
+          </thead>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let items of printDataSource; let i = index">
+          <ng-container>
+            <tr>
+              <td>{{ i + 1 }}</td>
+              <td [attr.rowspan]="items?.survey_name_rowspan" *ngIf="items?.survey_name_rowspan > 0" style="
+                vertical-align: middle;">
+                <span style="
+                  display: block;
+                  word-break: break-all;
+                  max-width: 200px;
+                  height: 100%; 
+                ">{{ items?.survey_name }}</span>
+              </td>
+              <td>
+                {{ items?.level_name }}
+              </td>
+              <td>{{ items?.de_assigned }}</td>
+              <td>{{ items?.de_pending }}</td>
+              <td>{{ items?.de_in_progress }}</td>
+              <td>{{ items?.de_submitted }}</td>
+              <td>{{ items?.review_assigned }}</td>
+              <td>{{ items?.review_pending }}</td>
+              <td>{{ items?.reviewed }}</td>
+              <td>{{ items?.approve_assigned }}</td>
+              <td>{{ items?.approve_pending }}</td>
+              <td>{{ items?.approved }}</td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
+<ng-container *ngIf="isGenerating">
+  <div class="position-fixed full-page-loader h-100 d-flex justify-content-center align-items-center top-0 start-0">
+    <app-loader [height]="'400px'"></app-loader>
+  </div>
+</ng-container>

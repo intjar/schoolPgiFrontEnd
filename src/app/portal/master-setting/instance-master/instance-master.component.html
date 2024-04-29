@@ -1,0 +1,980 @@
+<div class="position-relative">
+  <div
+    class="loader d-flex justify-content-center align-items-center position-absolute"
+    *ngIf="isLoader"
+  >
+    <app-loader [height]="'600px'"></app-loader>
+  </div>
+  <div class="container-fluid p-lg-4 p-3">
+    <div class="row">
+      <div class="col-md-12">
+        <app-breadcrumb [breadcrums]="breadcrums"></app-breadcrumb>
+        <!-- <div class="top-wrap">
+          <h2 class="heading-grey">Master Setting</h2>
+          <div class="breadcrumb-wrap">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a>Dashboard</a></li>
+                <li class="breadcrumb-item"><a>Master Setting</a></li>
+                <li class="breadcrumb-item active" aria-current="page">
+                  Instance Master
+                </li>
+              </ol>
+            </nav>
+          </div>
+        </div> -->
+      </div>
+      <div class="col-md-12 my-4">
+        <div class="card-wrap" id="focusForm">
+          <div
+            class="card-form"
+            *appShowRoleBaseActions="[
+              'Instance Master',
+              ['create', 'edit', 'view']
+            ]"
+          >
+            <h3 class="title-grey">
+              {{ instanceMSG }}
+            </h3>
+            <div class="common-form py-lg-4 py-3">
+              <form #f="ngForm" [formGroup]="instanceForm">
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label class="form-label"
+                        >Parent Level <span class="char-red">*</span></label
+                      >
+                      <ng-select
+                        placeholder="Select Parent Level"
+                        formControlName="parentLevel"
+                        (change)="onChangeParentLevel($event)"
+                      >
+                        <ng-container *ngFor="let parent of levelMasterData">
+                          <ng-option
+                            *ngIf="parent?.level_name"
+                            [value]="parent"
+                            >{{ parent?.level_name }}</ng-option
+                          >
+                        </ng-container>
+                      </ng-select>
+                      <div class="info-wrap mt-2">
+                        <img
+                          src="assets/images/info.svg"
+                          alt="info"
+                          class="img-fluid"
+                        />
+                        <p>Instance Level</p>
+                      </div>
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="isSubmitted && (instanceForm.controls['parentLevel']?.errors?.['required'])"
+                      >
+                        Please Select Parent Level
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label class="form-label"
+                        >Parent Instance <span class="char-red">*</span></label
+                      >
+                      <ng-select
+                        placeholder="Select Parent Instance"
+                        formControlName="parentInstance"
+                        (change)="onChangeParentInstance($event)"
+                      >
+                        <ng-option
+                          *ngFor="let PInstance of parentInstanceArr"
+                          [value]="PInstance"
+                          >{{ PInstance?.instance }}</ng-option
+                        >
+                      </ng-select>
+                      <div class="info-wrap mt-2">
+                        <img
+                          src="assets/images/info.svg"
+                          alt="info"
+                          class="img-fluid"
+                        />
+                        <p>State-District-Block (Eg:- UP-Lucknow-Chinhat)</p>
+                      </div>
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="isSubmitted && (instanceForm.controls['parentInstance']?.errors?.['required'] )"
+                      >
+                        Please Select Parent Instance
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label class="form-label"
+                        >Instance Level <span class="char-red">*</span></label
+                      >
+                      <ng-select
+                        placeholder="Select Instance Level"
+                        formControlName="instanceLevel"
+                        (change)="onChangeInstanceLevel($event)"
+                      >
+                        <ng-option
+                          *ngFor="let instance of instanceLevelArr"
+                          [value]="instance"
+                          >{{ instance?.level_name }}</ng-option
+                        >
+                      </ng-select>
+                      <div class="info-wrap mt-2">
+                        <img
+                          src="assets/images/info.svg"
+                          alt="info"
+                          class="img-fluid"
+                        />
+                        <p>Instance Level</p>
+                      </div>
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="isSubmitted && (instanceForm.controls['instanceLevel']?.errors?.['required'])"
+                      >
+                        Please Select Instance Level
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label class="form-label"
+                        >Instance Name <span class="char-red">*</span></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Enter Instance Name"
+                        formControlName="instanceName"
+                        alphaNumericSearch
+                        maxlength="100"
+                        minlength="3"
+                      />
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="isSubmitted && (instanceForm.controls['instanceName']?.errors?.['required'] || this.instanceForm?.get('instanceName')?.value?.trim().length == 0)"
+                      >
+                        Please Enter Instance Name
+                      </div>
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="instanceForm?.get('instanceName')?.errors?.['invalidInput']"
+                      >
+                        Please Enter Valid Instance Name
+                      </div>
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="instanceForm?.get('instanceName')?.errors?.['minlength']"
+                      >
+                        Minimum length should be 3
+                      </div>
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="instanceForm?.get('instanceName')?.errors?.['maxlength']"
+                      >
+                        Maximum length should be 100
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2">
+                    <div class="mb-3">
+                      <label class="form-label"
+                        >Code<span class="char-red">*</span></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Enter Code"
+                        formControlName="code"
+                        OnlyNumber
+                        maxlength="6"
+                        minlength="3"
+                      />
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="isSubmitted && instanceForm.controls['code']?.errors?.['required'] "
+                      >
+                        Please Enter Code
+                      </div>
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="instanceForm?.get('code')?.errors?.['minlength']"
+                      >
+                        Minimum length should be 3
+                      </div>
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="instanceForm?.get('code')?.errors?.['maxlength']"
+                      >
+                        Maximum length should be 6
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2">
+                    <div class="mb-3">
+                      <label class="form-label"
+                        >Status <span class="char-red">*</span></label
+                      >
+                      <ng-select
+                        formControlName="status"
+                        placeholder="Select Status"
+                      >
+                        <ng-option
+                          *ngFor="let val of statusValue"
+                          [value]="val"
+                        >
+                          {{ val }}
+                        </ng-option>
+                      </ng-select>
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="isSubmitted && instanceForm.controls['status']?.errors?.['required'] "
+                      >
+                        Please Select Status
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    class="col-md-4"
+                    *appShowRoleBaseActions="[
+                      'Instance Master',
+                      ['create', 'edit']
+                    ]"
+                  >
+                    <div class="d-flex justify-content-end">
+                      <div class="btn-wrap mt-30 btn-wrap-disable">
+                        <ng-container *ngIf="!isViewClick">
+                          <ng-container *ngIf="isShowButton">
+                            <ng-container
+                              *appShowRoleBaseActions="[
+                                'Instance Master',
+                                'create'
+                              ]"
+                            >
+                              <button
+                                class="btn-org me-3"
+                                (click)="
+                                  onSubmit(isShowButton ? 'Save' : 'Update')
+                                "
+                                [disabled]="instanceForm.invalid"
+                              >
+                                <div
+                                  class="d-flex justify-content-center align-items-center"
+                                >
+                                  <div
+                                    class="spinner-border text-light me-2"
+                                    role="status"
+                                    *ngIf="updating"
+                                  ></div>
+                                  <span>
+                                    {{ isShowButton ? "Save" : "Update" }}</span
+                                  >
+                                </div>
+                              </button>
+                              <button class="btn-org-bdr" (click)="onClear()">
+                                Reset
+                              </button>
+                            </ng-container>
+                          </ng-container>
+                          <ng-container *ngIf="!isShowButton">
+                            <ng-container
+                              *appShowRoleBaseActions="[
+                                'Instance Master',
+                                'edit'
+                              ]"
+                            >
+                              <button
+                                class="btn-org me-3"
+                                (click)="
+                                  onSubmit(isShowButton ? 'Save' : 'Update')
+                                "
+                                [disabled]="instanceForm.invalid"
+                              >
+                                <div
+                                  class="d-flex justify-content-center align-items-center"
+                                >
+                                  <div
+                                    class="spinner-border text-light me-2"
+                                    role="status"
+                                    *ngIf="updating"
+                                  ></div>
+                                  <span>
+                                    {{ isShowButton ? "Save" : "Update" }}</span
+                                  >
+                                </div>
+                              </button>
+                              <button class="btn-org-bdr" (click)="onClear()">
+                                Reset
+                              </button>
+                            </ng-container>
+                          </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="isViewClick">
+                          <button
+                            type="button"
+                            class="btn-org-bdr"
+                            (click)="onClear()"
+                            *appShowRoleBaseActions="[
+                              'Instance Master',
+                              'view'
+                            ]"
+                          >
+                            Close
+                          </button>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="card-form form-margin">
+            <h3 class="title-grey">
+              Bulk File Upload
+            </h3>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="mb-lg-0 mb-md-3">
+                  <label class="form-label font-size"
+                    >Download sample format file <span class="char-red">*</span></label
+                  >
+                  <div class="upload-wrap">
+                    <div class="btn-wrap" (click)="downloadUserFormat()">
+                      <div class="btn-org btn-upload"
+                      >
+                        <img
+                          class="me-2 img-fluid"
+                          src="assets/images/download.svg"
+                          alt="download-white"
+                        />
+                        <label>Download File</label>
+                      </div>
+                    </div>
+                    <p class="p-0 ms-2">
+                      Download sample format file for adding instances*
+                    </p>
+                  </div>
+                  <!-- <div
+                    *ngFor="let file of uploadArr; let i = index"
+                    class="file-name-wrap"
+                  >
+                    <span class="file-name-preview" [title]="file.name">{{
+                      file.name
+                    }}</span>
+                    <button
+                      class="btn-remove"
+                      type="button"
+                      (click)="removefile(i)"
+                    >
+                      <img src="assets/images/remove.svg" alt="remove" />
+                    </button>
+                  </div> -->
+                </div>
+              </div>
+  
+              <div class="col-md-6">
+                <div class="mb-lg-0 mb-md-3">
+                  <label for="file" class="form-label font-size"
+                    >Upload File <span class="char-red">*</span></label
+                  >
+                  <div class="upload-wrap">
+                    <button class="btn-org me-3 pad-0" (click)="
+                                        isOpenModal = true;
+                                        isSelectedFile = true;
+                                        uploadArr = []
+                                      ">
+                      <div class="btn-wrap">
+                        <div class="btn-org btn-upload">
+                          <img class="me-2 img-fluid" src="assets/images/download-white.svg" alt="download-white" />
+                          <label>Upload</label>
+                        </div>
+                      </div>
+                    </button>
+                    <!-- <input
+                      type="file"
+                      hidden=""
+                      class="form-control"
+                      id="file"
+                      accept="image/jpeg,image/jpg ,image/png,.xls,.xlsx,.pdf,"
+                      #file
+                      
+                      (click)="onChange($event)"
+                      
+                    /> -->
+  
+                    <!-- (change)="filePreview()" -->
+                    <p class="p-0 ms-2">
+                      Maximum upload file size 200 MB, allowed files
+                      XLS,JPG,JPEG,PNG,PDF *
+                    </p>
+                  </div>
+                  <!-- <div
+                    *ngFor="let file of uploadArr; let i = index"
+                    class="file-name-wrap"
+                  >
+                    <span class="file-name-preview" [title]="file.name">{{
+                      file.name
+                    }}</span>
+                    <button
+                      class="btn-remove"
+                      type="button"
+                      (click)="removefile(i)"
+                    >
+                      <img src="assets/images/remove.svg" alt="remove" />
+                    </button>
+                  </div> -->
+                </div>
+              </div>
+            </div>
+          
+          </div>
+          
+          <div
+            class="card-table"
+            *appShowRoleBaseActions="[
+              'Instance Master',
+              ['edit', 'view', 'delete']
+            ]"
+          >
+            <div class="card-table-top">
+              <div class="row">
+                <div class="col-md-7">
+                  <div class="common-form">
+                    <div class="row g-3">
+                      <div class="col-md-7">
+                        <div class="search-wrap">
+                          <div class="input-group">
+                            <span class="material-icons-round input-group-text">
+                              search
+                            </span>
+                            <!-- <input
+                              type="text"
+                              class="form-control"
+                              [(ngModel)]="searchFilter"
+                              (keyup)="applyFilter($event)"
+                              placeholder="Enter Keyword"
+                            /> -->
+                            <input
+                              type="text"
+                              class="form-control"
+                              [(ngModel)]="searchValue"
+                              (keyup.enter)="filterData('filter')"
+                              placeholder="Enter Keyword"
+                              [minlength]="3"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-auto">
+                        <div class="advance-filter">
+                          <div class="btn-wrap">
+                            <button
+                              class="btn-org"
+                              [disabled]="!searchValue"
+                              (click)="filterData('filter')"
+                            >
+                              Search
+                            </button>
+                            <button
+                              class="btn-org-bdr ms-3"
+                              (click)="filterData('clear')"
+                            >
+                              Clear
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- <div class="col-auto">
+                        <div class="advance-filter">
+                          <div class="btn-wrap">
+                            <button class="btn-org-bdr">Advance Filter</button>
+                          </div>
+                        </div>
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-5">
+                  <div class="view-wrap">
+                    <div class="row g-3 justify-content-end">
+                      <div class="col-auto">
+                        <div class="export-wrap">
+                          <div class="btn-export me-3">Export</div>
+                          <!-- <button class="btn-adobe me-3">
+                            <img
+                              src="assets/images/adobe.svg"
+                              alt="adobe"
+                              class="img-fluid"
+                            />
+                          </button>
+                          <button class="btn-xml" (click)="exportExcel()">
+                            <img
+                              src="assets/images/xml.svg"
+                              alt="xml"
+                              class="img-fluid"
+                            />
+                          </button> -->
+                          <button
+                            class="btn-adobe me-3"
+                            (click)="printData('pdf')"
+                          >
+                            <img
+                              src="assets/images/adobe.svg"
+                              alt="adobe"
+                              class="img-fluid"
+                            />
+                          </button>
+                          <button class="btn-xml" (click)="printData('csv')">
+                            <img
+                              src="assets/images/xml.svg"
+                              alt="xml"
+                              class="img-fluid"
+                            />
+                          </button>
+                        </div>
+                      </div>
+                      <!-- <div class="col-auto">
+                        <div class="btn-wrap">
+                          <button class="btn-org">View All</button>
+                        </div>
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="common-table">
+              <div class="table-container table-responsive">
+                <table
+                  class="table table-striped"
+                  matSort
+                  mat-table
+                  [dataSource]="dataSource"
+                >
+                  <ng-container matColumnDef="sn">
+                    <th mat-header-cell *matHeaderCellDef>S.No</th>
+                    <td mat-cell *matCellDef="let element; let i = index">
+                      {{ viewtable.pageIndex * viewtable.pageSize + (i + 1) }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="instance">
+                    <th mat-header-cell *matHeaderCellDef>Instance Name</th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.instance }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="level">
+                    <th mat-header-cell *matHeaderCellDef>Instance Level</th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.level }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="parentLevel">
+                    <th mat-header-cell *matHeaderCellDef>Parent Level</th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.parentLevel }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="parentInstance">
+                    <th mat-header-cell *matHeaderCellDef>Parent Instance</th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.parentInstance }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="instanceCode">
+                    <th mat-header-cell *matHeaderCellDef>Code</th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element?.instanceCode }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef>Status</th>
+                    <td mat-cell *matCellDef="let element">
+                      <div class="btn-wrap" *ngIf="element.status == true">
+                        <a class="table-btn table-btn-active">Active</a>
+                      </div>
+                      <div class="btn-wrap" *ngIf="element.status == false">
+                        <a class="table-btn table-btn-inactive">Inactive</a>
+                      </div>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef>Action</th>
+                    <td mat-cell *matCellDef="let element">
+                      <div class="btn-wrap">
+                        <button
+                          id="edit"
+                          class="me-3"
+                          (click)="
+                            edit(element, 'edit');
+                            scroll($event, 'commonScrollTo')
+                          "
+                          type="button"
+                          *appShowRoleBaseActions="['Instance Master', 'edit']"
+                        >
+                          <img
+                            src="assets/images/edit-user.svg"
+                            alt="icon"
+                            class="img-fluid"
+                          />
+                        </button>
+                        <button
+                          id="edit"
+                          class="me-3"
+                          (click)="
+                            edit(element, 'view');
+                            scroll($event, 'commonScrollTo')
+                          "
+                          type="button"
+                          *appShowRoleBaseActions="['Instance Master', 'view']"
+                        >
+                          <img
+                            src="assets/images/view-user.svg"
+                            alt="icon"
+                            class="img-fluid"
+                          />
+                        </button>
+                        <button
+                          id="remove"
+                          [disabled]="!element.status"
+                          (click)="remove(element)"
+                          type="button"
+                          *appShowRoleBaseActions="[
+                            'Instance Master',
+                            'delete'
+                          ]"
+                        >
+                          <img
+                            src="assets/images/remove.svg"
+                            alt="icon"
+                            class="img-fluid"
+                          />
+                        </button>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="noRecord">
+                    <td
+                      class="text-center"
+                      mat-footer-cell
+                      [attr.colspan]="8"
+                      *matFooterCellDef
+                    >
+                      <app-no-record-found
+                        [height]="'400px'"
+                      ></app-no-record-found>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="loading">
+                    <td
+                      class="text-center"
+                      mat-footer-cell
+                      [attr.colspan]="10"
+                      *matFooterCellDef
+                    >
+                      <app-loader [height]="'400px'"></app-loader>
+                    </td>
+                  </ng-container>
+                  <tr
+                    mat-header-row
+                    *matHeaderRowDef="displayedColumns; sticky: true"
+                  ></tr>
+                  <tr
+                    mat-row
+                    *matRowDef="let row; columns: displayedColumns"
+                  ></tr>
+                  <tr
+                    mat-footer-row
+                    [hidden]="!isLoading"
+                    *matFooterRowDef="['loading']"
+                  ></tr>
+                  <tr
+                    mat-footer-row
+                    [hidden]="isLoading || dataSource.filteredData.length > 0"
+                    *matFooterRowDef="['noRecord']"
+                  ></tr>
+                </table>
+              </div>
+              <!-- <mat-paginator
+                #viewtable
+                [pageSizeOptions]="[10, 20]"
+                hidePageSize="true"
+                aria-label="Select page of periodic elements"
+                showFirstLastButtons
+              >
+              </mat-paginator> -->
+
+              <mat-paginator
+                [pageSize]="10"
+                [hidePageSize]="true"
+                [hidden]="dataSource.filteredData.length == 0"
+                [showFirstLastButtons]="true"
+                [length]="totalCount"
+                [pageIndex]="pageNumber"
+                (page)="handlePageEvent($event)"
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-popup *ngIf="isShowPopup" (popup)="removeRecord($event)"></app-popup>
+
+<!-- <div class="alert" [class.visible]="isVisible">{{ msg }}</div> -->
+
+<!-----------------------------PDF Start Here=------------------------------------->
+<ng-container *ngIf="pdfOpen">
+  <div class="padding-main-divcls" id="print-pdf">
+    <table class="table table-bordered">
+      <thead>
+        <tr colspan="40">
+          <th colspan="40">
+            <header style="height: 80px">
+              <div
+                class="d-flex header-height justify-content-between align-items-center"
+              >
+                <img src="assets/images/ministry-logo.svg" [height]="50" />
+                <img src="assets/images/pgi-logo.svg" [height]="50" />
+              </div>
+            </header>
+          </th>
+        </tr>
+        <tr colspan="40">
+          <th colspan="40">
+            <div class="d-flex">
+              <ng-container
+                *ngFor="let breadcrums of breadcrums.links; let last = last"
+              >
+                <span class="bread-span"
+                  >{{ breadcrums?.link }} {{ !last ? "/" : "" }}
+                </span>
+              </ng-container>
+            </div>
+          </th>
+        </tr>
+        <tr class="header-table">
+          <ng-container>
+            <th>S.No</th>
+            <th>Instance Name</th>
+            <th>Instance Level</th>
+            <th>Parent Level</th>
+            <th>Parent Instance</th>
+            <th>Code</th>
+            <th>Status</th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let items of printDataSource; let i = index">
+          <tr>
+            <td>{{ i + 1 }}</td>
+            <td>{{ items?.instance }}</td>
+            <td>{{ items?.level }}</td>
+            <td>{{ items?.parentLevel }}</td>
+            <td>{{ items?.parentInstance }}</td>
+            <td>{{ items?.instanceCode }}</td>
+            <td>{{ items?.status ? "Active" : "Inactive" }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="isOpenModal">
+  <div class="modal common-modal fade show" tabindex="-1" role="dialog" id="uploadButtonModal"
+    aria-labelledby="uploadButtonModalLabel" aria-hidden="true" [ngStyle]="{ display: displayStyleForBulkUpload }">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Upload Data</h4>
+          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span class="material-icons-round">close</span>
+                </button> -->
+          <button type="button" class="btn-close" (click)="isOpenModal = false">
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="isSelectedFile" class="upload-container p-3 mb-2">
+            <div>
+              <button>
+                <img src="assets/images/upload-file.svg" alt="" />
+              </button>
+              <label for="file" class="btn-org ms-2">Browse File</label>
+            </div>
+            <input type="file" class="form-control" id="file" hidden #file (change)="selectFile($event)" />
+            <p class="mt-3 mb-0" style="color: #b8b5b5">
+              Maximum upload file size 25 MB, allowed files XLSX,XLS *
+            </p>
+          </div>
+          <div *ngIf="!isSelectedFile" class="file-name-wrap">
+            <span class="file-name-preview" [title]="uploadArr[0]?.name">{{
+              uploadArr[0]?.name
+              }}</span>
+            <button class="btn-remove" type="button" (click)="removefile()">
+              <img src="assets/images/remove.svg" alt="remove" />
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-end">
+          <div class="btn-wrap m-0">
+            <button type="button" class="btn-org me-3" (click)="uploadFile($event.target, 'file')">
+              Submit
+            </button>
+            <!-- <button type="button" class="btn-org-bdr" data-bs-dismiss="modal">Cancel</button> -->
+            <button type="button" class="btn-org-bdr" (click)="isOpenModal = false">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
+</ng-container>
+
+
+<ng-container *ngIf="isOpenModal2">
+  <div class="modal common-modal fade show" tabindex="-1" role="dialog" id="dd" aria-labelledby="uploadButtonModalLabel"
+    aria-hidden="true" [ngStyle]="{ display: displayStyleForBulkUpload }">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Upload Data</h4>
+          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span class="material-icons-round">close</span>
+                </button> -->
+          <button type="button" class="btn-close" (click)="isOpenModal2 = false;">
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- <div class="row align-items-center">
+            <div class="col-md-12">
+              <h6 class="modal-title-black">
+                Survey Id : {{result?.result_head?.[0].survey_id
+                }}<span class="seprator"></span>Survey Name :
+                {{result?.result_head?.[0]?.survey_name}}
+              </h6>
+            </div>
+          </div> -->
+
+          <div class="common-table">
+            <div class="table-container table-responsive">
+              <table class="table table-striped" mat-table [dataSource]="bulkUploadDataSource">
+                <ng-container matColumnDef="sn">
+                  <th mat-header-cell *matHeaderCellDef>S.No</th>
+                  <!-- <td mat-cell *matCellDef="let element; let i = index;"> {{ (viewtable?.pageIndex * viewtable?.pageSize)+
+                                    (i + 1) }} </td> -->
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ i + 1 }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="instance">
+                  <th mat-header-cell *matHeaderCellDef>Instance Name</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.instance }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="level">
+                  <th mat-header-cell *matHeaderCellDef>Instance Level</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.level }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="parentLevel">
+                  <th mat-header-cell *matHeaderCellDef>Parent Level</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.parentLevel }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="parentInstance">
+                  <th mat-header-cell *matHeaderCellDef>Parent Instance</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.parentInstance }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="instanceCode">
+                  <th mat-header-cell *matHeaderCellDef>Code</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.instanceCode }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap" *ngIf="element.status == true">
+                      <a class="table-btn table-btn-active">Active</a>
+                    </div>
+                    <div class="btn-wrap" *ngIf="element.status == false">
+                      <a class="table-btn table-btn-inactive">Inactive</a>
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="Errors">
+                  <th mat-header-cell *matHeaderCellDef>Errors</th>
+                  <td mat-cell *matCellDef="let element" class="text-danger">
+                    {{ element?.error }}
+                  </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="noRecord">
+                  <td class="text-center" mat-footer-cell [attr.colspan]="10" *matFooterCellDef>
+                    <app-no-record-found [height]="'400px'"></app-no-record-found>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="loading">
+                  <td class="text-center" mat-footer-cell [attr.colspan]="10" *matFooterCellDef>
+                    <app-loader [height]="'600px'"></app-loader>
+                  </td>
+                </ng-container> -->
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsForUploadExcelModal; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsForUploadExcelModal"></tr>
+                <!-- <tr mat-footer-row [hidden]="!isLoading" *matFooterRowDef="['loading']"></tr>
+                <tr mat-footer-row [hidden]="isLoading || bulkUploadDataSource.filteredData.length > 0"
+                  *matFooterRowDef="['noRecord']"></tr> -->
+              </table>
+            </div>
+            <!-- <mat-paginator [pageSize]="10" [hidePageSize]="true" [hidden]="dataSource.filteredData.length == 0"
+                        [showFirstLastButtons]="true" [length]="totalCount" [pageIndex]="pageNumber" (page)="handlePageEvent($event)">
+                    </mat-paginator>    -->
+          </div>
+        </div>
+        <div class="modal-footer justify-content-end">
+          <div class="btn-wrap m-0 btn-wrap-disable">
+            <!-- <button type="button" data-bs-dismiss="modal" class="btn-org me-3"
+                       (click)="uploadFile($event.target, 'table')">Submit</button> -->
+            <!-- <button type="button" class="btn-org-bdr" data-bs-dismiss="modal">Cancel</button> -->
+            <button type="button" class="btn-org me-3" [disabled]="isShowButton"
+              (click)="uploadFile($event, 'table')">
+              Submit
+            </button>
+            <button type="button" class="btn-org-bdr" (click)="isOpenModal2 = false;">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
+</ng-container>

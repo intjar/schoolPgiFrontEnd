@@ -1,0 +1,42 @@
+@import '../../../../assets/scss/variables';
+
+ol {
+  padding: 0 !important;
+
+  li {
+    list-style-type: none;
+  }
+}
+
+.file-name {
+  &-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid $grey_29;
+    border-radius: 3px;
+    padding: 10px;
+  }
+
+  &-preview {
+    letter-spacing: 0px;
+    color: $black;
+    font-size: 0.875em;
+    font-weight: 600;
+    margin: 0 15px 0 0;
+    word-break: break-all;
+  }
+}
+
+.modal-title-black {
+  font-size: 1em;
+  font-weight: 600;
+  letter-spacing: 0px;
+  margin: 0;
+  padding: 10px 0;
+  color: $grey_27;
+  .seprator {
+    border-right: 1px solid $grey_1;
+    margin: 0 15px;
+  }
+}

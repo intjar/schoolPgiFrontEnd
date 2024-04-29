@@ -1,0 +1,9 @@
+@import '../../../../assets/scss/variables';
+
+.btn-org{
+    &:disabled{
+        color: $white;
+        background-color: $grey_14;
+        border-color: $grey_14;
+    }
+}

@@ -1,0 +1,500 @@
+<div class="container-fluid p-4">
+  <div class="row">
+    <div class="col-md-12">
+      <!-- <div class="top-wrap">
+                <h2 class="heading-grey">
+                    Manage User
+                </h2>
+                <div class="breadcrumb-wrap">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a>Dashboard</a></li>
+                            <li class="breadcrumb-item"><a>Manage User</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Instance User Registration</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div> -->
+      <app-breadcrumb [breadcrums]="breadcrums"></app-breadcrumb>
+    </div>
+    <div class="col-md-12 my-4">
+      <div class="card-wrap" id="focusForm">
+        <div class="card-form" *appShowRoleBaseActions="[
+            'Instance User Registration',
+            ['create', 'edit', 'view']
+          ]">
+          <h3 class="title-grey">{{ useRegMSG }}</h3>
+          <div class="common-form py-4">
+            <form #f="ngForm" [formGroup]="childUserRegistrationForm">
+              <div class="row g-3">
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label">Name<span class="char-red">*</span></label>
+                    <input type="text" class="form-control" placeholder="Enter Name" formControlName="name"
+                      OnlyCharacter minlength="3" maxlength="50" />
+                    <div class="invalid-feedback"
+                      *ngIf="isSubmitted && (childUserRegistrationForm.controls['name']?.errors?.['required'] || this.childUserRegistrationForm?.get('name')?.value?.trim().length == 0)">
+                      Please Enter Name
+                    </div>
+                    <div class="invalid-feedback"
+                      *ngIf="(childUserRegistrationForm.get('name').touched || isSubmitted) && (childUserRegistrationForm.controls['name']?.errors?.['minlength'])">
+                      Please Enter Valid Name
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label">User Name<span class="char-red">*</span></label>
+                    <input type="text" class="form-control" placeholder="Enter User Name" formControlName="username"
+                      minlength="3" maxlength="50" appUsername />
+                    <div class="invalid-feedback"
+                      *ngIf=" isSubmitted && (childUserRegistrationForm.controls['username']?.errors?.['required'] || this.childUserRegistrationForm?.get('username')?.value?.trim().length == 0)">
+                      Please Enter User Name
+                    </div>
+                    <div class="invalid-feedback" *ngIf="
+                        childUserRegistrationForm.get('username').touched &&
+                        (childUserRegistrationForm.get('username').errors
+                          ?.username ||
+                          childUserRegistrationForm.get('username').errors
+                            ?.pattern ||
+                          childUserRegistrationForm.get('username').errors
+                            ?.minlength)
+                      ">
+                      Please Enter Valid User Name
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label">Email<span class="char-red">*</span></label>
+                    <input type="text" class="form-control" placeholder="Enter Email Id" formControlName="email"
+                      minlength="3" maxlength="50" appEmail (change)="differentPass($event)" />
+                    <div class="invalid-feedback"
+                      *ngIf="isSubmitted && (childUserRegistrationForm.controls['email']?.errors?.['required'] || this.childUserRegistrationForm?.get('email')?.value?.trim().length == 0)">
+                      Please Enter Email
+                    </div>
+                    <div class="invalid-feedback" *ngIf="error">
+                      Username and Email must be different
+                    </div>
+                    <div class="invalid-feedback" *ngIf="
+                        ((childUserRegistrationForm.get('email').invalid &&
+                            childUserRegistrationForm.get('email')?.value)) &&
+                        (childUserRegistrationForm.get('email').errors?.email ||
+                          childUserRegistrationForm.get('email').errors?.pattern ||
+                          childUserRegistrationForm.get('email').errors?.invalidInput ||
+                          childUserRegistrationForm.get('email').errors?.minlength) ||
+                          childUserRegistrationForm.get('email').touched &&
+                          childUserRegistrationForm.controls['email'].hasError('minlength')
+                      ">
+                      Email address is invalid
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label">Mobile Number<span class="char-red">*</span>
+                    </label>
+                    <input type="text" class="form-control" placeholder="Enter Mobile Number" formControlName="mobile"
+                      minlength="10" maxlength="10" oninput="if(!this.value.match('^[6-9][0-9]*$'))this.value='';" />
+                    <div class="invalid-feedback"
+                      *ngIf=" isSubmitted && (childUserRegistrationForm.controls['mobile']?.errors?.['required'])">
+                      Please Enter Mobile Number
+                    </div>
+                    <div class="invalid-feedback" *ngIf="
+                        childUserRegistrationForm.get('mobile').touched &&
+                        childUserRegistrationForm.controls['mobile'].hasError(
+                          'minlength'
+                        )
+                      ">
+                      Please Enter valid Mobile Number
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label">Assign Level <span class="char-red">*</span></label>
+                    <ng-select placeholder="Select Level" formControlName="assignLevel"
+                      (change)="onSelectAssignLevel($event)">
+                      <ng-option *ngFor="let level of levelDataArr" [value]="level">{{ level?.levelName }}</ng-option>
+                    </ng-select>
+                    <div class="invalid-feedback"
+                      *ngIf="isSubmitted  && (childUserRegistrationForm.controls['assignLevel']?.errors?.['required'])">
+                      Please Select Assign Level
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label">Select Instance<span class="char-red">*</span></label>
+                    <ng-select placeholder="Select Instance" formControlName="selectInstance"
+                      (change)="onSelectInstance($event)">
+                      <ng-option *ngFor="let inst of instanceDataArr" [value]="inst">{{ inst?.instance }}</ng-option>
+                    </ng-select>
+                    <div class="invalid-feedback"
+                      *ngIf=" isSubmitted  && (childUserRegistrationForm.controls['selectInstance']?.errors?.['required'])">
+                      Please Select Instance
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label">Assign Role<span class="char-red">*</span></label>
+                    <ng-select placeholder="Select Role" formControlName="assignRole"
+                      (change)="onSelectAssignRole($event)">
+                      <ng-option *ngFor="let role of roleDataArr" [value]="role">{{ role?.name }}</ng-option>
+                    </ng-select>
+                    <div class="invalid-feedback"
+                      *ngIf=" isSubmitted  && (childUserRegistrationForm.controls['assignRole']?.errors?.['required'])">
+                      Please Select Assign Role
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label">Status<span class="char-red">*</span></label>
+                    <ng-select placeholder="Select Status" formControlName="status">
+                      <ng-option *ngFor="let val of statusValue" [value]="val">{{ val }}</ng-option>
+                    </ng-select>
+                    <div class="invalid-feedback"
+                      *ngIf=" isSubmitted && childUserRegistrationForm.controls['status']?.errors?.['required'] ">
+                      Please Enter Status
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12" *appShowRoleBaseActions="[
+                    'Instance User Registration',
+                    ['create', 'edit']
+                  ]">
+                  <div class="d-flex justify-content-end">
+                    <div class="btn-wrap btn-wrap-disable">
+                      <ng-container *ngIf="!isViewClick">
+                        <ng-container *ngIf="isShowButton">
+                          <ng-container *appShowRoleBaseActions="[
+                              'Instance User Registration',
+                              'create'
+                            ]">
+                            <button class="btn-org me-3" (click)="
+                                onSubmit(isShowButton ? 'save' : 'update')
+                              " [disabled]="
+                                error ||
+                                childUserRegistrationForm.invalid ||
+                                disbaleButton
+                              ">
+                              <div class="d-flex justify-content-center align-items-center">
+                                <div class="spinner-border text-light me-2" role="status" *ngIf="disbaleButton"></div>
+                                <span>
+                                  {{ isShowButton ? "Save" : "Update" }}</span>
+                              </div>
+                            </button>
+                            <!-- <button *ngIf="!isShowButton" class="btn-org me-3" (click)="onSubmit('update')" [disabled]="disbaleButton">Update</button> -->
+                            <button type="button" class="btn-org-bdr" (click)="onCancle()">
+                              Reset
+                            </button>
+                          </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="!isShowButton">
+                          <ng-container *appShowRoleBaseActions="[
+                              'Instance User Registration',
+                              'edit'
+                            ]">
+                            <button class="btn-org me-3" (click)="
+                                onSubmit(isShowButton ? 'save' : 'update')
+                              " [disabled]="
+                                error ||
+                                childUserRegistrationForm.invalid ||
+                                disbaleButton
+                              ">
+                              <div class="d-flex justify-content-center align-items-center">
+                                <div class="spinner-border text-light me-2" role="status" *ngIf="disbaleButton"></div>
+                                <span>
+                                  {{ isShowButton ? "Save" : "Update" }}</span>
+                              </div>
+                            </button>
+                            <!-- <button *ngIf="!isShowButton" class="btn-org me-3" (click)="onSubmit('update')" [disabled]="disbaleButton">Update</button> -->
+                            <button type="button" class="btn-org-bdr" (click)="onCancle()">
+                              Reset
+                            </button>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                      <ng-container *ngIf="isViewClick">
+                        <button type="button" class="btn-org-bdr" (click)="onCancle()" *appShowRoleBaseActions="[
+                            'Instance User Registration',
+                            'view'
+                          ]">
+                          Close
+                        </button>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="card-table" *appShowRoleBaseActions="[
+            'Instance User Registration',
+            ['edit', 'view', 'delete']
+          ]">
+          <div class="card-table-top">
+            <div class="row">
+              <div class="col-md-7">
+                <div class="common-form">
+                  <div class="row g-3">
+                    <div class="col-md-7">
+                      <div class="search-wrap">
+                        <div class="input-group">
+                          <span class="material-icons-round input-group-text">
+                            search
+                          </span>
+                          <input type="text" class="form-control" [(ngModel)]="searchValue"
+                            (keyup.enter)="filterData('filter')" placeholder="Enter Keyword" [minlength]="3" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <div class="advance-filter">
+                        <div class="btn-wrap">
+                          <button class="btn-org" [disabled]="!searchValue" (click)="filterData('filter')">
+                            Search
+                          </button>
+                          <button class="btn-org-bdr ms-3" (click)="filterData('clear')">
+                            Clear
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="view-wrap">
+                  <div class="row g-3 justify-content-end">
+                    <div class="col-auto">
+                      <div class="export-wrap">
+                        <div class="btn-export me-3">Export</div>
+                        <button class="btn-adobe me-3" (click)="printData('pdf')" [disabled]="dataSource.filteredData.length == 0">
+                          <img src="assets/images/adobe.svg" alt="adobe" class="img-fluid" />
+                        </button>
+                        <button class="btn-xml" (click)="printData('csv')" [disabled]="dataSource.filteredData.length == 0">
+                          <img src="assets/images/xml.svg" alt="xml" class="img-fluid" />
+                        </button>
+                      </div>
+                    </div>
+                    <!-- <div class="col-auto">
+                                <div class="btn-wrap">
+                                  <button class="btn-org">View All</button>
+                                </div>
+                              </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="common-table">
+            <div class="table-container table-responsive">
+              <table class="table table-striped" mat-table [dataSource]="dataSource">
+                <ng-container matColumnDef="sn">
+                  <th mat-header-cell *matHeaderCellDef>S.No</th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ viewtable.pageIndex * viewtable.pageSize + (i + 1) }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>Name</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.name }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="username">
+                  <th mat-header-cell *matHeaderCellDef>User Name</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.userName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="email">
+                  <th mat-header-cell *matHeaderCellDef>Email ID</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.emailId }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="mobile">
+                  <th mat-header-cell *matHeaderCellDef>Mobile Number</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.number }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="instance">
+                  <th mat-header-cell *matHeaderCellDef>Instance</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.instance }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="role">
+                  <th mat-header-cell *matHeaderCellDef>Assign Role</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.role }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="level">
+                  <th mat-header-cell *matHeaderCellDef>Assign Level</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.level }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap" *ngIf="element.status == true">
+                      <a class="table-btn table-btn-active">Active</a>
+                    </div>
+                    <div class="btn-wrap" *ngIf="element.status == false">
+                      <a class="table-btn table-btn-inactive">Inactive</a>
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>Action</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap">
+                      <button id="edit" class="me-3" (click)="
+                          edit(element, 'edit');
+                          scroll($event, 'commonScrollTo')
+                        " [disabled]="!element?.isEditable" *appShowRoleBaseActions="[
+                          'Instance User Registration',
+                          'edit'
+                        ]">
+                        <img src="assets/images/edit-user.svg" alt="icon" class="img-fluid" />
+                      </button>
+                      <button id="view" class="me-3" (click)="
+                          edit(element, 'view');
+                          scroll($event, 'commonScrollTo')
+                        " *appShowRoleBaseActions="[
+                          'Instance User Registration',
+                          'view'
+                        ]">
+                        <img src="assets/images/view-user.svg" alt="icon" class="img-fluid" />
+                      </button>
+                      <button id="remove" [disabled]="!element.status || !element?.isEditable" (click)="remove(element)"
+                        type="button" *appShowRoleBaseActions="[
+                          'Instance User Registration',
+                          'delete'
+                        ]">
+                        <img src="assets/images/remove.svg" alt="icon" class="img-fluid" />
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="noRecord">
+                  <td class="text-center" mat-footer-cell [attr.colspan]="10" *matFooterCellDef>
+                    <app-no-record-found [height]="'400px'"></app-no-record-found>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="loading">
+                  <td class="text-center" mat-footer-cell [attr.colspan]="10" *matFooterCellDef>
+                    <app-loader [height]="'400px'"></app-loader>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                <tr mat-footer-row [hidden]="!isLoading" *matFooterRowDef="['loading']"></tr>
+                <tr mat-footer-row [hidden]="isLoading || dataSource.filteredData.length > 0"
+                  *matFooterRowDef="['noRecord']"></tr>
+              </table>
+            </div>
+
+            <mat-paginator [pageSize]="10" [showFirstLastButtons]="true" [length]="totalCount" [pageIndex]="pageNumber"
+              (page)="handlePageEvent($event)" [hidePageSize]="true">
+            </mat-paginator>
+
+            <!-- <mat-paginator #viewtable [pageSizeOptions]="[10, 20]" hidePageSize="true"
+                      aria-label="Select page of periodic elements" showFirstLastButtons>
+                     </mat-paginator> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-popup *ngIf="isShowPopup" (popup)="removeRecord($event)"></app-popup>
+<div class="alert" [class.visible]="isVisible">{{ msg }}</div>
+
+<!-----------------------------PDF Start Here=------------------------------------->
+<ng-container *ngIf="pdfOpen">
+  <div class="padding-main-divcls" id="print-pdf">
+    <table class="table table-bordered">
+      <thead>
+        <tr colspan="40">
+          <th colspan="40">
+            <header style="height: 80px">
+              <div class="d-flex header-height justify-content-between align-items-center">
+                <img src="assets/images/ministry-logo.svg" [height]="50" />
+                <img src="assets/images/pgi-logo.svg" [height]="50" />
+              </div>
+            </header>
+          </th>
+        </tr>
+        <tr colspan="40">
+          <th colspan="40">
+            <div class="d-flex">
+              <ng-container *ngFor="let breadcrums of breadcrums.links; let last = last">
+                <span class="bread-span">{{ breadcrums?.link }} {{ !last ? "/" : "" }}
+                </span>
+              </ng-container>
+            </div>
+          </th>
+        </tr>
+        <tr class="header-table">
+          <ng-container>
+            <th>S.No</th>
+            <th>Name</th>
+            <th>User Name</th>
+            <th>Email Id</th>
+            <th>Mobile Number</th>
+            <th>Instance</th>
+            <th>Assign Role</th>
+            <th>Assign Level</th>
+            <th>Status</th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let items of printDataSource; let i = index">
+          <ng-container>
+            <tr>
+              <td>{{ i + 1 }}</td>
+              <td>{{ items?.name }}</td>
+              <td>
+                <span style="
+                    display: block;
+                    word-break: break-all;
+                    max-width: 200px;
+                    height: 100%;
+                  ">{{ items?.userName }}</span>
+              </td>
+              <td>{{ items?.emailId }}</td>
+              <td>{{ items?.number }}</td>
+              <td>{{ items?.instance }}</td>
+              <td>{{ items?.role }}</td>
+              <td>{{ items?.level }}</td>
+              <td>{{ items?.status ? "Active" : "Inactive" }}</td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="isGenerating">
+  <div class="position-fixed full-page-loader h-100 d-flex justify-content-center align-items-center top-0 start-0">
+    <app-loader [height]="'400px'"></app-loader>
+  </div>
+</ng-container>

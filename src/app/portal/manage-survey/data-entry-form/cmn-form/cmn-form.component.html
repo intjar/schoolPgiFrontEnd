@@ -1,0 +1,330 @@
+<ng-container [formGroup]="dataentryGroup">
+  <ng-container>
+
+
+    <ng-container>
+
+      <!--For Dropdown Start-->
+      <ng-container *ngIf="items?.type == 'Drop Down'">
+        <div class="mb-4">
+          <div class="form-content mb-0">
+            <label class="form-label">Select Answer <span class="char-red"
+                *ngIf="items.is_mandatory == 1">*</span></label>
+            <!-- <select class="form-select" formControlName="dropdown" (change)="dropdownchange(items,$event)"
+              [attr.readonly]="disabled ? 'readonly': null">
+              <option *ngFor="let opt of  items?.ans_options?.split('||')" [value]="opt">
+                {{opt}}</option>
+            </select> -->
+
+            <ng-select formControlName="dropdown" (change)="dropdownchange(items,$event)" [readonly]="disabled"
+              placeholder="Select Answer" [multiple]="false">
+              <ng-option *ngFor="let opt of  items?.ans_options?.split('||')" [value]="opt">{{opt}}</ng-option>
+            </ng-select>
+            <!-- <span *ngIf="items.is_mandatory == 1 && !disabled" class="required-tex">Required</span> -->
+            <div class="d-flex justify-content-between align-items-center" *ngIf="!disabled">
+              <!-- <span *ngIf="items.is_mandatory == 1" class="required-tex">Required</span> -->
+              <div class="info-wrap mt-2">
+                <img src="assets/images/info.svg" alt="info" class="img-fluid" />
+                <p>Select anyone Answer from Drop-Down</p>
+              </div>
+              <!-- <span class="required-tex">Hint: Select anyone Answer from Drop-Down</span> -->
+            </div>
+          </div>
+        </div>
+
+      </ng-container>
+
+      <!--For Check Box-->
+      <ng-container *ngIf="items?.type == 'Check Box'">
+        <ng-container *ngFor="let item of items?.ans_options?.split('||');let i= index;">
+          <div class="form-check me-3">
+            <input class="form-check-input" type="checkbox" [value]="item" (click)="checkBox(items,$event)"
+              [checked]="dataentryGroup.controls['checkbox'].value.includes(item)" [disabled]="disabled">
+            <label class="form-check-label"> {{item}}<span class="char-red"
+                *ngIf="items.is_mandatory == 1">*</span></label>
+          </div>
+
+        </ng-container>
+
+        <div class="d-flex justify-content-between align-items-center" *ngIf="!disabled">
+          <!-- <span *ngIf="items.is_mandatory == 1" class="required-tex">Required</span> -->
+          <div class="info-wrap mt-2">
+            <img src="assets/images/info.svg" alt="info" class="img-fluid" />
+            <p>Select anyone Answer</p>
+          </div>
+          <!-- <span class="required-tex">Hint: Select anyone Answer</span> -->
+        </div>
+        <!-- <span *ngIf="items.is_mandatory == 1 && !disabled" class="required-tex">Required</span> -->
+
+      </ng-container>
+
+      <!--For Date Time-->
+      <ng-container *ngIf="items?.type == 'Date Time'">
+        <div class="input-group calender-input-group mb-0">
+          <ng-container *ngIf="items.is_mandatory != 1">
+            <input class="form-control" onkeydown="return false" matInput [matDatepicker]="startDate"
+              placeholder="Select Start Date" formControlName="date" (dateChange)="datechange(items,$event)"
+              [readonly]="disabled">
+          </ng-container>
+          <ng-container *ngIf="items.is_mandatory == 1">
+            <input class="form-control" onkeydown="return false" matInput [matDatepicker]="startDate"
+              placeholder="Select Start Date" formControlName="date" (dateChange)="datechange(items,$event)"
+              [readonly]="disabled" required="">
+          </ng-container>
+
+          <span class="input-group-text">
+            <mat-datepicker-toggle matSuffix [for]="startDate" [disabled]="disabled"></mat-datepicker-toggle></span>
+          <mat-datepicker #startDate></mat-datepicker>
+        </div>
+
+        <div class="invalid-feedback"
+          *ngIf="dataentryGroup.get('date').touched && dataentryGroup.controls['date'].hasError('required')">
+          Required
+        </div>
+        <!-- <span *ngIf="items.is_mandatory == 1 && !disabled" class="required-tex mb-2">Required</span> -->
+
+      </ng-container>
+
+      <!--For Answere-->
+      <ng-container *ngIf="items?.type == 'Single Text Box'">
+        <div class="form-content">
+
+          <label class="form-label">Answer<span class="char-red" *ngIf="items.is_mandatory == 1">*</span></label>
+          <ng-container *ngIf="!disabled">
+
+            <ng-container *ngIf="!items?.sq_only_numeric && !items?.q_only_numeric">
+              <!--For Required -->
+              <ng-container *ngIf="items.is_mandatory == 1">
+                <input type="text" class="form-control" placeholder="Enter the Answer" formControlName="ans"
+                  (blur)="singleTextBox(items,$event)" required>
+
+
+              </ng-container>
+
+              <!--For Not Required -->
+              <ng-container *ngIf="items.is_mandatory != 1">
+                <input type="text" class="form-control" placeholder="Enter the Answer" formControlName="ans"
+                  (blur)="singleTextBox(items,$event)">
+              </ng-container>
+
+            </ng-container>
+
+
+            <ng-container *ngIf="items?.sq_only_numeric || items?.q_only_numeric">
+              <!--For Required -->
+              <ng-container *ngIf="items.is_mandatory == 1">
+                <input type="text" class="form-control" placeholder="Enter the Answer" formControlName="ans"
+                  (blur)="singleTextBox(items,$event)" OnlyNumber required>
+              </ng-container>
+
+              <!--For Not Required -->
+              <ng-container *ngIf="items.is_mandatory != 1">
+                <input type="text" class="form-control" placeholder="Enter the Answer" formControlName="ans"
+                  (blur)="singleTextBox(items,$event)" OnlyNumber>
+              </ng-container>
+
+            </ng-container>
+            <div class="invalid-feedback"
+              *ngIf="dataentryGroup.get('ans').touched && dataentryGroup.controls['ans'].hasError('required')">
+              Required
+            </div>
+
+          </ng-container>
+
+          <ng-container *ngIf="disabled">
+            <input type="text" class="form-control" placeholder="Enter the Answer" formControlName="ans"
+              (blur)="singleTextBox(items,$event)" readonly>
+          </ng-container>
+
+          <div class="d-flex justify-content-between align-items-center" *ngIf="!disabled">
+            <!-- <span *ngIf="items.is_mandatory == 1" class="required-tex">Required</span> -->
+            <div class="info-wrap mt-2" *ngIf="items?.sq_only_numeric || items?.q_only_numeric">
+              <img src="assets/images/info.svg" alt="info" class="img-fluid" />
+              <p *ngIf="items?.sq_only_numeric || items?.q_only_numeric">Only Numeric Value</p>
+            </div>
+            <!-- <span class="required-tex" *ngIf="items?.sq_only_numeric || items?.q_only_numeric">Hint: Only Numeric Value</span> -->
+          </div>
+        </div>
+      </ng-container>
+
+
+      <!--Multiple Choice-->
+      <ng-container *ngIf="items?.type == 'Multiple Choice'">
+        <!-- (change)="reviewerLevel($event)"  -->
+        <div class="mb-4">
+          <label class="form-label">Select Answer <span class="char-red"
+              *ngIf="items.is_mandatory == 1">*</span></label>
+          <ng-container *ngIf="!disabled">
+            <ng-select formControlName="multiSelect" bindLabel="viewer" placeholder="Select Answer" [multiple]="true"
+              (change)="multiItems(items,$event)" [required]="items.is_mandatory == 1">
+              <ng-option *ngFor="let data of items?.ans_options?.split('||')" [value]="data">{{data}}</ng-option>
+
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <!-- {{items | json}}                     -->
+                <div class="ng-value" *ngFor="let item of items | slice:0:1 ;let j = index;">
+                  <span class="ng-value-label" title="{{items[j]}}">{{items[j]}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 1">
+                  <span class="ng-value-label" title="{{showTitle(items)}}">+ {{items.length - 1}} more</span>
+                </div>
+              </ng-template>
+
+            </ng-select>
+            <div class="d-flex justify-content-between align-items-center" *ngIf="!disabled">
+              <!-- <span *ngIf="items.is_mandatory == 1" class="required-tex">Required</span> -->
+              <div class="info-wrap mt-2">
+                <img src="assets/images/info.svg" alt="info" class="img-fluid" />
+                <p>Select Multiple Answer from Drop-Down</p>
+              </div>
+              <!-- <span class="required-tex" >Hint: Select Multiple Answer from Drop-Down</span> -->
+            </div>
+
+            <div class="invalid-feedback"
+              *ngIf="dataentryGroup.get('multiSelect').touched && dataentryGroup.controls['multiSelect'].hasError('required')">
+              Required
+            </div>
+
+          </ng-container>
+
+          <!-- <ng-container *ngIf="disabled">
+            <span *ngFor="let data of items?.ans_options?.split('||')">{{data}}</span>
+            <ng-select formControlName="multiSelect" bindLabel="viewer" placeholder="Select Answer" [multiple]="true" [attr.disabled]="disabled">
+            <ng-option *ngFor="let data of items?.ans_options?.split('||')" [value]="data">{{data}}</ng-option>
+          </ng-select> -->
+          <!-- </ng-container> -->
+
+          <ng-container *ngIf="disabled">
+            <br>
+            <ng-container *ngIf="dataentryGroup.controls['multiSelect'].value?.length > 0">
+              <span *ngFor="let data of dataentryGroup.controls['multiSelect'].value;let last = last;"
+              class="pe-1 multiselect-option">{{data
+              }}{{!last ? ',' : ''}}</span>
+            </ng-container>
+            <ng-container *ngIf="dataentryGroup.controls['multiSelect'].value?.length == null">
+              <span
+              class="pe-1 multiselect-option">Answer not selected</span>
+            </ng-container>
+
+
+            <br>
+          </ng-container>
+
+
+
+
+
+        </div>
+      </ng-container>
+
+      <!--Multiple Text Box-->
+      <ng-container *ngIf="items?.type == 'Multiple Text Box'">
+
+        <ng-container *ngFor="let item of items?.ans_options?.split('||');let i = index">
+          <!-- (blur)="multipleTextBoxes(items,$event,item )"  (click)="removeFromLocal(items,item,$event, i)" (blur)="!isUpdate ? multipleTextBoxes(items,$event,item, i) : ''"
+(blur)="!isUpdate ? multipleTextBoxes(items,$event,item, i) : ''"-->
+          <div class="form-content mb-4" [class.mb-0]="items.sq_only_numeric == 1">
+            <label class="form-label">{{item}}<span class="char-red" *ngIf="items.is_mandatory  == 1">*</span></label>
+
+            <ng-container *ngIf="items?.sq_only_numeric || items?.q_only_numeric">
+              <input type="text" class="form-control" [disabled]="disabled" placeholder="Enter the Answer"
+                (blur)="multipleTextBoxes(items,$event,item, i)"
+                [value]="updateMultiValue(item,i)? updateMultiValue(item,i): '' " OnlyNumber>
+
+            </ng-container>
+            <ng-container *ngIf="!items?.sq_only_numeric  && !items?.q_only_numeric">
+              <input type="text" class="form-control" [disabled]="disabled" placeholder="Enter the Answer"
+                (blur)="multipleTextBoxes(items,$event,item, i)"
+                [value]="updateMultiValue(item,i)? updateMultiValue(item,i): '' ">
+            </ng-container>
+            <!-- <div class="invalid-feedback"
+            *ngIf="dataentryGroup.get('multipleAns').touched && dataentryGroup.controls['multiSelect'].hasError('required')">
+            Required
+            </div>  formControlName="multipleAns" formControlName="multipleAns" -->
+            <div class="d-flex justify-content-between align-items-center" *ngIf="!disabled">
+              <!-- <span *ngIf="items.is_mandatory == 1" class="required-tex">Required</span> -->
+              <div class="info-wrap mt-2" *ngIf="items?.sq_only_numeric || items?.q_only_numeric">
+                <img src="assets/images/info.svg" alt="info" class="img-fluid" />
+                <p *ngIf="items?.sq_only_numeric || items?.q_only_numeric">Only Numeric Value</p>
+              </div>
+              <!-- <span class="required-tex" *ngIf="items?.sq_only_numeric || items?.q_only_numeric">Hint: Only Numeric
+                Value</span> -->
+            </div>
+          </div>
+          <div class="invalid-feedback" *ngIf="errorMultiple == i">
+            Required
+          </div>
+
+          <!-- <div class="d-flex justify-content-between align-items-center" *ngIf="!disabled">
+            <span *ngIf="items.is_mandatory == 1" class="required-tex">Required</span>
+            <span class="required-tex" *ngIf="items?.sq_only_numeric || items?.q_only_numeric">Only Numeric Value</span>
+          </div> -->
+
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="items?.type == 'File Upload'">
+        <!--Not answered-->
+        <ng-container *ngIf="!filePath && !disabled && !isLoading">
+          <div class="upload-container p-3 mb-2">
+            <div>
+              <button><img src="assets/images/upload-file.svg" alt=""></button>
+              <label for="file" class="btn-org ms-2">Browse File</label>
+            </div>
+            <input type="file" class="form-control" id="file" hidden #file (change)="uploadFile($event.target)">
+            <p class="mt-3 mb-0" style="color: #b8b5b5;">Maximum upload file size 25 MB, allowed files
+              XLSX,XLS,JPG,PNG,PDF *
+            </p>
+          </div>
+          <!-- <span *ngIf="items.is_mandatory == 1 && !disabled" class="required-tex">Required</span> -->
+        </ng-container>
+
+        <ng-container *ngIf="isLoading">
+          <app-loader [height]="'80px'"></app-loader>
+        </ng-container>
+
+
+        <!--Answered-->
+
+        <ng-container *ngIf="filePath && !disabled && !isLoading">
+
+          <div class="uploaded-file mb-3">
+
+            <a [href]="basePath + filePath.filePath" target="_blank" [title]="'download'" class="download-img">
+              <img src="assets/images/download.svg" alt="download" />
+            </a>
+
+            <ng-container>
+              <a class="delete-img">
+              <img src="assets/images/icons/delete.svg" alt="delete" class="ps-2 cursor-show"
+                (click)="deleteMediaFiles(items)" />
+              </a>
+              <span class="ps-2"> {{gefileName(filePath?.filePath)}}</span>
+            </ng-container>
+
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="(filePath?.filePath == ''|| filePath?.filePath == null)  && disabled">
+          <p class="file-upload-pending">File Upload Pending</p>
+        </ng-container>
+        <ng-container *ngIf="filePath?.filePath != '' && filePath?.filePath != null && disabled">
+          <div class="uploaded-file">
+            <a [href]="basePath + filePath?.filePath" target="_blank" [title]="'download'"
+              class="d-flex justify-content-start align-items-center">
+              <img src="assets/images/download.svg" alt="download" />
+              <span class="ps-3"> {{gefileName(filePath?.filePath)}}</span>
+            </a>
+          </div>
+        </ng-container>
+
+
+      </ng-container>
+
+
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+
+<!-- <div class="alert" [class.visible]="isVisible"> {{msg}} </div> -->

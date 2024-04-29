@@ -1,0 +1,125 @@
+@import '../../../assets/scss/variables';
+
+.top-wrap{
+    .content-right{
+        .select-wrap, .btn-wrap{
+            @media (max-width: 767px) {
+                min-width: 50%;
+            }
+        }
+        .btn-publish{
+            display: flex;
+            align-items: center;
+            img{
+                height: 25px;
+                margin-right: 5px;
+                @media (max-width: 767px) {
+                    display: none;
+                }
+            }
+            @media (max-width: 767px) {
+                padding: 10px;
+            }
+        }
+    }
+}
+
+.dashboard-graph{
+    &-wrap{
+        .instance-card {
+            background: $grey_30;
+            border-radius: 14px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .heading-black {
+            font-family: Brandon Grotesque;
+            letter-spacing: 0px;
+            color: $black;
+            text-transform: capitalize;
+            font-size: 1.25em;
+            font-weight: 500;
+            margin-right: 15px;
+        }
+        
+        .total-no {
+            font-size: 1.125em;
+            font-weight: bold;
+            letter-spacing: 0px;
+            color: $black;
+            margin: 0;
+        }
+
+        .card-table{
+            border: none;
+            border-radius: 0;
+            padding: 0;
+        }
+    }
+    &-card{
+        border: 1px solid $grey_10;
+        border-radius: 14px;
+        padding: 15px;
+        .graph-title {
+            font-size: 1.25em;
+            font-weight: bold;
+            font-family: Brandon Grotesque;
+            letter-spacing: 0px;
+            color: $black;
+            text-transform: capitalize;
+            text-align: center;
+            margin: 0;
+        }
+    }
+}
+
+::ng-deep{
+    .highcharts-container, 
+    .highcharts-root {
+        margin: auto;
+        width:100% !important;
+        height:100% !important;
+    }
+
+    .select-wrap{
+        .ng-select{
+            &-container{
+                font-family: "Montserrat", sans-serif;
+                font-size: 0.875em;
+                font-weight: 500;
+                height: 45px !important;
+                @media (max-width: 767px) {
+                    font-size: 0.75em;
+                    height: 38px !important;
+                }
+                .ng-input{
+                    top: 11px !important;
+                    @media (max-width: 767px) {
+                        top: 8px !important;
+                    }
+                }
+                .ng-value-container {
+                    padding-right: 10px;
+                }
+            }
+            &-focused{
+                &:not(.ng-select-opened)>.ng-select-container{
+                    border-color: $grey_11;
+                    box-shadow: none;
+                }
+            }
+        }
+        .ng-option{
+            font-family: "Montserrat", sans-serif;
+            font-size: 0.875em; 
+            font-weight: 500;
+            @media (max-width: 767px) {
+                font-size: 0.75em;
+            }
+        }
+    }
+}

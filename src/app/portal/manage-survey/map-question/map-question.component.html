@@ -1,0 +1,748 @@
+<div class="container-fluid p-4">
+  <div class="row">
+    <div class="col-md-12">
+      <!-- <div class="top-wrap">
+        <h2 class="heading-grey">Manage Survey</h2>
+        <div class="breadcrumb-wrap">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a>Dashboard</a></li>
+              <li class="breadcrumb-item"><a>Manage Survey</a></li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Map Question
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div> -->
+      <app-breadcrumb [breadcrums]="breadcrums" (back)="backToSurvey()" [showBack]="true"></app-breadcrumb>
+    </div>
+
+    <div class="col-md-12 my-4">      
+      <div class="card-wrap" id="focusForm">
+        <div class="card-form">
+          <h3 class="title-grey">Survey Summary</h3>
+          <div class="summary-wrap pt-4">
+            <div class="row" *ngFor="let data of mapQuestionSurveyArr" >
+              <div class="col-md-2">
+                <h3 class="summary-title">Survey Name</h3>
+                <p [title]="data.surveyName" class="summary-desc">{{data?.surveyName}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Data Approver</h3>
+                <p class="summary-desc">{{data?.approverLevelId?.levelName}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Data Reviewer</h3>
+                <p class="summary-desc">{{reviewerLevel(data?.reviewerLevelId)}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Data Viewer</h3>
+                <p class="summary-desc">{{viewerLevel(data?.viewerLevelId)}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Data Entry</h3>
+                <p class="summary-desc">{{data?.deoLevelId?.levelName}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Year </h3>
+                <p class="summary-desc">{{data?.yearCode}} </p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Active Duration</h3>
+                <p class="summary-desc">{{data?.surveyStartDate | date:'dd-MM-yyyy'}} to {{data?.surveyEndDate | date:'dd-MM-yyyy'}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Approval Role</h3>
+                <p class="summary-desc">{{data?.approverRoleId?.name}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Reviewer Roles </h3>
+                <p class="summary-desc">{{popupReviewerRole(data?.reviewerRole)}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Viewer Roles</h3>
+                <p class="summary-desc">{{popupViewerRole(data?.viewerRole)}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Data Entry Role</h3>
+                <p class="summary-desc">{{data?.deoRoleId?.name}}</p>
+              </div>
+
+              <div class="col-md-12">
+                <h3 class="summary-title">Description</h3>
+                <p class="summary-desc">{{data?.surveyDescription}}</p>
+              </div>              
+            </div>
+          </div>
+        </div>
+
+
+
+
+        <div class="card-form mt-5" *appShowRoleBaseActions="['Map Question', ['create', 'edit', 'view']]">
+          <h3 class="title-grey">{{ mapMSG }}</h3>
+          <div class="common-form py-2">
+            <div class="info-wrap info-new mb-2">
+              <img src="assets/images/info-new.svg" alt="info" class="img-fluid" />
+              <p>
+                On Survey Sub Domain, Questions and Sub Question will be shown
+                in the order of selection.
+              </p>
+            </div>
+            <form [formGroup]="mapquestionForm">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Domain Name <span class="char-red">*</span></label>
+                    <ng-select placeholder="Select Domain Name" formControlName="domainName"
+                      (change)="onselectDomain($event)">
+                      <ng-option *ngFor="let viewDomain of domainArr" [value]="viewDomain">{{ viewDomain?.domainName}}</ng-option>
+                    </ng-select>
+                    <div class="invalid-feedback"
+                      *ngIf="isSubmitted && (mapquestionForm.controls['domainName']?.errors?.['required'])">
+                      Please Select Domain
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Sub Domain Name <span class="char-red">*</span></label>
+                    <ng-select placeholder="Select Sub Domain Name" formControlName="subdomainName"
+                      (change)="onselectsubDomain($event)">
+                      <ng-option *ngFor="let viewsubDomain of sDomainArr" [value]="viewsubDomain">
+                        {{ viewsubDomain?.subDomainName }}</ng-option>
+                    </ng-select>
+                    <div class="invalid-feedback"
+                      *ngIf="isSubmitted && (mapquestionForm.controls['subdomainName']?.errors?.['required'])">
+                      Please Select SubDomain
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Question <span class="char-red">*</span></label>
+                    <ng-select placeholder="Select Question" formControlName="question"
+                      (change)="onselectQuestion($event)">
+                      <ng-option *ngFor="let viewQuestion of questionArr" [value]="viewQuestion">{{
+                        viewQuestion?.questionCode }} -
+                        {{ viewQuestion?.question }}</ng-option>
+                    </ng-select>
+                    <div class="invalid-feedback"
+                      *ngIf="isSubmitted && (mapquestionForm.controls['question']?.errors?.['required'])">
+                      Please Select Question
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Sub Question <span class="char-red">*</span></label>
+                    <ng-select placeholder="Select Sub Question" formControlName="subQuestion"
+                      (change)="onselectsubQuestion($event)" [multiple]="true">
+                      <ng-option *ngFor="let viewsubQUestion of sQuestionArr" [value]="viewsubQUestion">
+                        {{ viewsubQUestion?.subQuestionCode }} -
+                        {{ viewsubQUestion?.subQuestion }}</ng-option>
+
+                      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                        <div class="ng-value" *ngFor="
+                            let item of items | slice : 0 : 1;
+                            let j = index
+                          ">
+                          <span class="ng-value-label" title="{{ items[j]?.subQuestionCode }} - {{
+                              items[j]?.subQuestion
+                            }}">{{ items[j]?.subQuestionCode }} -
+                            {{ items[j]?.subQuestion }}</span>
+                          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 1">
+                          <span class="ng-value-label" title="{{ showTitle(items) }}">+ {{ items.length - 1 }}
+                            more</span>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                    <div class="invalid-feedback"
+                      *ngIf="isSubmitted && (mapquestionForm.controls['subQuestion']?.errors?.['required']) && !isShowError">
+                      Please Select Sub Question
+                    </div>
+                    <div class="invalid-feedback" *ngIf="isShowError">
+                      {{ subQuestErrorMSG }}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Maximum Value</label>
+                    <input class="form-control" placeholder="Enter Maximum Value" formControlName="valueLogic"
+                      maxlength="100"/>
+                    <div class="invalid-feedback">
+                      <p *ngIf="isSubmitted && (mapquestionForm.controls['valueLogic']?.errors?.['required'])">
+                        Please Enter Maximum Value
+                      </p>
+                      <p *ngIf="isSubmitted && (mapquestionForm.controls['valueLogic']?.errors?.['minlength'])">
+                        Maximum Value must be at least 3 character long.
+                      </p>
+                      <p
+                        *ngIf="mapquestionForm.get('valueLogic')?.errors?.['valueLogic'] || mapquestionForm.get('valueLogic')?.errors?.['pattern']">
+                        Maximum Value is invalid
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Maximum Pointer</label>
+                    <input class="form-control" placeholder="Enter Maximum Pointer"
+                      formControlName="pointerLogic" maxlength="100" />
+                    <div class="invalid-feedback">
+                      <p *ngIf="isSubmitted && (mapquestionForm.controls['pointerLogic']?.errors?.['required'])">
+                        Please Enter Maximum Pointer
+                      </p>
+                      <p *ngIf="isSubmitted && (mapquestionForm.controls['pointerLogic']?.errors?.['minlength'])">
+                        Maximum Pointer must be at least 3 characters long.
+                      </p>
+                      <p
+                        *ngIf="mapquestionForm.get('pointerLogic')?.errors?.['pointerLogic'] || mapquestionForm.get('pointerLogic')?.errors?.['pattern']">
+                        Maximum Pointer is invalid
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label">Weightage <span class="char-red">*</span>
+                    </label>
+                    <input type="text" class="form-control" placeholder="Enter Weightage" formControlName="weightage"
+                      maxlength="5" />
+                    <div class="invalid-feedback">
+                      <p *ngIf="isSubmitted && (mapquestionForm.controls['weightage']?.errors?.['required'])">
+                        Please Enter Weightage
+                      </p>
+                      <!-- <p
+                      *ngIf="isSubmitted && (mapquestionForm.controls['weightage']?.errors?.['minlength'])"
+                      >
+                      Weightage must have 3 digits.
+                    </p> -->
+                      <p
+                        *ngIf="mapquestionForm.get('weightage')?.errors?.['weightage'] || mapquestionForm.get('weightage')?.errors?.['pattern']">
+                        Weightage is invalid
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="d-flex mt-40">
+                    <div class="common-form me-2">
+                      <div class="form-check map-check me-3">
+                        <input class="form-check-input" type="checkbox" formControlName="mandatory"
+                          (click)="isMandatory($event)" [checked]="mandatoryChecked == 1" />
+                        <label class="form-check-label">Mandatory<span class="char-red">*</span></label>
+                      </div>
+                    </div>
+                    <div class="common-form" *ngIf="!isShowfield">
+                      <div class="form-check map-check me-3">
+                        <input class="form-check-input" type="checkbox" formControlName="thirdParty"
+                          (click)="isthirdparty($event)" [checked]="thirdPartyChecked == 1" />
+                        <label class="form-check-label">Third Party Source<span class="char-red">*</span></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="col-md-5" *ngIf="mapquestionForm.get('thirdParty')?.value || showdataSource"> -->
+                <div class="col-md-5">
+                  <div class="mb-3">
+                    <label class="form-label">Data Source Name<span class="char-red">*</span></label>
+                    <ng-select placeholder="Select Data Source Name" formControlName="datasourceName"
+                      (change)="onSelectDataSource($event)">
+                      <ng-option *ngFor="let viewDataSource of dataSourceArr" [value]="viewDataSource">{{
+                        viewDataSource?.name }}</ng-option>
+                    </ng-select>
+                    <div class="invalid-feedback"
+                      *ngIf="isSubmitted && (mapquestionForm.controls['datasourceName']?.errors?.['required'])">
+                      Please Select Data Source
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label">Serial Number <span class="char-red">*</span></label>
+                    <input type="text" class="form-control" placeholder="Enter Serial Number" formControlName="serialno"/>
+                    <div class="invalid-feedback">
+                      <p *ngIf="isSubmitted && (mapquestionForm.controls['serialno']?.errors?.['required'])">
+                        Please Enter Serial Number
+                      </p>                         
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label">Select Status<span class="char-red">*</span></label>
+                    <ng-select formControlName="status" placeholder="Select Status">
+                      <ng-option *ngFor="let val of statusValue" [value]="val">{{ val }}</ng-option>
+                    </ng-select>
+                    <div class="invalid-feedback"
+                      *ngIf="isSubmitted && mapquestionForm.controls['status']?.errors?.['required'] ">
+                      Please Select Status
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6" *appShowRoleBaseActions="['Map Question', ['create', 'edit']]">
+                  <div class="d-flex justify-content-end" *ngIf="!isViewClick">
+                    <div class="btn-wrap mt-30">
+                      <ng-container *ngIf="isshowButton">
+                        <ng-container *appShowRoleBaseActions="['Map Question', ['create']]">
+                          <button *ngIf="isshowButton" class="btn-org me-3" (click)="onSubmit('save')">
+                            Save
+                          </button>
+                          <button class="btn-org-bdr" (click)="
+                              onCancel(); scroll($event, 'commonScrollTo')
+                            ">
+                            Reset
+                          </button>
+                        </ng-container>
+                      </ng-container>
+                      <ng-container *ngIf="!isshowButton">
+                        <ng-container *appShowRoleBaseActions="['Map Question', ['edit']]">
+                          <button *ngIf="!isshowButton" class="btn-org me-3" (click)="onSubmit('update')">
+                            Update
+                          </button>
+                          <button class="btn-org-bdr" (click)="
+                              onCancel(); scroll($event, 'commonScrollTo')
+                            ">
+                            Reset
+                          </button>
+                        </ng-container>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- <div class="card-table">
+          <div class="common-table" >
+            <div class="dataTables_scroll table-responsive">
+              <table class="dataTable">
+                <thead>
+                  <tr>
+                    <th>
+                      <div class="d-flex align-items-center">
+                        S.NO
+                        <span class="material-icons-outlined">
+                          arrow_drop_down
+                        </span>
+                      </div>
+                    </th>
+                    <th>
+                      <div class="d-flex align-items-center">
+                        Domain
+                        <span class="material-icons-outlined">
+                          arrow_drop_down
+                        </span>
+                      </div>
+                    </th>
+                    <th>
+                      <div class="d-flex align-items-center">
+                        Sub Domain
+                        <span class="material-icons-outlined">
+                          arrow_drop_down
+                        </span>
+                      </div>
+                    </th>
+                    <th>
+                      <div class="d-flex align-items-center">
+                        Question
+                        <span class="material-icons-outlined">
+                          arrow_drop_down
+                        </span>
+                      </div>
+                    </th>
+                    <th>
+                      <div class="d-flex align-items-center">
+                        Sub Question
+                        <span class="material-icons-outlined">
+                          arrow_drop_down
+                        </span>
+                      </div>
+                    </th>
+                    <th>
+                      <div class="d-flex align-items-center">
+                        Status
+                        <span class="material-icons-outlined">
+                          arrow_drop_down
+                        </span>
+                      </div>
+                    </th>
+                    <th>
+                      <div class="d-flex align-items-center">
+                        Actions
+                        <span class="material-icons-outlined">
+                          arrow_drop_down
+                        </span>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>01</td>
+                    <td>
+                      Access
+                    </td>
+                    <td>Sub Domain Name</td>
+                    <td>Question, Selective Option-1, Option-2, Option-3, Option-4</td>
+                    <td>
+                      Multi Select
+                      <div class="btn-wrap mt-2">
+                        <button data-bs-toggle="modal" data-bs-target="#viewSubQuestionModal" class="table-btn table-btn-org">View Sub Question</button>
+                      </div>
+                    </td>
+                    <td>
+                      <button class="table-btn table-btn-active">Active</button>
+                    </td>
+                    <td>
+                      <div class="btn-wrap justify-content-center">
+                        <button class="me-3">
+                          <img src="assets/images/edit-user.svg" alt="icon" class="img-fluid" />
+                        </button>
+                        <button data-bs-toggle="modal" data-bs-target="#removeButtonModal">
+                          <img src="assets/images/remove.svg" alt="icon" class="img-fluid" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>02</td>
+                    <td>
+                      Access
+                    </td>
+                    <td>Sub Domain Name</td>
+                    <td>Question, Selective Option-1, Option-2, Option-3, Option-4</td>
+                    <td>
+                      Multi Select
+                      <div class="btn-wrap mt-2">
+                        <button data-bs-toggle="modal" data-bs-target="#viewSubQuestionModal" class="table-btn table-btn-org">View Sub Question</button>
+                      </div>
+                    </td>
+                    <td>
+                      <button class="table-btn table-btn-inactive">Inactive</button>
+                    </td>
+                    <td>
+                      <div class="btn-wrap justify-content-center">
+                        <button class="me-3">
+                          <img src="assets/images/edit-user.svg" alt="icon" class="img-fluid" />
+                        </button>
+                        <button data-bs-toggle="modal" data-bs-target="#removeButtonModal">
+                          <img src="assets/images/remove.svg" alt="icon" class="img-fluid" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div> -->
+        <div class="card-table" *appShowRoleBaseActions="['Map Question', ['edit', 'view', 'delete']]">
+          <div class="card-table-top">
+            <div class="row">
+              <div class="col-md-7">
+                <div class="common-form">
+                  <div class="row g-3">
+                    <div class="col-md-7">
+                      <div class="search-wrap">
+                        <div class="input-group">
+                          <span class="material-icons-round input-group-text">
+                            search
+                          </span>
+                          <input type="text" class="form-control" [(ngModel)]="searchValue"
+                            (keyup.enter)="filterData('filter')" placeholder="Enter Keyword" [minlength]="3" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <div class="advance-filter">
+                        <div class="btn-wrap">
+                          <button class="btn-org" [disabled]="!searchValue" (click)="filterData('filter')">
+                            Search
+                          </button>
+                          <button class="btn-org-bdr ms-3" (click)="searchValue = ''; filterData('clear')">
+                            Clear
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="view-wrap">
+                  <div class="row g-3 justify-content-end">
+                    <div class="col-auto">
+                      <div class="export-wrap">
+                        <div class="btn-export me-3">Export</div>
+                        <button class="btn-adobe me-3" (click)="printData('pdf')" [disabled]="dataSource.filteredData.length == 0">
+                          <img src="assets/images/adobe.svg" alt="adobe" class="img-fluid" />
+                        </button>
+                        <button class="btn-xml" (click)="printData('csv')" [disabled]="dataSource.filteredData.length == 0">
+                          <img src="assets/images/xml.svg" alt="xml" class="img-fluid" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="common-table" id="commonTable">
+            <div class="table-container table-responsive">
+              <table  mat-table #table class="table table-striped" matSort mat-table [dataSource]="dataSource" 
+              cdkDropList [cdkDropListData]="dataSource" (cdkDropListDropped)="dropTable($event)"
+              [cdkDropListDisabled]="dragDisabled">
+              <!-- <ng-container matColumnDef="drop">                         //////   drag and drop feature
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element; let i = index">                
+                  <svg width="24px" fill="currentColor" viewBox="0 0 24 24" (mousedown)="dragDisabled = false;">
+                    <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                    <path d="M0 0h24v24H0z" fill="none"></path>
+                  </svg>
+                </td>
+              </ng-container> -->
+                <ng-container matColumnDef="sn">
+                  <th mat-header-cell *matHeaderCellDef>S.No</th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ viewtable.pageIndex * viewtable.pageSize + (i + 1) }}                    
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="domain">
+                  <th mat-header-cell *matHeaderCellDef>Domain</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.domainName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="subDomain">
+                  <th mat-header-cell *matHeaderCellDef>Sub Domain</th>
+                  <td mat-cell *matCellDef="let element">                    
+                    {{ element.subDomainName == null ? "NA" : element.subDomainName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="question">
+                  <th mat-header-cell *matHeaderCellDef>Question</th>
+                  <td mat-cell *matCellDef="let element" class="word-break">
+                    {{ element.question }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="subQuestion">
+                  <th mat-header-cell *matHeaderCellDef>Sub Question</th>
+                  <td mat-cell *matCellDef="let element">                   
+                    <div class="btn-wrap mt-2">
+                      <button data-bs-toggle="modal" data-bs-target="#viewMapSubQuestionModal"
+                        class="table-btn table-btn-org" [disabled]="element?.subQuestionName == ''"
+                        (click)="viewSubQuest(element)">
+                        View Sub Question
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap" *ngIf="element.isDeleted == 0">
+                      <a class="table-btn table-btn-active">Active</a>
+                    </div>
+                    <div class="btn-wrap" *ngIf="element.isDeleted == 1">
+                      <a class="table-btn table-btn-inactive">Inactive</a>
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>Action</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap">
+                      <button id="edit" class="me-3" (click)="
+                          edit(element, 'edit');
+                          scroll($event, 'commonScrollTo')
+                        " *appShowRoleBaseActions="['Map Question', ['edit']]">
+                        <img src="assets/images/edit-user.svg" alt="icon" class="img-fluid" />
+                      </button>
+                      <button id="edit" class="me-3" (click)="
+                          edit(element, 'view');
+                          scroll($event, 'commonScrollTo')
+                        " *appShowRoleBaseActions="['Map Question', ['view']]">
+                        <img src="assets/images/view-user.svg" alt="icon" class="img-fluid" />
+                      </button>
+                      <button id="remove" type="button" [disabled]="element.isDeleted" (click)="remove(element)"
+                        *appShowRoleBaseActions="['Map Question', 'delete']">
+                        <img src="assets/images/remove.svg" alt="icon" class="img-fluid" />
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="noRecord">
+                  <td class="text-center" mat-footer-cell [attr.colspan]="7" *matFooterCellDef>No records found</td>
+                </ng-container> -->
+                <ng-container matColumnDef="noRecord">
+                  <td class="text-center" mat-footer-cell [attr.colspan]="7" *matFooterCellDef>
+                    <app-no-record-found [height]="'400px'"></app-no-record-found>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="loading">
+                  <td class="text-center" mat-footer-cell [attr.colspan]="10" *matFooterCellDef>
+                    <app-loader [height]="'400px'"></app-loader>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns" cdkDrag [cdkDragData]="row"></tr>
+                <!-- <tr mat-footer-row [hidden]="dataSource.filteredData.length >0" *matFooterRowDef="['noRecord']"></tr> -->
+                <tr mat-footer-row [hidden]="!isLoading" *matFooterRowDef="['loading']"></tr>
+                <tr mat-footer-row [hidden]="isLoading || dataSource.filteredData.length > 0"
+                  *matFooterRowDef="['noRecord']"></tr>
+              </table>
+            </div>
+
+            <mat-paginator [pageSize]="10" [hidePageSize]="true" [hidden]="dataSource.filteredData.length == 0"
+              [showFirstLastButtons]="true" [length]="totalCount" [pageIndex]="pageNumber"
+              (page)="handlePageEvent($event)">
+            </mat-paginator>
+            <!-- <mat-paginator #viewtable [pageSizeOptions]="[10, 20]" hidePageSize="true"
+              aria-label="Select page of periodic elements" [hidden]="dataSource.filteredData.length == 0"
+              showFirstLastButtons>
+            </mat-paginator> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="alert" [class.visible]="isVisible">{{ msg }}</div> -->
+
+  <!-- Delete Modal Start-->
+  <app-popup *ngIf="isShowPopup" (popup)="removeRecord($event)"></app-popup>
+  <!-- Delete Modal End-->
+
+  <!-- View Sub Question Modal Start-->
+  <div class="modal common-modal fade" tabindex="-1" role="dialog" id="viewMapSubQuestionModal"
+    aria-labelledby="viewSubQuestionModalLabel" aria-hidden="true" [ngStyle]="{ display: displayStyle }">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Sub Questions</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+        <ng-container *ngIf="!isLoading && selectSubQuestionArr?.length > 0">
+          <div class="modal-body">
+            <div class="scrollbar-y pe-3">
+              <div class="bdr-grey" *ngFor="let data of selectSubQuestionArr">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="modal-body-content mb-4">
+                      <h3 class="modal-title-grey">Sub Question</h3>
+                      <p class="modal-desc-black">
+                        {{ data?.subQuestName }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="modal-body-content mb-lg-0 mb-md-4">
+                      <h3 class="modal-title-grey">Sub Question Type</h3>
+                      <p class="modal-desc-black">
+                        {{ data?.subQuestType }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="modal-body-content mb-lg-0 mb-md-4">
+                      <h3 class="modal-title-grey">Sub Question Code</h3>
+                      <p class="modal-desc-black">
+                        {{ data?.subQuestCode }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="modal-body-content mb-lg-0 mb-md-4">
+                      <h3 class="modal-title-grey">Sub Question Status</h3>
+                      <p class="status active" [ngClass]="{
+                          active: data?.subQuestStatus == true,
+                          inactive: data?.subQuestStatus == false
+                        }">
+                        {{ data?.subQuestStatus == true ? "Active" : "Inactive" }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!isLoading && selectSubQuestionArr?.length == 0">
+          <app-no-record-found [height]="'200px'"></app-no-record-found>
+        </ng-container>
+        <ng-container *ngIf="isLoading">
+          <app-loader [height]="'600px'"></app-loader>
+        </ng-container>
+
+      </div>
+    </div>
+  </div>
+  <!-- View Sub Question Modal End-->
+</div>
+
+<!-----------------------------PDF Start Here=------------------------------------->
+<ng-container *ngIf="pdfOpen">
+  <div class="padding-main-divcls" id="print-pdf">
+    <table class="table table-bordered">
+      <thead>
+        <tr colspan="40">
+          <th colspan="40">
+            <header style="height: 80px">
+              <div class="d-flex header-height justify-content-between align-items-center">
+                <img src="assets/images/ministry-logo.svg" [height]="50" />
+                <img src="assets/images/pgi-logo.svg" [height]="50" />
+              </div>
+            </header>
+          </th>
+        </tr>
+        <tr colspan="40">
+          <th colspan="40">
+            <div class="d-flex">
+              <ng-container *ngFor="let breadcrums of breadcrums.links; let last = last">
+                <span class="bread-span">{{ breadcrums?.link }} {{ !last ? "/" : "" }}
+                </span>
+              </ng-container>
+            </div>
+          </th>
+        </tr>
+        <tr class="header-table">
+          <ng-container>
+            <th>S.No</th>
+            <th>Domain</th>
+            <th>Sub Domain</th>
+            <th>Question</th>
+            <th>Status</th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let items of mapQuestionAlldata; let i = index">
+          <tr>
+            <td>{{ i + 1 }}</td>
+            <td>{{ items?.domainName }}</td>
+            <td>{{ items?.subDomainName ? items?.subDomainName : "NA" }}</td>
+            <td>{{ items?.question }}</td>
+            <td>{{ items?.isDeleted ? "Inactive" : "Active" }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
+<ng-container *ngIf="isGenerating">
+  <div class="position-fixed full-page-loader h-100 d-flex justify-content-center align-items-center top-0 start-0">
+    <app-loader [height]="'400px'"></app-loader>
+  </div>
+</ng-container>

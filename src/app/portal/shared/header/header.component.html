@@ -1,0 +1,93 @@
+<!-- Navbar Start -->
+<div class="site-header">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Sitemap</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Feedback</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">FAQs</a>
+        </li>
+      </ul>
+      <div class="skipwrap">
+        <ul>
+          <li><a href="https://spgi-web-uat.inroad.in/" target="_blank">Go to website</a></li>
+          <!-- <li>
+            <div class="d-flex">
+              <button class="text-increment-btn">Text size A-</button>
+              <button class="text-increment-btn">A</button>
+              <button class="text-increment-btn">A+</button>
+            </div>
+          </li>
+          <li>
+            <a>
+              <div class="select-wrap">
+                <select class="form-select">
+                  <option value="en">English</option>
+                  <option value="hi">हिन्दी</option>
+                </select>
+              </div>
+            </a>
+          </li> -->
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="logo-wrap">
+    <div class="content-left">
+      <div class="logo-left me-2">
+        <img src="assets/images/ministry-logo.svg" alt="ministry-logo" class="img-fluid" />
+      </div>
+    </div>
+    <div class="content-right">
+      <div class="notification-wrap">
+        <div class="dropdown notification-dropdown">
+          <button class="dropdown-toggle notification-button" type="button" id="dropdownMenuButton1"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="assets/images/notification.svg" alt="notification" class="img-fluid" />
+            <!-- <span class="notification-count"></span> -->
+          </button>
+          <ul class="dropdown-menu notification-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+            <li class="dropdown-header notification-header">Notifications</li>
+            <li>
+              <a>
+                <div class="user-list d-flex">
+                  <div *ngIf="viewNotification > 0">
+                    <div class="flex-shrink-0">
+                      <img src="assets/images/admin.png" alt="user-img" class="img-fluid" />
+                    </div>
+                    <div class="flex-grow-1 ms-2" *ngFor="let item of viewNotification">
+                      <p class="user-detail">
+                        <span class="user-name">
+                          {{ item?.from.name }}
+                        </span>
+                        sent you a message.
+                        <small class="time">{{ item?.createdAt | date : "mm" }} min ago</small>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-center w-100" *ngIf="viewNotification == 0">
+                    <p class="no-notification">No new notification</p>
+                  </div>
+                </div>
+              </a>
+            </li>
+            <li></li>
+            <li class="dropdown-footer notification-footer" (click)="Notification()">
+              <a routerLinkActive="active">View all notifications</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="logo-right text-end">
+        <img src="assets/images/pgi-logo.svg" alt="pgi-logo" class="img-fluid" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Navbar End -->

@@ -1,0 +1,1063 @@
+<div class="container-fluid p-lg-4 p-3">
+  <div class="row">
+    <div class="col-md-12">
+      <app-breadcrumb
+        [breadcrums]="breadcrums"
+        (back)="isSubDomain = true; backButtonClick()"
+        [showBack]="!isSubDomain"
+      ></app-breadcrumb>
+    </div>
+
+    <div class="col-md-12 my-4" *ngIf="isSubDomain">
+      <div class="card-wrap" id="focusForm">
+        <div
+          class="card-form"
+          *appShowRoleBaseActions="[
+            'Domain Master',
+            ['create', 'edit', 'view']
+          ]"
+        >
+          <h3 class="title-grey">
+            {{ domainMSG }}
+          </h3>
+          <div class="common-form py-lg-4 py-3">
+            <form #f="ngForm" [formGroup]="domainForm">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <div class="mb-lg-0 mb-md-3">
+                    <label class="form-label"
+                      >Domain Name <span class="char-red">*</span></label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      formControlName="domainname"
+                      placeholder="Enter Domain Name"
+                      DomainName
+                      maxlength="100"
+                      minlength="3"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (domainForm.controls['domainname']?.errors?.['required'] || this.domainForm?.get('domainname')?.value?.trim().length == 0)"
+                    >
+                      Please Enter Domain Name
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="domainForm?.get('domainname')?.errors?.['invalidInput']"
+                    >
+                      Please Enter Valid Domain Name
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="domainForm?.get('domainname')?.errors?.['minlength']"
+                    >
+                      Minimum length should be 3
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="domainForm?.get('domainname')?.errors?.['maxlength']"
+                    >
+                      Maximum length should be 100
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="mb-lg-0 mb-md-3">
+                    <label class="form-label"
+                      >Code <span class="char-red">*</span></label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter Code"
+                      formControlName="code"
+                      OnlyNumber
+                      maxlength="6"
+                      minlength="3"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (domainForm.controls['code']?.errors?.['required'])"
+                    >
+                      Please Enter code
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="domainForm?.get('code')?.errors?.['minlength']"
+                    >
+                      Minimum length should be 3
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="domainForm?.get('code')?.errors?.['maxlength']"
+                    >
+                      Maximum length should be 6
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="mb-lg-0 mb-md-3">
+                    <label class="form-label"
+                      >Status <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      placeholder="Select Status"
+                      formControlName="status"
+                    >
+                      <ng-option
+                        *ngFor="let val of statusValue"
+                        [value]="val"
+                        >{{ val }}</ng-option
+                      >
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="domainForm.controls['status']?.errors?.['required'] "
+                    >
+                      Please Select Status
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="col-md-4"
+                  *appShowRoleBaseActions="[
+                    'Domain Master',
+                    ['create', 'edit']
+                  ]"
+                >
+                  <div class="d-flex justify-content-end">
+                    <div class="btn-wrap mt-30 btn-wrap-disable">
+                      <ng-container *ngIf="!isViewClick">
+                        <ng-container *ngIf="isShowButton">
+                          <ng-container
+                            *appShowRoleBaseActions="[
+                              'Domain Master',
+                              'create'
+                            ]"
+                          >
+                            <button
+                              class="btn-org me-3 btn-wrap-disable"
+                              (click)="
+                                onSubmit(isShowButton ? 'save' : 'update')
+                              "
+                              [disabled]="domainForm.invalid || updating"
+                            >
+                              <div
+                                class="d-flex justify-content-center align-items-center"
+                              >
+                                <div
+                                  class="spinner-border text-light me-2"
+                                  role="status"
+                                  *ngIf="updating"
+                                ></div>
+                                <span>
+                                  {{ isShowButton ? "Save" : "Update" }}</span
+                                >
+                              </div>
+                            </button>
+                            <!-- <button *ngIf="!isShowButton" class="btn-org me-3"
+                                                      (click)="onSubmit('update')">Update</button> -->
+                            <button class="btn-org-bdr" (click)="onCancel()">
+                              Reset
+                            </button>
+                          </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="!isShowButton">
+                          <ng-container
+                            *appShowRoleBaseActions="['Domain Master', 'edit']"
+                          >
+                            <button
+                              class="btn-org me-3 btn-wrap-disable"
+                              (click)="
+                                onSubmit(isShowButton ? 'save' : 'update')
+                              "
+                              [disabled]="domainForm.invalid || updating"
+                            >
+                              <div
+                                class="d-flex justify-content-center align-items-center"
+                              >
+                                <div
+                                  class="spinner-border text-light me-2"
+                                  role="status"
+                                  *ngIf="updating"
+                                ></div>
+                                <span>
+                                  {{ isShowButton ? "Save" : "Update" }}</span
+                                >
+                              </div>
+                            </button>
+                            <!-- <button *ngIf="!isShowButton" class="btn-org me-3"
+                                                      (click)="onSubmit('update')">Update</button> -->
+                            <button class="btn-org-bdr" (click)="onCancel()">
+                              Reset
+                            </button>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                      <ng-container *ngIf="isViewClick">
+                        <button
+                          type="button"
+                          class="btn-org-bdr"
+                          (click)="onCancel()"
+                          *appShowRoleBaseActions="['Domain Master', 'view']"
+                        >
+                          Close
+                        </button>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div
+          class="card-table"
+          *appShowRoleBaseActions="[
+            'Domain Master',
+            ['edit', 'view', 'delete']
+          ]"
+        >
+          <div class="card-table-top">
+            <div class="row">
+              <div class="col-md-7">
+                <div class="common-form">
+                  <div class="row g-3">
+                    <div class="col-md-7">
+                      <div class="search-wrap">
+                        <div class="input-group">
+                          <span class="material-icons-round input-group-text">
+                            search
+                          </span>
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Enter Keyword"
+                            [(ngModel)]="searchFilter"
+                            (keyup.enter)="applyFilter($event, 'domain')"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <div class="advance-filter">
+                        <div class="btn-wrap">
+                          <button
+                            class="btn-org"
+                            [disabled]="!searchFilter"
+                            (click)="applyFilter(searchFilter, 'domain')"
+                          >
+                            Search
+                          </button>
+                          <button
+                            class="btn-org-bdr ms-3"
+                            (click)="
+                              searchFilter = '';
+                              applyFilter(searchFilter, 'domain')
+                            "
+                          >
+                            Clear
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="view-wrap">
+                  <div class="row g-3 justify-content-end">
+                    <div class="col-auto">
+                      <div class="export-wrap">
+                        <div class="btn-export me-3">Export</div>
+                        <button
+                          class="btn-adobe me-3"
+                          (click)="printPDF()"
+                          [disabled]="dataSource.filteredData.length == 0"
+                        >
+                          <img
+                            src="assets/images/adobe.svg"
+                            alt="adobe"
+                            class="img-fluid"
+                          />
+                        </button>
+                        <button
+                          class="btn-xml"
+                          (click)="exportExcel()"
+                          [disabled]="dataSource.filteredData.length == 0"
+                        >
+                          <img
+                            src="assets/images/xml.svg"
+                            alt="xml"
+                            class="img-fluid"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                    <!-- <div class="col-auto">
+                                  <div class="btn-wrap">
+                                    <button class="btn-org">View All</button>
+                                  </div>
+                                </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="common-table">
+            <div class="table-container table-responsive">
+              <table
+                class="table table-striped"
+                mat-table
+                [dataSource]="dataSource"
+              >
+                <ng-container matColumnDef="sn">
+                  <th mat-header-cell *matHeaderCellDef>S.No</th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ viewtable.pageIndex * viewtable.pageSize + (i + 1) }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="domainName">
+                  <th mat-header-cell *matHeaderCellDef>Domain Name</th>
+                  <td mat-cell *matCellDef="let element" class="word-break">
+                    {{ element?.domainName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="domainCode">
+                  <th mat-header-cell *matHeaderCellDef>Code</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.domainCode }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="subdomain">
+                  <th mat-header-cell *matHeaderCellDef>Sub Domain Name</th>
+                  <td mat-cell *matCellDef="let element">
+                    <button
+                      id="manageSubDomain"
+                      (click)="
+                        manageSubDomainReport(element);
+                        subDomain();
+                        scroll($event, 'commonScrollTo')
+                      "
+                      class="table-btn table-btn-org"
+                    >
+                      Manage Sub Domain
+                    </button>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap" *ngIf="element.status == true">
+                      <a class="table-btn table-btn-active">Active</a>
+                    </div>
+                    <div class="btn-wrap" *ngIf="element.status == false">
+                      <a class="table-btn table-btn-inactive">Inactive</a>
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>Action</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap">
+                      <button
+                        id="edit"
+                        class="me-3"
+                        (click)="
+                          edit(element, 'edit');
+                          scroll($event, 'commonScrollTo')
+                        "
+                        [disabled]="!element?.isEditable"
+                        *appShowRoleBaseActions="['Domain Master', 'edit']"
+                      >
+                        <img
+                          src="assets/images/edit-user.svg"
+                          alt="icon"
+                          class="img-fluid"
+                        />
+                      </button>
+                      <button
+                        id="view"
+                        class="me-3"
+                        (click)="
+                          edit(element, 'view');
+                          scroll($event, 'commonScrollTo')
+                        "
+                        *appShowRoleBaseActions="['Domain Master', 'view']"
+                      >
+                        <img
+                          src="assets/images/view-user.svg"
+                          alt="icon"
+                          class="img-fluid"
+                        />
+                      </button>
+                      <button
+                        id="remove"
+                        [disabled]="!element.status || !element?.isEditable"
+                        (click)="remove(element)"
+                        type="button"
+                        *appShowRoleBaseActions="['Domain Master', 'delete']"
+                      >
+                        <img
+                          src="assets/images/remove.svg"
+                          alt="icon"
+                          class="img-fluid"
+                        />
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="noRecord">
+                  <td
+                    class="text-center"
+                    mat-footer-cell
+                    [attr.colspan]="6"
+                    *matFooterCellDef
+                  >
+                    <app-no-record-found
+                      [height]="'400px'"
+                    ></app-no-record-found>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="loading">
+                  <td
+                    class="text-center"
+                    mat-footer-cell
+                    [attr.colspan]="10"
+                    *matFooterCellDef
+                  >
+                    <app-loader [height]="'400px'"></app-loader>
+                  </td>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedColumns; sticky: true"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                ></tr>
+                <tr
+                  mat-footer-row
+                  [hidden]="!isLoading"
+                  *matFooterRowDef="['loading']"
+                ></tr>
+                <tr
+                  mat-footer-row
+                  [hidden]="isLoading || dataSource.filteredData.length > 0"
+                  *matFooterRowDef="['noRecord']"
+                ></tr>
+              </table>
+            </div>
+            <mat-paginator
+              #viewtable
+              [pageSizeOptions]="[10, 20]"
+              hidePageSize="true"
+              [hidden]="dataSource.filteredData.length == 0"
+              aria-label="Select page of periodic elements"
+              showFirstLastButtons
+            >
+            </mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub Domain Start -->
+    <div class="col-md-12 my-4" *ngIf="!isSubDomain">
+      <div class="card-wrap" id="focusForm">
+        <div
+          class="card-form"
+          *appShowRoleBaseActions="[
+            'Sub Domain Master',
+            ['create', 'edit', 'view']
+          ]"
+        >
+          <h3 class="title-grey">
+            {{ subDomainMSG }}
+          </h3>
+          <div class="common-form py-lg-4 py-3">
+            <form #f="ngForm" [formGroup]="subDomainForm">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Domain Name <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      formControlName="domainname"
+                      placeholder="Select Domain Name"
+                      (change)="onSelectChange($event)"
+                      [(ngModel)]="assignDomain"
+                    >
+                      <ng-option
+                        *ngFor="let domain of domainArr"
+                        [value]="domain"
+                        >{{ domain?.domainName }}</ng-option
+                      >
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (subDomainForm.controls['domainname']?.errors?.['required'] )"
+                    >
+                      Please Select Domain Name
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Sub Domain Name <span class="char-red">*</span></label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      formControlName="subdomainname"
+                      placeholder="Enter Sub Domain Name"
+                      DomainName
+                      maxlength="100"
+                      minlength="3"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (subDomainForm.controls['subdomainname']?.errors?.['required'] || this.subDomainForm?.get('subdomainname')?.value?.trim().length == 0)"
+                    >
+                      Please Enter Sub Domain Name
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="subDomainForm?.get('subdomainname')?.errors?.['invalidInput']"
+                    >
+                      Please Enter Valid Domain Name
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="subDomainForm?.get('subdomainname')?.errors?.['minlength']"
+                    >
+                      Minimum length should be 3
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="subDomainForm?.get('subdomainname')?.errors?.['maxlength']"
+                    >
+                      Maximum length should be 100
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Code<span class="char-red">*</span></label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter Code"
+                      formControlName="code"
+                      OnlyNumber
+                      maxlength="6"
+                      minlength="3"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (subDomainForm.controls['code']?.errors?.['required'])"
+                    >
+                      Please Enter code
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="subDomainForm?.get('code')?.errors?.['minlength']"
+                    >
+                      Minimum length should be 3
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="subDomainForm?.get('code')?.errors?.['maxlength']"
+                    >
+                      Maximum length should be 6
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Status <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      placeholder="Select Status"
+                      formControlName="status"
+                    >
+                      <ng-option
+                        *ngFor="let val of statusValue"
+                        [value]="val"
+                        >{{ val }}</ng-option
+                      >
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="subDomainForm.controls['status']?.errors?.['required'] "
+                    >
+                      Please Select Status
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="col-md-12"
+                  *appShowRoleBaseActions="[
+                    'Sub Domain Master',
+                    ['create', 'edit']
+                  ]"
+                >
+                  <div class="d-flex justify-content-end">
+                    <div class="btn-wrap btn-wrap-disable">
+                      <ng-container *ngIf="!isSubViewClick">
+                        <ng-container *ngIf="isShowButton">
+                          <ng-container
+                            *appShowRoleBaseActions="[
+                              'Sub Domain Master',
+                              'create'
+                            ]"
+                          >
+                            <button
+                              class="btn-org me-3"
+                              [disabled]="subDomainForm.invalid || updating"
+                              (click)="
+                                onSubmitSubDomain(
+                                  isShowButton ? 'save' : 'update'
+                                )
+                              "
+                            >
+                              <div
+                                class="d-flex justify-content-center align-items-center"
+                              >
+                                <div
+                                  class="spinner-border text-light me-2"
+                                  role="status"
+                                  *ngIf="updating"
+                                ></div>
+                                <span>
+                                  {{ isShowButton ? "Save" : "Update" }}</span
+                                >
+                              </div>
+                            </button>
+
+                            <button class="btn-org-bdr" (click)="onCancel()">
+                              Reset
+                            </button>
+                          </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="!isShowButton">
+                          <ng-container
+                            *appShowRoleBaseActions="[
+                              'Sub Domain Master',
+                              'edit'
+                            ]"
+                          >
+                            <button
+                              class="btn-org me-3"
+                              [disabled]="subDomainForm.invalid || updating"
+                              (click)="
+                                onSubmitSubDomain(
+                                  isShowButton ? 'save' : 'update'
+                                )
+                              "
+                            >
+                              <div
+                                class="d-flex justify-content-center align-items-center"
+                              >
+                                <div
+                                  class="spinner-border text-light me-2"
+                                  role="status"
+                                  *ngIf="updating"
+                                ></div>
+                                <span>
+                                  {{ isShowButton ? "Save" : "Update" }}</span
+                                >
+                              </div>
+                            </button>
+
+                            <button class="btn-org-bdr" (click)="onCancel()">
+                              Reset
+                            </button>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                      <ng-container *ngIf="isSubViewClick">
+                        <button
+                          type="button"
+                          class="btn-org-bdr"
+                          (click)="onCancel()"
+                          *appShowRoleBaseActions="[
+                            'Sub Domain Master',
+                            'view'
+                          ]"
+                        >
+                          Close
+                        </button>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div
+          class="card-table"
+          *appShowRoleBaseActions="[
+            'Sub Domain Master',
+            ['edit', 'view', 'delete']
+          ]"
+        >
+          <!-- <h3 class="title-grey mb-3">List of Sub Domain in Domain - Access</h3> -->
+          <div class="card-table-top">
+            <div class="row">
+              <div class="col-md-7">
+                <div class="common-form">
+                  <div class="row g-3">
+                    <div class="col-md-7">
+                      <div class="search-wrap">
+                        <div class="input-group">
+                          <span class="material-icons-round input-group-text">
+                            search
+                          </span>
+                          <input
+                            type="text"
+                            class="form-control"
+                            #searchItem
+                            placeholder="Enter Keyword"
+                            [(ngModel)]="subSearchFilter"
+                            (keyup.enter)="applyFilter($event, 'subdomain')"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <div class="advance-filter">
+                        <div class="btn-wrap">
+                          <button
+                            class="btn-org"
+                            [disabled]="!subSearchFilter"
+                            (click)="applyFilter(subSearchFilter, 'subdomain')"
+                          >
+                            Search
+                          </button>
+                          <button
+                            class="btn-org-bdr ms-3"
+                            (click)="
+                              subSearchFilter = '';
+                              applyFilter(subSearchFilter, 'subdomain')
+                            "
+                          >
+                            Clear
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="view-wrap">
+                  <div class="row g-3 justify-content-end">
+                    <div class="col-auto">
+                      <div class="export-wrap">
+                        <div class="btn-export me-3">Export</div>
+                        <button
+                          class="btn-adobe me-3"
+                          (click)="printPDF()"
+                          [disabled]="dataSourceManage.filteredData.length == 0"
+                        >
+                          <img
+                            src="assets/images/adobe.svg"
+                            alt="adobe"
+                            class="img-fluid"
+                          />
+                        </button>
+                        <button
+                          class="btn-xml"
+                          (click)="exportExcel()"
+                          [disabled]="dataSourceManage.filteredData.length == 0"
+                        >
+                          <img
+                            src="assets/images/xml.svg"
+                            alt="xml"
+                            class="img-fluid"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                    <!-- <div class="col-auto">
+                                  <div class="btn-wrap">
+                                    <button class="btn-org">View All</button>
+                                  </div>
+                                </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="common-table">
+            <div class="table-container table-responsive">
+              <table
+                class="table table-striped"
+                mat-table
+                [dataSource]="dataSourceManage"
+              >
+                <ng-container matColumnDef="sn">
+                  <th mat-header-cell *matHeaderCellDef>S.No</th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{
+                      viewmanagetable.pageIndex * viewmanagetable.pageSize +
+                        (i + 1)
+                    }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="domain">
+                  <th mat-header-cell *matHeaderCellDef>Domain Name</th>
+                  <td mat-cell *matCellDef="let element" class="word-break">
+                    {{ element?.domainMaster?.domainName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="code">
+                  <th mat-header-cell *matHeaderCellDef>Domain Code</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.domainMaster?.domainCode }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="subDomainName">
+                  <th mat-header-cell *matHeaderCellDef>Sub Domain Name</th>
+                  <td mat-cell *matCellDef="let element" class="word-break">
+                    {{ element?.subDomainName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="subDomainCode">
+                  <th mat-header-cell *matHeaderCellDef>Sub Domain Code</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.subDomainCode }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap" *ngIf="element.status == true">
+                      <a class="table-btn table-btn-active">Active</a>
+                    </div>
+                    <div class="btn-wrap" *ngIf="element.status == false">
+                      <a class="table-btn table-btn-inactive">Inactive</a>
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>Action</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap">
+                      <button
+                        id="edit"
+                        class="me-3"
+                        (click)="
+                          editSubDomain(element, 'subedit');
+                          scroll($event, 'commonScrollTo')
+                        "
+                        [disabled]="!element?.isEditable"
+                        *appShowRoleBaseActions="['Sub Domain Master', 'edit']"
+                      >
+                        <img
+                          src="assets/images/edit-user.svg"
+                          alt="icon"
+                          class="img-fluid"
+                        />
+                      </button>
+                      <button
+                        id="view"
+                        class="me-3"
+                        (click)="
+                          editSubDomain(element, 'subview');
+                          scroll($event, 'commonScrollTo')
+                        "
+                        *appShowRoleBaseActions="['Sub Domain Master', 'view']"
+                      >
+                        <img
+                          src="assets/images/view-user.svg"
+                          alt="icon"
+                          class="img-fluid"
+                        />
+                      </button>
+                      <button
+                        id="remove"
+                        [disabled]="!element.status || !element?.isEditable"
+                        (click)="remove(element)"
+                        type="button"
+                        *appShowRoleBaseActions="[
+                          'Sub Domain Master',
+                          'delete'
+                        ]"
+                      >
+                        <img
+                          src="assets/images/remove.svg"
+                          alt="icon"
+                          class="img-fluid"
+                        />
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="noRecord">
+                  <td
+                    class="text-center"
+                    mat-footer-cell
+                    [attr.colspan]="7"
+                    *matFooterCellDef
+                  >
+                    <app-no-record-found
+                      [height]="'400px'"
+                    ></app-no-record-found>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="loading">
+                  <td
+                    class="text-center"
+                    mat-footer-cell
+                    [attr.colspan]="10"
+                    *matFooterCellDef
+                  >
+                    <app-loader [height]="'400px'"></app-loader>
+                  </td>
+                </ng-container>
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="SubdisplayedColumns; sticky: true"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: SubdisplayedColumns"
+                ></tr>
+                <tr
+                  mat-footer-row
+                  [hidden]="!isLoading"
+                  *matFooterRowDef="['loading']"
+                ></tr>
+                <tr
+                  mat-footer-row
+                  [hidden]="
+                    isLoading || dataSourceManage.filteredData.length > 0
+                  "
+                  *matFooterRowDef="['noRecord']"
+                ></tr>
+              </table>
+            </div>
+
+            <mat-paginator
+              #viewmanagetable
+              [pageSizeOptions]="[10, 20]"
+              hidePageSize="true"
+              [hidden]="dataSourceManage.filteredData.length == 0"
+              aria-label="Select page of periodic elements"
+              showFirstLastButtons
+            >
+            </mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Assign Menu End -->
+  </div>
+</div>
+
+<app-popup *ngIf="isShowPopup" (popup)="removeRecord($event)"></app-popup>
+<!-- <div class="alert" [class.visible]="isVisible">{{ msg }}</div> -->
+
+<!-----------------------------PDF Start Here=------------------------------------->
+<ng-container *ngIf="pdfOpen">
+  <div class="padding-main-divcls" id="print-pdf">
+    <table class="table table-bordered">
+      <thead>
+        <tr colspan="40">
+          <th colspan="40">
+            <header style="height: 80px">
+              <div
+                class="d-flex header-height justify-content-between align-items-center"
+              >
+                <img src="assets/images/ministry-logo.svg" [height]="50" />
+                <img src="assets/images/pgi-logo.svg" [height]="50" />
+              </div>
+            </header>
+          </th>
+        </tr>
+        <tr colspan="40">
+          <th colspan="40">
+            <div class="d-flex">
+              <ng-container
+                *ngFor="let breadcrums of breadcrums.links; let last = last"
+              >
+                <span class="bread-span"
+                  >{{ breadcrums?.link }} {{ !last ? "/" : "" }}
+                </span>
+              </ng-container>
+            </div>
+          </th>
+        </tr>
+        <tr class="header-table">
+          <ng-container *ngIf="isSubDomain">
+            <th>S.No</th>
+            <th>Domain Name</th>
+            <th>Code</th>
+            <th>Status</th>
+          </ng-container>
+
+          <ng-container *ngIf="!isSubDomain">
+            <th>S.No</th>
+            <th>Domain Name</th>
+            <th>Domain Code</th>
+            <th>Sub Domain Name</th>
+            <th>SubDomain Code</th>
+            <th>Status</th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container
+          *ngFor="
+            let items of isSubDomain
+              ? dataSource.filteredData
+              : dataSourceManage.filteredData;
+            let i = index
+          "
+        >
+          <ng-container *ngIf="isSubDomain">
+            <tr>
+              <td>{{ i + 1 }}</td>
+              <td>{{ items?.domainName }}</td>
+              <td>{{ items?.domainCode }}</td>
+              <td>{{ items?.status ? "Active" : "Inactive" }}</td>
+            </tr>
+          </ng-container>
+
+          <ng-container *ngIf="!isSubDomain">
+            <tr>
+              <td>{{ i + 1 }}</td>
+              <td>{{ items?.domainMaster?.domainName }}</td>
+              <td>{{ items?.domainMaster?.domainCode }}</td>
+              <td>{{ items?.subDomainName }}</td>
+              <td>{{ items?.subDomainCode }}</td>
+              <td>{{ items?.status ? "Active" : "Inactive" }}</td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
+<!-- element['Domain Name'] = element['domainMaster']['domainName']
+element['Domain Code'] = element['domainMaster']['domainCode']
+element['Sub Domain Name'] = element['subDomainName']
+element['SubDomain Code'] = element['subDomainCode']
+element['status'] = element['status'] ? 'Active' :'Inactive' -->

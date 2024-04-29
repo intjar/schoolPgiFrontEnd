@@ -1,0 +1,14 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 66 84" width="66" height="84">
+	<title>report-svg</title>
+	<style>
+		.s0 { fill: #ffffff } 
+	</style>
+	<g id="Document">
+		<path id="Layer" class="s0" d="m13.4 17.7h37.8v2.2h-37.8z"/>
+		<path id="Layer" class="s0" d="m13.4 25.7h37.8v2.1h-37.8z"/>
+		<path id="Layer" class="s0" d="m13.4 34.4h37.8v2.2h-37.8z"/>
+		<path id="Layer" class="s0" d="m13.4 42.4h37.8v2.1h-37.8z"/>
+		<path id="Layer" class="s0" d="m13.4 51.1h37.8v2.2h-37.8z"/>
+		<path id="Layer" fill-rule="evenodd" class="s0" d="m65.4 7.3v59.2c0 9.2-7.5 16.7-16.7 16.7h-42.2c-3.6 0-6.5-2.9-6.5-6.5v-69.4c0-3.6 2.9-6.5 6.5-6.5h52.3c3.6 0 6.6 2.9 6.6 6.5zm-58.9 71.6h38.2v-15.5h16.3v-56.1c0-1.2-1-2.2-2.2-2.2h-52.3c-1.2 0-2.1 1-2.1 2.2v69.4c0 1.2 0.9 2.2 2.1 2.2zm54.4-11.1h-11.9v11c6.2-0.1 11.3-4.9 11.9-11z"/>
+	</g>
+</svg>

@@ -1,0 +1,266 @@
+<div class="row" [ngStyle]="isPDF ? {'margin-top':'20px'}: {}">
+  <div class="col-md-3">
+    <div class="form-content">
+      <h3 class="title-black" [ngStyle]="isPDF ? {'text-align':'left','font-size':'17px'}: {}">Survey Name</h3>
+      <p class="desc-black disabled" [ngStyle]="isPDF ? {'text-align':'left','font-size':'17px'}: {}">
+        {{result?.result_head?.[0]?.survey_name ? result?.result_head?.[0]?.survey_name : result?.[0]?.survey_name }}
+      </p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="form-content">
+      <h3 class="title-black" [ngStyle]="isPDF ? {'text-align':'left','font-size':'17px'}: {}">Year Assigned On</h3>
+      <p class="desc-black disabled" [ngStyle]="isPDF ? {'text-align':'left','font-size':'17px'}: {}">
+        {{result?.result_head?.[0]?.start_date ? result?.result_head?.[0]?.start_date : result?.[0]?.year_assigned_on}}
+      </p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="form-content">
+      <h3 class="title-black" [ngStyle]="isPDF ? {'text-align':'left','font-size':'17px'}: {}">Active Upto</h3>
+      <p class="desc-black disabled" [ngStyle]="isPDF ? {'text-align':'left','font-size':'17px'}: {}">
+        {{result?.result_head?.[0]?.active_upto ? result?.result_head?.[0]?.active_upto : result?.[0]?.valid_upto}}
+      </p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="form-content">
+      <h3 class="title-black" [ngStyle]="isPDF ? {'text-align':'left','font-size':'17px'}: {}">Instance Name</h3>
+      <p class="desc-black disabled" [ngStyle]="isPDF ? {'text-align':'left','font-size':'17px'}: {}">
+        {{instance_name ? instance_name : ''}}
+      </p>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="form-content">
+      <h3 class="title-black" [ngStyle]="isPDF ? {'text-align':'left','font-size':'17px'}: {}">Description</h3>
+      <p class="desc-black disabled" [ngStyle]="isPDF ? {'text-align':'left','font-size':'17px'}: {}">
+        {{result?.result_head?.[0]?.survey_description ? result?.result_head?.[0]?.survey_description :
+        result?.[0]?.survey_desc}}
+      </p>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="row">
+  <!-- <div class="col-md-12">
+    <div class="card-table-top mb-0">
+      <div class="view-wrap">
+        <div class="export-wrap">
+          <div class="btn-export me-3">Export</div>
+          <button class="btn-adobe me-3">
+            <img src="assets/images/adobe.svg" alt="adobe" class="img-fluid" />
+          </button>
+          <button class="btn-xml">
+            <img src="assets/images/xml.svg" alt="xml" class="img-fluid" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <div class="col-md-12">
+    <ng-container *ngFor="let question of domainObjectArray; let index = index">
+      <div class="common-table common-table-survey my-3">
+        <h2 class="heading-black common-table-heading">
+          {{ index + 1 }}.
+          {{ filterHeader(question)?.[0]?.domain_name}}
+          {{
+          filterHeader(question)?.[0]?.sub_domain_name? ('-' +
+          filterHeader(question)?.[0]?.sub_domain_name): ''}}
+        </h2>
+        <div class="table-container table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>
+                  S.No
+                </th>
+                <th>
+                  Question
+                </th>
+                <th>
+                  Answer
+                </th>
+                <th>
+                  Weightage
+                </th>
+                <th>
+                  Value
+                </th>
+                <th>
+                  Pointers
+                </th>
+                <th>
+                  Data Source
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let item of loadForm(domainObjectArray[index]); let i = index">
+                <tr>
+                  <ng-container *ngIf="item.sub_question_id == 0">
+                    <td>
+                      {{ item.indexNo }}
+                    </td>
+                    <td>
+                      <p class="mb-0">
+                        {{
+                        isReview
+                        ? item?.question_name
+                        : item?.question
+                        }}<span class="char-red">*</span>
+                      </p>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="item">
+                        <app-pdf-commom [items]="item"></app-pdf-commom>
+                      </ng-container>
+                    </td>
+                    <td>
+                      {{item?.weightage}}
+                    </td>
+                    <td>
+                      {{item?.value_logic}}
+                    </td>
+                    <td>
+                      {{item?.pointer_logic}}
+                    </td>
+                    <td>
+                      {{item?.data_source_name}}
+                    </td>
+                  </ng-container>
+                  <ng-container *ngIf="item.sub_question_id != 0">
+                    <td>
+                      {{ item.indexNo }}
+                    </td>
+                    <td>
+                        <p class="mb-0">
+
+                          {{
+                          isReview
+                          ? item?.sub_question_name
+                          : item?.question
+                          }}
+                          <span class="char-red">*</span>
+                        </p>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="item">
+                        <app-pdf-commom [items]="item"></app-pdf-commom>
+                      </ng-container>
+                    <td>
+
+                    </td>
+                    <td>
+
+                    </td>
+                    <td>
+
+                    </td>
+                    <td>
+
+                    </td>
+                  </ng-container>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- <div class="form-list" *ngIf="isPDF">
+      <ol>
+        <ng-container *ngFor="let question of domainObjectArray; let index = index">
+          <li [ngStyle]="isPDF ? {'text-align':'left','list-style-type':'none', 'padding':'none'}: {}">
+            <div class="form-list-content">
+              <div class="row">
+                <div class="col-md-12">
+                  <h2 class="heading-black"
+                    [ngStyle]="isPDF ? {'text-align':'left','font-size':'17px','margin-top': '15px'}: {}">
+                    {{ index + 1 }}.
+                    {{ filterHeader(question)?.[0]?.domain_name}}
+                    {{
+                    filterHeader(question)?.[0]?.sub_domain_name? ('-' +
+                    filterHeader(question)?.[0]?.sub_domain_name): ''}}
+                  </h2>
+                </div>
+              </div>
+
+              <div class="row" [ngStyle]="isPDF ? {'margin-left':'20px'}: {}">
+                <ng-container *ngFor="let item of loadForm(domainObjectArray[index]); let i = index">
+                  <ng-container *ngIf="item.sub_question_id == 0">
+                   
+                    <div class="col-12 col-md-6">
+                      <div class="form-content">
+                        <h3 class="title-black" [ngStyle]="isPDF ? {'font-size':'15px'}: {}">
+                          {{ item.indexNo }}. {{
+                          isReview
+                          ? item?.question_name
+                          : item?.question
+                          }}<span class="char-red">*</span>
+                        </h3>
+                        <p class="desc-black">
+                          {{
+                          isReview
+                          ? item?.question_name
+                          : item?.question
+                          }}
+                        </p>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 mb-4">
+                      <ng-container *ngIf="item">
+                        <app-pdf-commom [items]="item"></app-pdf-commom>
+                      </ng-container>
+                    </div>
+                    <div class="col-12 mb-4" *ngIf="isReview">
+                      <app-calculation [calculation]="item"></app-calculation>
+                    </div>
+                  </ng-container>
+
+                  
+                  <ng-container *ngIf="item.sub_question_id != 0">
+                    <div class="col-12 col-md-6 mb-4">
+                      <div class="form-content" [ngStyle]="isPDF ? {'margin-left':'15px'}: {}">
+                        <div class="mb-2">
+                          <h3 class="title-black" [ngStyle]="isPDF ? {'font-size':'15px'}: {}">
+                            {{ item.indexNo }}
+                            {{
+                            isReview
+                            ? item?.sub_question_name
+                            : item?.question
+                            }}
+                            <span class="char-red">*</span>
+                          </h3>
+                          <p class="desc-black">
+                            {{
+                            isReview
+                            ? item?.sub_question_name
+                            : item?.question
+                            }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                      <ng-container *ngIf="item">
+                        <app-pdf-commom [items]="item"></app-pdf-commom>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </div>
+          </li>
+        </ng-container>
+      </ol>
+    </div> -->
+  </div>
+</div>

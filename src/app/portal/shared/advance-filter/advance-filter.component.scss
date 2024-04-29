@@ -1,0 +1,23 @@
+@import '../../../../assets/scss/variables';
+
+.form{
+    &-radio-wrap{
+        display: flex;
+        align-items: center;
+    }
+    &-check-input{
+        &[type=radio] {
+            border-radius: 50% !important;
+        }
+        &:checked {
+            background-color: $orange;
+            border-color: $orange;
+        }
+    }
+}
+
+.btn-add-label{
+    margin: 30px 0 0 0;
+    height: 42px;
+    padding: 0 14px;
+}

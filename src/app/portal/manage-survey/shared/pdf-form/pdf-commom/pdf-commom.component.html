@@ -1,0 +1,27 @@
+<ng-container>
+  <div class="d-flex flex-column" >
+    <!-- <ng-container *ngIf="items?.ans_options">
+      <label class="form-label"><b>Option :</b> {{replaceString(items?.ans_options)}}</label>
+    </ng-container>
+    <label class="form-label"><b>Type :</b> {{items?.type}}</label> -->
+    <!-- <label class="form-label" *ngIf="items?.answers ? items?.answers : items?.answer"><b>Answer :</b> -->
+
+      {{replaceString(items?.answers ? items?.answers : items?.answer) == true ? (items?.answers ? (items?.answers | date :'YYYY-MM-dd' ): (items?.answer | date :'YYYY-MM-dd')) : replaceString(items?.answers ? items?.answers : items?.answer)}}
+      <!-- <ng-container *ngIf="items?.type == 'Drop Down'|| items?.type == 'Single Text Box'">
+        {{items?.answers}}
+      </ng-container>
+      <ng-container *ngIf="items?.type  == 'Check Box' || items?.type == 'Multiple Choice'">
+        {{replaceString(items?.answers)}}
+      </ng-container>
+      <ng-container *ngIf="items?.type == 'Date Time'">
+        {{items?.answers | date :'YYYY-MM-dd'}}
+      </ng-container>
+      <ng-container *ngIf="items?.type == 'Multiple Text Box'">
+        {{replaceAns(replaceString(items?.answers))}}
+      </ng-container>
+      <ng-container *ngIf="items?.type == 'File Upload'">
+        <a [href]="basePath+items?.answers">{{basePath}}{{items?.answers}}</a>
+      </ng-container> -->
+    <!-- </label> -->
+  </div>
+</ng-container>

@@ -1,0 +1,98 @@
+@import '../../../../assets/scss/variables';
+
+.upload-wrap{
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    p{
+        text-align: left;
+        font-size: 0.625em;
+    }
+    .btn{
+        &-upload{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 120px;
+            font-size: 0.75em;
+            padding: 18px;
+            position: relative;
+            img{
+                height: 18px;
+                position: absolute;
+                left: 10px;
+                top: 50%;
+                transform: translate(0%, -50%);
+            }
+            label{
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%,-50%);
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 10px 0 35px;
+            }
+        }
+        // &-disable{
+        //     background-color: $disableBtn;
+        //     &:hover{
+        //         background-color: $disableBtn;
+        //     }
+        // }
+    }
+}
+
+.font-size{
+    letter-spacing: 0px;
+    color: #363B46;
+    font-size: 0.75em;
+    font-weight: 500;
+}
+
+.form-margin{
+    margin-top: 2rem;
+    .g-3{
+        padding: 1rem;
+    }
+}
+
+.pad-0{
+    padding: 0 !important;
+}
+
+.file-name {
+    &-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid $grey_29;
+      border-radius: 3px;
+      padding: 10px;
+    }
+  
+    &-preview {
+      letter-spacing: 0px;
+      color: $black;
+      font-size: 0.875em;
+      font-weight: 600;
+      margin: 0 15px 0 0;
+      word-break: break-all;
+    }
+  }
+
+  .modal-title-black {
+    font-size: 1em;
+    font-weight: 600;
+    letter-spacing: 0px;
+    margin: 0;
+    padding: 10px 0;
+    color: $grey_27;
+    .seprator {
+      border-right: 1px solid $grey_1;
+      margin: 0 15px;
+    }
+  }

@@ -1,0 +1,546 @@
+<div class="container-fluid p-4">
+  <div class="row">
+    <div class="col-md-12">
+      <app-breadcrumb [breadcrums]="breadcrums" (back)="backToSurvey()" [showBack]="true"></app-breadcrumb>
+    </div>
+    <div class="col-md-12 my-4">
+      <div class="card-wrap">
+        <div class="card-form">
+          <h3 class="title-grey">Survey Summary</h3>
+          <div class="summary-wrap pt-4">
+            <div class="row" *ngFor="let data of assignSurveyArr">
+              <div class="col-md-2">
+                <h3 class="summary-title">Survey Name</h3>
+                <p [title]="data.surveyName" class="summary-desc">{{data?.surveyName}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Data Approver</h3>
+                <p class="summary-desc">{{data?.approverLevelId?.levelName}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Data Reviewer</h3>
+                <p class="summary-desc">{{reviewerLevel(data?.reviewerLevelId)}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Data Viewer</h3>
+                <p class="summary-desc">{{viewerLevel(data?.viewerLevelId)}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Data Entry</h3>
+                <p class="summary-desc">{{data?.deoLevelId?.levelName}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Year </h3>
+                <p class="summary-desc">{{data?.yearCode}} </p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Active Duration</h3>
+                <p class="summary-desc">{{data?.surveyStartDate | date:'dd-MM-yyyy'}} to {{data?.surveyEndDate |
+                  date:'dd-MM-yyyy'}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Approval Role</h3>
+                <p class="summary-desc">{{data?.approverRoleId?.name}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Reviewer Roles </h3>
+                <p class="summary-desc">{{popupReviewerRole(data?.reviewerRole)}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Viewer Roles</h3>
+                <p class="summary-desc">{{popupViewerRole(data?.viewerRole)}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Data Entry Role</h3>
+                <p class="summary-desc">{{data?.deoRoleId?.name}}</p>
+              </div>
+              <div class="col-md-2">
+                <h3 class="summary-title">Procedure Name</h3>
+                <p class="summary-desc">{{data?.procedureName}}</p>
+              </div>
+              <div class="col-md-12">
+                <h3 class="summary-title">Description</h3>
+                <p class="summary-desc">{{data?.surveyDescription}}</p>
+              </div>
+              
+              <div class="col-md-12">
+                <div class="d-flex justify-content-end">
+                  <div class="btn-wrap">
+                    <button class="btn-org-link view-btn" (click)="view()">
+                      <img src="assets/images/eye-org.svg" alt="view" class="img-fluid" /> View Mapped Questions
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="card-table">
+          <h3 class="title-grey mb-3">User List</h3>
+          <!-- <div class="card-table-top">
+            <div class="common-form">
+              <form>
+                <div class="row g-3">
+                  <div class="col-md-3">
+                    <div class="mb-lg-0 mb-md-3">
+                      <ng-select placeholder="Data Entry Level" (change)="applyFilter($event, 'level')"
+                        [multiple]="true" name="dataEntryModel" [(ngModel)]="dataEntryModel">
+                        <ng-option *ngFor="let level of dataEntryLevelArr"
+                          [value]="level">{{level?.level_name}}</ng-option>
+
+                          <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:1 ;let j = index;">
+                              <span class="ng-value-label" title="{{items[j]?.level_name}}">{{items[j]?.level_name}}</span>
+                              <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                            </div>
+                            <div class="ng-value" *ngIf="items.length > 1">
+                              <span class="ng-value-label"  title="{{showTitle(items,'dataentrylevel')}}">+ {{items.length - 1}} more</span>
+                            </div>
+                          </ng-template>
+
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="mb-lg-0 mb-md-3">
+                      <ng-select [multiple]="true" placeholder="Select Instance" (change)="instanceApplyFilter($event)" [(ngModel)]="instanceModel" name="instanceModel">
+                        <ng-option *ngFor="let inst of instanceArr" [value]="inst">{{inst?.instanceName}}</ng-option>
+
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                          <div class="ng-value" *ngFor="let item of items | slice:0:1 ;let j = index;">
+                            <span class="ng-value-label" title="{{items[j]?.instanceName}}">{{items[j]?.instanceName}}</span>
+                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                          </div>
+                          <div class="ng-value" *ngIf="items.length > 1">
+                            <span class="ng-value-label"  title="{{showTitle(items,'instance')}}">+ {{items.length - 1}} more</span>
+                          </div>
+                        </ng-template>
+
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="mb-lg-0 mb-md-3">
+                      <div class="search-wrap">
+                        <div class="input-group">
+                          <span class="material-icons-round input-group-text">
+                            search
+                          </span>
+                          <input (keyup)="applyFilter($event,'isSearchField')" type="text" class="form-control"
+                            placeholder="Enter Keyword" [(ngModel)]="keywordModel" name="keywordModel"/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="view-wrap">
+                      <div class="row g-3 justify-content-end">
+                        <div class="col-auto">
+                          <div class="export-wrap">
+                            <div class="btn-export me-3">Export</div>
+                            <button class="btn-adobe me-3" (click)="printData('pdf')">
+                              <img src="assets/images/adobe.svg" alt="adobe" class="img-fluid" />
+                            </button>
+                            <button class="btn-xml" (click)="printData('csv')">
+                              <img src="assets/images/xml.svg" alt="xml" class="img-fluid" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div> -->
+
+          <div class="card-table-top">
+            <div class="row">
+              <div class="col-md-7">
+                <div class="common-form">
+                  <div class="row g-3">
+                    <div class="col-md-7">
+                      <div class="search-wrap">
+                        <div class="input-group">
+                          <span class="material-icons-round input-group-text">
+                            search
+                          </span>
+                          <input type="text" class="form-control" [(ngModel)]="searchValue"
+                            (keyup.enter)="filterData('filter')" placeholder="Enter Keyword" [minlength]="3" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <div class="advance-filter">
+                        <div class="btn-wrap">
+                          <button class="btn-org" [disabled]="!searchValue" (click)="filterData('filter')">
+                            Search
+                          </button>
+                          <button class="btn-org-bdr ms-3" (click)="searchValue = ''; filterData('clear')">
+                            Clear
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="view-wrap">
+                  <div class="row g-3 justify-content-end">
+                    <div class="col-auto">
+                      <div class="export-wrap">
+                        <div class="btn-export me-3">Export</div>
+                        <button class="btn-adobe me-3" (click)="printData('pdf')">
+                          <img src="assets/images/adobe.svg" alt="adobe" class="img-fluid" />
+                        </button>
+                        <button class="btn-xml" (click)="printData('csv')">
+                          <img src="assets/images/xml.svg" alt="xml" class="img-fluid" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="common-table">
+            <div class="table-container table-responsive">
+              <table class="table table-striped" matSort mat-table [dataSource]="dataSource">
+                <ng-container matColumnDef="sn">
+                  <th mat-header-cell *matHeaderCellDef>S.No</th>
+                  <td mat-cell *matCellDef="let element; let i = index;"> {{ (viewtable.pageIndex *
+                    viewtable.pageSize)+(i + 1) }} </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>User Name</th>
+                  <td mat-cell *matCellDef="let element">{{element?.user_name}}</td>
+                </ng-container>
+                <ng-container matColumnDef="entity">
+                  <th mat-header-cell *matHeaderCellDef>Entity Level</th>
+                  <td mat-cell *matCellDef="let element" [title]="element?.level_name" class="ellipse-text">
+                    {{element?.level_name}}</td>
+                </ng-container>
+                <ng-container matColumnDef="instance">
+                  <th mat-header-cell *matHeaderCellDef>Instance</th>
+                  <td mat-cell *matCellDef="let element" [title]="element?.instance_name" class="ellipse-text">
+                    {{element?.instance_name}}</td>
+                </ng-container>
+                <ng-container matColumnDef="role">
+                  <th mat-header-cell *matHeaderCellDef>Role Name</th>
+                  <td mat-cell *matCellDef="let element" [title]="element?.role_name" class="ellipse-text">
+                    {{element?.role_name}}</td>
+                </ng-container>
+                <ng-container matColumnDef="approver">
+                  <th mat-header-cell *matHeaderCellDef>Approver
+                  </th>
+                  <td mat-cell *matCellDef="let element; let i = index;">
+                    <div class="common-form">
+                      <div class="form-check me-3">
+                        <input class="form-check-input" type="checkbox"
+                          [checked]="dataSource.filteredData[i]?.app_is_chk == 1" [disabled]="true">
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="reviewer">
+                  <th mat-header-cell *matHeaderCellDef>Reviewer
+                  </th>
+                  <td mat-cell *matCellDef="let element; let i = index;">
+                    <div class="common-form">
+                      <div class="form-check me-3">
+                        <input class="form-check-input" type="checkbox"
+                          [checked]="dataSource.filteredData[i]?.reviw_is_chk == 1" [disabled]="true">
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="viewer">
+                  <th mat-header-cell *matHeaderCellDef>Viewer
+                  </th>
+                  <td mat-cell *matCellDef="let element; let i = index;">
+                    <div class="common-form">
+                      <div class="form-check me-3">
+                        <input class="form-check-input" type="checkbox"
+                          [checked]="dataSource.filteredData[i]?.viw_is_chk == 1" [disabled]="true">
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="deo">
+                  <th mat-header-cell *matHeaderCellDef>DEO
+                  </th>
+                  <td mat-cell *matCellDef="let element; let i = index;">
+                    <div class="common-form">
+                      <div class="form-check me-3">
+                        <input class="form-check-input" type="checkbox"
+                          [checked]="dataSource.filteredData[i]?.deo_is_chk == 1" [disabled]="true">
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="noRecord">
+                  <td class="text-center" mat-footer-cell [attr.colspan]="10" *matFooterCellDef><app-no-record-found
+                      [height]="'400px'"></app-no-record-found></td>
+                </ng-container>
+                <ng-container matColumnDef="loading">
+                  <td class="text-center" mat-footer-cell [attr.colspan]="10" *matFooterCellDef><app-loader
+                      [height]="'400px'"></app-loader></td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                <tr mat-footer-row [hidden]="!isLoading" *matFooterRowDef="['loading']"></tr>
+                <tr mat-footer-row [hidden]="isLoading || dataSource.filteredData.length >0"
+                  *matFooterRowDef="['noRecord']"></tr>
+              </table>
+
+            </div>           
+            <mat-paginator [pageSize]="10" [hidePageSize]="true" [hidden]="dataSource.filteredData.length == 0"
+              [showFirstLastButtons]="true" [length]="totalCount" [pageIndex]="pageNumber"
+              (page)="handlePageEvent($event)">
+            </mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="isDataLoading">
+  <div class="position-fixed full-page-loader h-100 d-flex justify-content-center align-items-center top-0 start-0">
+    <app-loader [height]="'400px'"></app-loader>
+  </div>
+</ng-container>
+
+<!-----------------------------PDF Start Here=------------------------------------->
+<ng-container *ngIf="pdfOpen">
+  <div class="padding-main-divcls" id="print-pdf">
+    <table class="table table-bordered">
+      <thead>
+        <tr colspan="40">
+          <th colspan="40">
+            <header style="height: 80px">
+              <div class="d-flex header-height justify-content-between align-items-center">
+                <img src="assets/images/ministry-logo.svg" [height]="50" />
+                <img src="assets/images/pgi-logo.svg" [height]="50" />
+              </div>
+            </header>
+          </th>
+        </tr>
+        <tr colspan="40">
+          <th colspan="40">
+            <div class="d-flex">
+              <ng-container *ngFor="let breadcrums of breadcrums.links; let last = last">
+                <span class="bread-span">{{ breadcrums?.link }} {{ !last ? "/" : "" }}
+                </span>
+              </ng-container>
+            </div>
+          </th>
+        </tr>
+        <tr class="header-table">
+          <ng-container>
+            <th>S.No</th>
+            <th>User Name</th>
+            <th>Entity Level</th>
+            <th>Instance</th>
+            <th>Role Name</th>
+            <th>Approver</th>
+            <th>Reviewer</th>
+            <th>Viewer</th>
+            <th>DEO</th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let items of assignSurveyAllData; let i = index">
+          <tr>
+            <td>{{ i + 1 }}</td>
+            <td>{{ items?.user_name }}</td>
+            <td>{{ items?.level_name }}</td>
+            <td>{{ items?.instance_name }}</td>
+            <td>{{ items?.role_name }}</td>
+            <td>{{ items?.app_is_chk == 1 ?  'Approver' : '' }}</td>  
+            <td>{{ items?.reviw_is_chk == 1 ?  'Reviewer' : '' }}</td>           
+            <td>{{ items?.viw_is_chk == 1 ?  'Viewer' : '' }}</td>  
+            <td>{{ items?.deo_is_chk == 1 ?  'DEO' : '' }}</td>  
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="isGenerating">
+  <div class="position-fixed full-page-loader h-100 d-flex justify-content-center align-items-center top-0 start-0">
+    <app-loader [height]="'400px'"></app-loader>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="viewButtonModal">
+  <div
+    class="modal common-modal fade show"
+    tabindex="-1"
+    role="dialog"
+    id="viewButtonModal"
+    aria-labelledby="viewButtonModalLabel"
+    aria-hidden="true"
+    [ngStyle]="{ display: displayStyle }"
+    role="dialog"
+    data-backdrop="true"
+  >
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">View Mapped Questions</h4>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            (click)="closeViewModal()"
+          >
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="scrollbar-y pe-3">
+              <div class="row">
+                <!-- <div class="col-md-12">
+                  <div class="card-table-top mb-0">
+                      <div class="view-wrap">
+                          <div class="export-wrap">
+                              <div class="btn-export me-3">Export</div>
+                              <button class="btn-adobe me-3">
+                                  <img src="assets/images/adobe.svg" alt="adobe" class="img-fluid" />
+                              </button>
+                              <button class="btn-xml">
+                                  <img src="assets/images/xml.svg" alt="xml" class="img-fluid" />
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+              </div> -->
+                <div class="col-md-12">
+                  <div *ngFor="let item of heading" [hidden]="item?.question == 0">
+                    <div class="common-table common-table-survey my-3">
+                      <h2 class="heading-black common-table-heading">
+                        {{ item?.domainName }}
+                      </h2>
+                      <div class="table-container table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                              <tr>
+                                <th>
+                                    S.No
+                                </th>
+                                <th>
+                                    Question
+                                </th>
+                                <th>
+                                    Weightage
+                                </th>
+                                <th>
+                                    Max Value
+                                </th>
+                                <th>
+                                    Max Pointer
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                              <ng-container *ngFor="let ques of item?.question; let i = index">
+                                <tr>
+                                  <td>
+                                    {{ ques?.indexNo }}
+                                  </td>
+                                  <td>
+                                    {{ ques?.question }}
+                                  </td>
+                                  <td>
+                                    {{ ques?.weightage }}
+                                  </td>
+                                  <td>
+                                    {{ ques?.valueLogic }}
+                                  </td>
+                                  <td>
+                                    {{ ques?.pointerLogic }}
+                                  </td>
+                                </tr>
+                              </ng-container>
+                            </tbody>
+                        </table>
+                      </div>
+  
+                    </div>
+                  </div>
+                </div>
+                <!-- <div *ngFor="let item of heading" [hidden]="item?.question == 0">
+                  <div class="col-md-12">
+                    <div class="modal-body-content mb-4">
+                      <h3 class="modal-title-grey">
+                        {{ item?.domainName }}
+                      </h3>
+                      <div class="row" *ngFor="let ques of item?.question; let i = index">
+                        <div class="col-md-6 mb-3">
+                          <p class="modal-desc-black">
+                            {{ i + 1 + ")" }} {{ ques?.question }}
+                          </p>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                          <h3 class="modal-title-grey">
+                            Value
+                          </h3>
+                          <p class="modal-desc-black">
+                            {{ ques?.valueLogic }}
+                          </p>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                          <h3 class="modal-title-grey">
+                            Pointer
+                          </h3>
+                          <p class="modal-desc-black">
+                            {{ ques?.pointerLogic }}
+                          </p>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                          <h3 class="modal-title-grey">
+                            Weightage
+                          </h3>
+                          <p class="modal-desc-black">
+                            {{ ques?.weightage }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+              </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="btn-wrap m-0 col-md-5">
+            <button
+              type="button"
+              class="btn-org me-3"
+              data-bs-dismiss="modal"
+              (click)="closeViewModal()"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    _ngcontent-boi-c151=""
+    class="modal-backdrop fade show ng-tns-c151-7"
+  ></div>
+</ng-container>

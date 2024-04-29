@@ -1,0 +1,17 @@
+<div class="mb-0">
+  <ng-select
+    placeholder="Select Financial Year"
+    (change)="selectFinancialYear($event)"
+    [(ngModel)]="year"
+  >
+    <ng-option value="All">All</ng-option>
+    <ng-option *ngFor="let year of financialYearArr" [value]="year">{{
+      year?.yearCode
+    }}</ng-option>
+  </ng-select>
+
+  <!-- <div
+        class="invalid-feedback">
+        Please Select Approval Role
+      </div> -->
+</div>

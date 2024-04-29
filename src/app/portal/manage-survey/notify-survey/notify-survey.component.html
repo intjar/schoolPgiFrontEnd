@@ -1,0 +1,211 @@
+
+<div class="container-fluid p-4">
+    <div class="row">
+      <div class="col-md-12">
+        <app-breadcrumb [breadcrums]="breadcrums" (back)="backToSurvey()" [showBack]="true"></app-breadcrumb>
+      </div>
+      <div class="col-md-12 my-4">
+        <div class="card-wrap">
+          <div class="card-form">
+            <h3 class="title-grey">Survey Summary</h3>
+            <div class="summary-wrap pt-4">
+              <div class="row" *ngFor="let data of assignSurveyArr">
+                <div class="col-md-2">
+                  <h3 class="summary-title">Survey Name</h3>
+                  <p [title]="data.surveyName" class="summary-desc">{{data?.surveyName}}</p>
+                </div>
+                <div class="col-md-2">
+                  <h3 class="summary-title">Data Approver</h3>
+                  <p class="summary-desc">{{data?.approverLevelId?.levelName}}</p>
+                </div>
+                <div class="col-md-2">
+                  <h3 class="summary-title">Data Reviewer</h3>
+                  <p class="summary-desc">{{reviewerLevel(data?.reviewerLevelId)}}</p>
+                </div>
+                <div class="col-md-2">
+                  <h3 class="summary-title">Data Viewer</h3>
+                  <p class="summary-desc">{{viewerLevel(data?.viewerLevelId)}}</p>
+                </div>
+                <div class="col-md-2">
+                  <h3 class="summary-title">Data Entry</h3>
+                  <p class="summary-desc">{{data?.deoLevelId?.levelName}}</p>
+                </div>
+                <div class="col-md-2">
+                  <h3 class="summary-title">Year </h3>
+                  <p class="summary-desc">{{data?.yearCode}} </p>
+                </div>
+                <div class="col-md-2">
+                  <h3 class="summary-title">Active Duration</h3>
+                  <p class="summary-desc">{{data?.surveyStartDate | date:'dd-MM-yyyy'}} to {{data?.surveyEndDate | date:'dd-MM-yyyy'}}</p>
+                </div>
+                <div class="col-md-2">
+                  <h3 class="summary-title">Approval Role</h3>
+                  <p class="summary-desc">{{data?.approverRoleId?.name}}</p>
+                </div>
+                <div class="col-md-2">
+                  <h3 class="summary-title">Reviewer Roles </h3>
+                  <p class="summary-desc">{{popupReviewerRole(data?.reviewerRole)}}</p>
+                </div>
+                <div class="col-md-2">
+                  <h3 class="summary-title">Viewer Roles</h3>
+                  <p class="summary-desc">{{popupViewerRole(data?.viewerRole)}}</p>
+                </div>
+                <div class="col-md-2">
+                  <h3 class="summary-title">Data Entry Role</h3>
+                  <p class="summary-desc">{{data?.deoRoleId?.name}}</p>
+                </div>
+  
+                <div class="col-md-12">
+                  <h3 class="summary-title">Description</h3>
+                  <p class="summary-desc">{{data?.surveyDescription}}</p>
+                </div>
+                <div class="col-md-12">
+                    <div class="d-flex justify-content-end">
+                      <!-- <div class="btn-wrap">
+                        <button class="btn-org-link view-btn" (click)="view()">
+                          <img src="assets/images/eye-org.svg" alt="view" class="img-fluid" /> View Mapped Questions
+                        </button>
+                      </div> -->
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end pt-3">
+            <div class="btn-wrap">
+              <button class="btn-org" type="button" (click)="isShowPopup = true;" [disabled]="isNotified">{{notifySurveyButton}}</button>
+            </div>
+          </div>
+          <div class="card-table mt-3" *ngIf="!assignSurveyArr[0]?.isAssignEnable">
+            <h3 class="title-grey mb-3">Assigned/Unassigned Survey</h3>
+            <div class="card-table-top">
+              <div class="common-form">
+                <form>
+                  <div class="row g-3">
+                    <div class="col-md-3">
+                      <div class="mb-3">
+                        <label class="form-label">Action <span class="char-red">*</span></label>
+                        <ng-select placeholder="Select Action" (change)="getAssignedUnassignedLeveldata($event, 'action')"
+                        name="action" [(ngModel)]="actionSurveyModel">
+                          <ng-option *ngFor="let action of surveyActionArr"
+                            [value]="action">{{action?.name}}</ng-option>
+                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">                       
+                              <div class="ng-value" *ngFor="let item of items | slice:0:1 ;let j = index;">
+                                <span class="ng-value-label" title="{{items[j]?.name}}">{{items[j]?.name}}</span>
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                              </div>
+                              <div class="ng-value" *ngIf="items.length > 1">
+                                <span class="ng-value-label"  title="{{showTitle(items,'action')}}">+ {{items.length - 1}} more</span>
+                              </div>
+                            </ng-template>
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="mb-3">
+                        <label class="form-label">Level <span class="char-red">*</span></label>
+                        <ng-select placeholder="Select Data Entry Level" (change)="getAssignedUnassignedInstanceRoledata($event, 'level')"
+                          [multiple]="true" name="levelSurveyModel" [(ngModel)]="levelSurveyModel">
+                          <ng-option *ngFor="let level of surveyLevelArr"
+                            [value]="level">{{level?.levelName}}</ng-option>
+                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">                       
+                              <div class="ng-value" *ngFor="let item of items | slice:0:1 ;let j = index;">
+                                <span class="ng-value-label" title="{{items[j]?.levelName}}">{{items[j]?.levelName}}</span>
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                              </div>
+                              <div class="ng-value" *ngIf="items.length > 1">
+                                <span class="ng-value-label"  title="{{showTitle(items,'dataentrylevel')}}">+ {{items.length - 1}} more</span>
+                              </div>
+                            </ng-template>
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="mb-3">
+                        <label class="form-label">Instance</label>
+                        <ng-select [multiple]="true" placeholder="Select Instance" [(ngModel)]="instanceSurveyModel" name="instanceSurveyModel">
+                          <ng-option *ngFor="let inst of surveyInstanceArr" [value]="inst">{{inst?.instanceName}}</ng-option>
+                          <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">                       
+                            <div class="ng-value" *ngFor="let item of items | slice:0:1 ;let j = index;">
+                              <span class="ng-value-label" title="{{items[j]?.instanceName}}">{{items[j]?.instanceName}}</span>
+                              <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                            </div>
+                            <div class="ng-value" *ngIf="items.length > 1">
+                              <span class="ng-value-label"  title="{{showTitle(items,'instance')}}">+ {{items.length - 1}} more</span>
+                            </div>
+                          </ng-template>
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="mb-3">
+                        <label class="form-label">Role</label>
+                        <ng-select name="roleSurveyModel" placeholder="Select Roles"
+                        [multiple]="true" [(ngModel)]="roleSurveyModel">
+                        <ng-option *ngFor="let role of surveyRoleArr" [value]="role">{{role?.name}}</ng-option>
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">                       
+                          <div class="ng-value" *ngFor="let item of items | slice:0:1 ;let j = index;">
+                            <span class="ng-value-label" title="{{items[j]?.name}}">{{items[j]?.name}}</span>
+                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                          </div>
+                          <div class="ng-value" *ngIf="items.length > 1">
+                            <span class="ng-value-label"  title="{{showTitle(items,'role')}}">+ {{items.length - 1}} more</span>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="d-flex justify-content-end">
+                          <div class="btn-wrap">
+                            <button class="btn-org me-3" type="button" type="button" (click)="SaveSurveyData('AST')" [disabled]="isNotified">Assign</button>
+                            <button type="button" class="btn-org-bdr" (click)="SaveSurveyData('UST')" [disabled]="isNotified">Unassign</button>
+                          </div>
+                        </div>
+                    </div>  
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="alert" [class.visible]="isVisible"> {{msg}} </div>
+  <ng-container *ngIf="isDataLoading">
+    <div class="position-fixed full-page-loader h-100 d-flex justify-content-center align-items-center top-0 start-0">
+      <app-loader  [height]="'400px'"></app-loader>
+    </div>
+  </ng-container>
+  
+  <!-- View Survey Modal Start-->
+  <ng-container *ngIf="viewButtonModal">
+    <div class="modal common-modal fade show" tabindex="-1" role="dialog" id="viewButtonModal"
+    aria-labelledby="viewButtonModalLabel" aria-hidden="true" [ngStyle]="{'display':displayStyle}"  role="dialog" data-backdrop="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Survey Details</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeViewModal()">
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <app-no-record-found [height]="'300px'" *ngIf="dataUniqueArray?.[0] == undefined"></app-no-record-found>
+          <view-mapped-questions [result]="resultData" [unique]="dataUniqueArray"
+          [popup]="true"  *ngIf="dataUniqueArray?.[0] != undefined"></view-mapped-questions>
+        </div>
+        <div class="modal-footer">
+          <div class="btn-wrap m-0 col-md-5">
+            <button type="button" class="btn-org me-3" data-bs-dismiss="modal" (click)="closeViewModal()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div _ngcontent-boi-c151="" class="modal-backdrop fade show ng-tns-c151-7"></div>
+  </ng-container>
+  <!-- View Survey Modal End-->
+  <app-notify-popup *ngIf="isShowPopup" (popup)="notifySurvey($event)" [modalText]="modalText"></app-notify-popup>

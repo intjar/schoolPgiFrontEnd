@@ -1,0 +1,109 @@
+@import '../../../../assets/scss/variables';
+
+ol {
+  padding: 0 !important;
+
+  li {
+    list-style-type: none;
+  }
+}
+
+.icon-margin {
+  margin-bottom: 25px;
+}
+
+.pagination-text {
+  margin: 0;
+  color: $grey_9;
+  font-size: 0.75em;
+  font-weight: 600;
+}
+
+.modal-base {
+  background-color: #000000a1;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1111;
+}
+
+.survey-form {
+  .form-list-content {
+    margin-bottom: 12px;
+    padding: 10px;
+    &.active {
+      background: $grey-background;
+      padding: 10px 12px;
+
+      .heading-black {
+        color: $dark-purple;
+      }
+    }
+
+    .heading-black {
+      color: $grey_28;
+      font-size: 0.875em;
+      margin: 0 0 18px 0;
+      font-weight: bold;
+    }
+
+    .ques-status {
+      margin: 0 8px 0 0;
+      font-size: 0.75em;
+      font-weight: 500;
+      letter-spacing: 0px;
+      color: $black;
+      border-right: 1px solid $grey_10;
+      padding: 0 8px 0 0;
+      line-height: 2;
+
+      &:last-child {
+        border: none;
+        padding: 0;
+        margin: 0;
+      }
+    }
+  }
+}
+
+
+
+.progress {
+  height: 4px;
+  border-radius: 0;
+  margin: 5px 0;
+  &-wrap{
+    .title {
+      font-size: 0.625em;
+      font-weight: 500;
+      letter-spacing: 0px;
+      color: $black;
+      display: block;
+    }
+  }
+  &-bar {
+    width: 0;
+    background-color: $green;
+    animation: progress 1.5s ease-in-out forwards;
+  } 
+}
+
+@keyframes progress {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+} 
+@keyframes show  {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+

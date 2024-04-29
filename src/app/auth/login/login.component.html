@@ -1,0 +1,156 @@
+<div class="login-wrap">
+    <div class="logo-wrap">
+        <div class="logo-left me-2">
+            <img src="assets/images/ministry-logo.svg" alt="ministry-logo" class="img-fluid" />
+        </div>
+        <div class="logo-right text-end">
+            <img src="assets/images/pgi-logo.svg" alt="pgi-logo" class="img-fluid" />
+        </div>
+    </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-5 col-xxl-5">
+                <div class="login-card">
+                    <h2 class="heading-black">
+                        Login
+                    </h2>
+                    <div class="login-form">
+                        <form #f="ngForm" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="input-group mb-4">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="username"  formControlName="username" placeholder="Username" (keyup)="userField()" maxlength="50">
+                                            <label>User Name</label>
+                                        </div>
+                                        <span class="input-group-text">
+                                            <img src="assets/images/user.svg" alt="user-icon" class="img-fluid" />
+                                        </span>
+                                        <div class="invalid-feedback"
+                                        *ngIf="isSubmitted && (loginForm.controls['username']?.errors?.['required'] || this.loginForm?.get('username')?.value?.trim().length == 0) || isUser">
+                                        {{userErrormsg}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="input-group mb-4">
+
+                                        <div class="form-floating">
+                                            <ng-container *ngIf="!isLocal">
+
+                                                <input [type]="viewPassword" maxlength="20" type="password" class="form-control" id="password" formControlName="password" placeholder="Password" (keyup)="PassField()" appBlockcopypaste>
+
+                                            </ng-container>
+                                            <ng-container *ngIf="isLocal">
+
+                                                <input [type]="viewPassword" maxlength="20" type="password" class="form-control" id="password" formControlName="password" placeholder="Password" (keyup)="PassField()" >
+
+                                            </ng-container>
+                                            <label>Password</label>
+                                        </div>
+                                        <a *ngIf="viewPassword == 'password'" class="input-group-text">
+                                            <img src="assets/images/eye-close.svg" alt="eye-icon" class="img-fluid"
+                                                (click)="passwordView()" />
+                                        </a>
+                                        <a *ngIf="viewPassword == 'text'" class="input-group-text">
+                                            <img src="assets/images/eye.svg" alt="eye-icon" class="img-fluid"
+                                                (click)="passwordView()" />
+                                        </a>
+
+                                        <div class="invalid-feedback"
+                                        *ngIf="isSubmitted && (loginForm.controls['password']?.errors?.['required'] || this.loginForm?.get('password')?.value?.trim().length == 0) || isPassword">
+                                            {{passErrormsg}}
+                                        </div>
+                                        <!-- <div class="invalid-feedback" *ngIf="isMessage">Incorrect password</div> -->
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group mb-4 captcha-group">
+                                        <div class="form-floating">
+                                            <span id="captcha" class="captcha-no"></span>
+                                        </div>
+                                        <a  class="input-group-text" (click)="createCaptcha(true,false)">
+                                            <img src="assets/images/refresh.svg" alt="refresh-icon" class="img-fluid" />
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group mb-4 captcha-input">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" OnlyNumber formControlName="captcha" placeholder="Security Text" maxlength="6" (keyup)="inputCaptcha()">
+                                            <label>Security Text</label>
+                                        </div>
+                                        <div class="invalid-feedback"
+                                        *ngIf="isSubmitted && (loginForm.controls['captcha']?.errors?.['required'] || this.loginForm?.get('captcha')?.value?.trim().length == 0) || isValidCaptcha">
+                                         {{captchaErrormsg}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="input-group mb-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" formControlName="check"(change)="inputCheck($event)" >
+                                            <label class="form-check-label">
+                                                I accept the Terms of Use
+                                            </label>
+                                        </div>
+                                        <div class="invalid-feedback"
+                                            *ngIf="isSubmitted && (loginForm.controls['check']?.errors?.['required']) ">
+                                            {{checkErrormsg}}
+                                        </div>
+                                        <div class="invalid-feedback" *ngIf="isValidCheck">{{checkErrormsg}}</div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="mb-4 text-end">
+                                        <a (click)="forgetpass()" class="forget-link" style="cursor: pointer;">Forgot Password ?</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="btn-wrap mb-4">
+                                        <button class="btn-org" type="submit" [disabled]="isSend">
+                                          <div class="d-flex justify-content-center align-items-center">
+                                          <div class="spinner-border text-light me-2" role="status" *ngIf="isSend"></div>
+                                          <span>Login</span>
+                                        </div>
+
+                                        </button>
+                                    </div>
+                                    <!-- <p class="signup-text mb-3">Don't have an account? <a href="#" class="link-org">Sign Up</a></p> -->
+                                    <p class="term-text">By continuing, you agree to accept our Privacy Policy & Terms of Service.</p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="copyright-text">
+                    <p>
+                        © 2023, Department of School Education & Literacy, Ministry of Education
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="alert" [class.visible]="isVisible"> {{msg}} </div> -->
+</div>
+
+<!--
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Login to school PGI</h4>
+            </div>
+            <div class="modal-body">
+                <p>Incorrect username and password</p>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-danger" (click)="closePopup()" >OK</button>
+            </div>
+        </div>
+    </div>
+</div> -->
+

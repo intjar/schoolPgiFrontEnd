@@ -1,0 +1,117 @@
+
+/* fallback */
+@font-face {
+    font-family: 'Material Icons';
+    src: url('~/assets/fonts/material-icons/MaterialIcons-Regular.eot');
+    src: url('~/assets/fonts/material-icons/MaterialIcons-Regular.eot?#iefix') format('embedded-opentype'),
+        url('~/assets/fonts/material-icons/MaterialIcons-Regular.woff2') format('woff2'),
+        url('~/assets/fonts/material-icons/MaterialIcons-Regular.woff') format('woff'),
+        url('~/assets/fonts/material-icons/MaterialIcons-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* fallback */
+@font-face {
+    font-family: 'Material Icons Round';
+    src: url('~/assets/fonts/material-icons/MaterialIconsRound-Regular.eot');
+    src: url('~/assets/fonts/material-icons/MaterialIconsRound-Regular.eot?#iefix') format('embedded-opentype'),
+        url('~/assets/fonts/material-icons/MaterialIconsRound-Regular.woff2') format('woff2'),
+        url('~/assets/fonts/material-icons/MaterialIconsRound-Regular.woff') format('woff'),
+        url('~/assets/fonts/material-icons/MaterialIconsRound-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* fallback */
+@font-face {
+    font-family: 'Material Icons Two Tone';
+    src: url('~/assets/fonts/material-icons/MaterialIconsTwoTone-Regular.eot');
+    src: url('~/assets/fonts/material-icons/MaterialIconsTwoTone-Regular.eot?#iefix') format('embedded-opentype'),
+        url('~/assets/fonts/material-icons/MaterialIconsTwoTone-Regular.woff2') format('woff2'),
+        url('~/assets/fonts/material-icons/MaterialIconsTwoTone-Regular.woff') format('woff'),
+        url('~/assets/fonts/material-icons/MaterialIconsTwoTone-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* fallback */
+@font-face {
+    font-family: 'Material Icons Outlined';
+    src: url('~/assets/fonts/material-icons/MaterialIconsOutlined-Regular.eot');
+    src: url('~/assets/fonts/material-icons/MaterialIconsOutlined-Regular.eot?#iefix') format('embedded-opentype'),
+        url('~/assets/fonts/material-icons/MaterialIconsOutlined-Regular.woff2') format('woff2'),
+        url('~/assets/fonts/material-icons/MaterialIconsOutlined-Regular.woff') format('woff'),
+        url('~/assets/fonts/material-icons/MaterialIconsOutlined-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
+
+
+.material-icons-round {
+    font-family: 'Material Icons Round';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
+
+.material-icons-two-tone {
+    font-family: 'Material Icons Two Tone';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
+
+.material-icons-outlined {
+    font-family: 'Material Icons Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}

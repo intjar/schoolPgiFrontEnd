@@ -1,0 +1,31 @@
+<div class="col-md-12">
+    <div class="top-wrap">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="content-left">
+                <h2 class="heading-grey">
+                    {{breadcrums?.heading}}
+                </h2>
+                <div class="breadcrumb-wrap">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                          <ng-container *ngFor="let item of breadcrums?.links">
+                            <li class="breadcrumb-item" *ngIf="!item?.current" routerLinkActive="router-link-active" ><a  >{{item?.link}}</a></li>
+                            <li class="breadcrumb-item active" aria-current="page" *ngIf="item?.current">{{item?.link}}</li>
+                          </ng-container>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="content-right">
+                <div class="btn-wrap" *ngIf="showBack">
+                    <button class="btn btn-back" (click)="back.emit(true)">
+                        <span class="material-icons-round">
+                            keyboard_backspace
+                        </span>
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

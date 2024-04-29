@@ -1,0 +1,332 @@
+<ng-container *ngIf="!isSurveyUpload">
+  <div class="container-fluid p-4">
+    <div class="row">
+      <div class="col-md-12">
+        <app-breadcrumb [breadcrums]="breadcrums" (back)="backTo()"
+          [showBack]="true"></app-breadcrumb>
+      </div>
+      <div class="col-md-12 my-4">
+        <div class="card-wrap">
+          <ng-container *ngIf="isLoading">
+            <app-loader [height]="'400px'"></app-loader>
+          </ng-container>
+          <ng-container *ngIf="!isLoading && dataUniqueArray?.length == 0">
+            <app-no-record-found [height]="'400px'"></app-no-record-found>
+          </ng-container>
+          <ng-container *ngIf="!isLoading && dataUniqueArray?.length > 0">
+            <div class="row">
+              <div class="col-md-5">
+                <div class="card-form p-3">
+                  <h3 class="title-grey">Fill this Survey</h3>
+                  <div class="common-form survey-form pt-4">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-content">
+                          <h3 class="title-black">
+                            Survey Name 
+                          </h3>
+                          <p class="desc-black disabled">
+                            {{resultData?.result_head?.[0]?.survey_name}}
+                            <img src="assets/images/eye-blue.svg" alt="view" class="img-fluid ps-2 cursor-show"
+                              (click)="viewButtonModal = true;displayStyle = 'block'" />
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-content">
+                          <h3 class="title-black">
+                            Year Assigned On
+                          </h3>
+                          <p class="desc-black disabled">
+                            {{resultData?.result_head?.[0]?.start_date}}
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-content">
+                          <h3 class="title-black">
+                            Active Duration
+                          </h3>
+                          <p class="desc-black disabled">
+                            {{resultData?.result_head?.[0]?.active_upto}}
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="form-content">
+                          <h3 class="title-black">
+                            Description
+                          </h3>
+                          <p class="desc-black disabled">
+                            {{resultData?.result_head?.[0]?.survey_description}}
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="form-list">
+                          <ol>
+                            <li>
+                              <ng-container *ngFor="let unique of domainObjectArray;let i= index">
+                                <div class="form-list-content" [class.active]="(pageNumber+1) === (i+1)">
+                                  <h2 class="heading-black cursor-show"
+                                    (click)="onSelectQuestion(i);scroll($event,'commonScrollTo')">
+                                    <!-- {{i + 1}}. {{ filterHeader(unique?.domain)?.[0]?.domain_name}} {{ -->
+                                      {{i + 1}}. {{ filterHeader(i)?.[0]?.domain_name}} {{
+                                    filterHeader(i)?.[0]?.sub_domain_name? ('-' +
+                                    filterHeader(i)?.[0]?.sub_domain_name): ''}}
+                                  </h2>
+                                  <div class="d-flex align-items-center">
+                                    <span class="ques-status">
+                                      Total Question - {{filterHeader(i)?.[0]?.total_question}}
+                                    </span>
+                                    <span class="ques-status">
+                                      Answer Question - {{filterHeader(i)?.[0]?.attempted_question}}
+                                    </span>
+                                    <span class="ques-status">
+                                      Pending Question - {{filterHeader(i)?.[0]?.pending_question}}
+                                    </span>
+                                  </div>
+                                  <div class="progress-wrap">
+                                    <div class="progress">
+                                      <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="percentageCount(filterHeader(i)?.[0]?.total_question , filterHeader(i)?.[0]?.attempted_question)" aria-valuemin="0"
+                                        aria-valuemax="100"   [style.max-width.%]="percentageCount(filterHeader(i)?.[0]?.total_question , filterHeader(i)?.[0]?.attempted_question)"></div>
+                                    </div>
+                                    <span class="title">{{ percentageCount(filterHeader(i)?.[0]?.total_question , filterHeader(i)?.[0]?.attempted_question)}}% Completed</span>
+                                  </div>
+                                </div>
+                              </ng-container>
+                            </li>
+                          </ol>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <div class="card-form">
+                  <div class="common-form survey-form">
+                    <div class="form-list">
+                      <ol>
+                        <li>
+                          <app-data-form [pageNumber]="pageNumber" [pageChange]="pageChange" [resultData]="resultData"
+                            [dataUniqueArray]="dataUniqueArray" [updatedSno]="updatedSno"
+                            [disabled]="status == statusJson.f || disableFields || getRoleName()? true : false"
+                            [domainObjectArray]="domainObjectArray"></app-data-form>
+  
+                        </li>
+                      </ol>
+                    </div>
+  
+                    <div class="pagination-container">
+  
+                      <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="pagination-text">
+                          Pages {{pageNumber +1 }} of {{dataUniqueArray.length}}
+                        </span>
+                        <div class="btn-wrap">
+                          <!--When Status Not submitted-->
+                          <ng-container *ngIf="status != statusJson.f && !disableFields && !getRoleName()">
+                            <ng-container *ngIf="pageNumber != 0">
+                              <button class="btn-org me-3" (click)="pagination('prev')"
+                                [disabled]="pageNumber == 0">Prev</button>
+                            </ng-container>
+  
+                            <button class="btn-org-bdr me-3"
+                              (click)="udpateAns(dataUniqueArray.length-1 == pageNumber ? 'final': 'next')">{{dataUniqueArray.length-1
+                              ==
+                              pageNumber ? 'Save' :'Next'}}</button>
+                            <button class="btn-org-bdr" (click)="saveAndSubmit()"
+                              *ngIf="dataUniqueArray.length-1 == pageNumber">Save & Submit</button>
+                            <!-- <button class="btn-org-bdr ms-3" data-bs-toggle="modal" data-bs-target="#dataModal"
+                        (click)="isShowPopup = true">View</button> data-bs-toggle="modal" data-bs-target="#dataModal"-->
+                          </ng-container>
+  
+  
+                          <!--When Status Submitted-->
+                          <ng-container *ngIf="status == statusJson.f || disableFields || getRoleName()">
+                            <ng-container *ngIf="pageNumber != 0">
+                              <button class="btn-org me-3" (click)="pagination('prev')"
+                                [disabled]="pageNumber == 0">Prev</button>
+                            </ng-container>
+  
+                            <ng-container *ngIf="dataUniqueArray.length-1 != pageNumber">
+                              <button class="btn-org-bdr me-3" (click)="pagination('next')"
+                                [disabled]="dataUniqueArray.length-1 == pageNumber">{{dataUniqueArray.length-1 ==
+                                pageNumber ? 'Save' :'Next'}}</button>
+                            </ng-container>
+  
+                            <button class="btn-org-bdr" data-bs-toggle="modal" data-bs-target="#dataModal"
+                              (click)="isShowPopup = true">View</button>
+                          </ng-container>
+  
+                        </div>
+  
+  
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="alert" [class.visible]="isVisible"> {{msg}} </div> -->
+
+
+  <ng-container *ngIf="isShowPopup && resultData?.result_det?.length > 0">
+    <!-- Remark Detail Modal Start-->
+    <div class="modal-base">
+      <div class="modal common-modal fade show d-block" tabindex="-1" role="dialog" id="dataModal"
+        aria-labelledby="remarkButtonModalLabel" aria-hidden="true" [ngStyle]="{'display':displayStyle}">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Survey Name - {{resultData?.result_head?.[0]?.survey_name}}
+              </h4>
+              <button type="button" (click)="isShowPopup = false;type = ''" class="btn-close">
+                <span class="material-icons-round">close</span>
+              </button>
+            </div>
+
+            <div class="modal-body">
+              <div class="common-form survey-form">
+                <div class="form-list">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="modal-body-content">
+                        <ng-container *ngIf="isShowPopup">
+                          <approve-form [result]="resultData" [unique]="dataUniqueArray"
+                            [domainObjectArray]="domainObjectArray" [popup]="isShowPopup" [fieldShow]="true"
+                            (export)="export($event)"></approve-form>
+                        </ng-container>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ng-container *ngIf="(status == statusJson.s && !disableFields && !getRoleName()) || (isShowSubmit)">
+              <div class="modal-footer">
+                <div class="btn-wrap w-100 m-0">
+                  <div class="d-flex justify-content-between align-items-center w-100">
+                    <!--(change)="inputCheck($event)"formControlName="check" -->
+                    <div class="common-form">
+                      <div class="form-check map-check">
+                        <input class="form-check-input" type="checkbox" (change)="inputCheck($event)"
+                          [(ngModel)]="disableSubmitButton">
+                        <label class="form-check-label">
+                          I accept the Terms of Use
+                        </label>
+                      </div>
+                    </div>
+
+                    <!-- saveSubmit('', true , '')  -->
+
+                    <div class="btn-wrap-disable">
+                      <button class="btn-org" data-bs-dismiss="modal" [disabled]="!disableSubmitButton"
+                        (click)="disableSubmitButton ? finalSubmit() : '';">Submit</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+
+
+  <!-- View Survey Modal Start-->
+  <ng-container *ngIf="viewButtonModal">
+    <div class="modal common-modal fade show" tabindex="-1" role="dialog" id="viewButtonModal"
+      aria-labelledby="viewButtonModalLabel" aria-hidden="true" [ngStyle]="{'display':displayStyle}" role="dialog"
+      data-backdrop="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Survey Questions</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+              (click)="closeViewModal()">
+              <span class="material-icons-round">close</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <app-no-record-found [height]="'300px'" *ngIf="dataUniqueArray?.[0] == undefined"></app-no-record-found>
+
+            <view-mapped-questions [result]="resultPopup" [unique]="dataUniqueArray" [popup]="true"
+              *ngIf="dataUniqueArray?.[0] != undefined" [formDataEntry]="true"
+              [domainObjectArray]="domainObjectArray" ></view-mapped-questions>
+
+          </div>
+          <div class="modal-footer">
+            <div class="btn-wrap m-0 col-md-5">
+              <button type="button" class="btn-org me-3" data-bs-dismiss="modal"
+                (click)="closeViewModal()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div _ngcontent-boi-c151="" class="modal-backdrop fade show ng-tns-c151-7"></div>
+  </ng-container>
+  <!-- View Survey Modal End-->
+  <ng-container *ngIf="isPDF && dataUniqueArray.length > 0">
+    <div class="position-fixed full-page-loader h-100 d-flex justify-content-center align-items-center top-0 start-0">
+      <app-loader [height]="'400px'"></app-loader>
+    </div>
+
+    <div class="print">
+      <table class="table table-bordered" id="print-ans">
+        <thead>
+          <tr colspan="40">
+            <th colspan="40">
+              <header style="height: 80px;margin-bottom: 10px;">
+                <div class="d-flex header-height justify-content-between align-items-center">
+                  <img src="assets/images/ministry-logo.svg" [height]="50" />
+                  <img src="assets/images/pgi-logo.svg" [height]="50" />
+                </div>
+              </header>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <app-pdf-form [result]="resultData" [unique]="dataUniqueArray" [domainObjectArray]="domainObjectArray"
+                [isPDF]="isPDF"></app-pdf-form>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr colspan="40">
+            <td colspan="40">
+              <div class="footer-fixed" id="content">
+                <footer class="d-flex  justify-content-between align-items-center"><span>Disclaimer: Legal information
+                    is
+                    not legal advice. Read the disclaimer.</span>
+                  <div>Report Generation Date: {{currentTime | date :'YYYY-MM-dd'}}</div>
+                  <!-- <div id="empty-footer">Page </div> -->
+                </footer>
+              </div>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </ng-container>
+</ng-container>
+
+<ng-container *ngIf="isSurveyUpload">
+  <data-upload-form [id]="id" (back)="back.emit(true);" [result]="resultData" [unique]="dataUniqueArray"
+    [domainObjectArray]="domainObjectArray" [disabled]="status == statusJson.f ? true : false"></data-upload-form>
+</ng-container>

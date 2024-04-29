@@ -1,0 +1,115 @@
+<!-- Sidebar Start -->
+<div class="sidebar">
+  <div class="sidebar-scrollbar">
+    <div class="admin-profile">
+      <div class="admin-img">
+        <img src="assets/images/admin.png" alt="admin" class="img-fluid" />
+      </div>
+      <h3 class="admin-title">Welcome Back !</h3>
+      <h2 class="admin-name">{{ username }}</h2>
+      <div class="admin-role dropdown">
+        <button
+          class="dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <!-- Application Administrator -->
+          {{ roleName }}
+        </button>
+        <ul class="dropdown-menu">
+          <li class="dropdown-item" (click)="userProfile()">
+            <a class="dropdown-link">My Profile</a>
+          </li>
+          <li routerLink="/portal/profile/changePassword" class="dropdown-item">
+            <a class="dropdown-link">Change Password</a>
+          </li>
+          <li class="dropdown-item" (click)="userlogout()">
+            <a class="dropdown-link">Logout</a>
+          </li>
+        </ul>
+      </div>
+      <div class="admin-level-instance">
+        <p class="text-grey">{{ levelName }}</p>
+        <span class="seprator">-</span>
+        <p class="text-grey">{{ instanceName }}</p>
+      </div>
+    </div>
+
+    <div class="accordion" id="accordionSidebar">
+      <ng-container *ngFor="let menus of allMenus; let menuIndex = index">
+        <div class="accordion-item">
+          <div class="accordion-header" [attr.id]="menuIndex">
+            <button
+              [ngClass]="{ active: router.url.includes(menus?.url) }"
+              (click)="toggleMenu()"
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              [attr.data-bs-target]="'#collapse' + menuIndex"
+              aria-expanded="false"
+              [attr.aria-controls]="'collapse' + menuIndex"
+              *ngIf="menus?.subMenu?.length > 0"
+            >
+              <img
+                [src]="'assets/images/' + menus?.icons"
+                alt="{{ menus?.icons }}"
+                class="img-fluid"
+              />
+              {{ menus?.title }}
+            </button>
+
+            <button
+              [ngClass]="{ active: router.url.includes(menus?.url) }"
+              (click)="toggleMenu()"
+              class="accordion-button dashboard-link"
+              type="button"
+              [routerLink]="menus?.url"
+              *ngIf="menus?.subMenu?.length == 0 && menus?.type == 'StaticMenu'"
+            >
+              <img
+                [src]="'assets/images/' + menus?.icons"
+                alt="dashboard"
+                class="img-fluid"
+              />
+              {{ menus?.title }}
+            </button>
+          </div>
+          <ng-container *ngIf="menus?.subMenu?.length > 0">
+            <div
+              [attr.id]="'collapse' + menuIndex"
+              *ngIf="!show"
+              class="accordion-collapse collapse"
+              aria-labelledby="menuIndex"
+              data-bs-parent="#accordionSidebar"
+              [ngClass]="{ show: router.url.includes(menus?.url) }"
+            >
+              <div class="accordion-body">
+                <ng-container
+                  *ngFor="
+                    let submenus of menus?.subMenu;
+                    let subMenuIndex = index
+                  "
+                >
+                  <a
+                    routerLinkActive="active"
+                    [routerLink]="submenus?.url"
+                    class="accordion-link"
+                    >{{ submenus?.title }}</a
+                  >
+                </ng-container>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<button class="sidebar-toggler" (click)="toggleSidebar()">
+  <img
+    src="assets/images/sidebar-toggle.svg"
+    alt="sidebar-toggle"
+    class="img-fluid"
+  />
+</button>

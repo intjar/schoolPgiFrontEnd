@@ -1,0 +1,77 @@
+<ng-container *ngIf="domainObjectArray?.length > 0 && resultData?.result_det?.length > 0">
+  <div class="form-list-content">
+    <h2 class="heading-black heading-blue">
+      {{pageNumber + 1}}. {{filterHeader(domainObjectArray[pageNumber])?.[0]?.domain_name}} {{
+      filterHeader(domainObjectArray[pageNumber])?.[0]?.sub_domain_name? ('-' +
+      filterHeader(domainObjectArray[pageNumber])?.[0]?.sub_domain_name ): ''}}
+    </h2>
+    <div class="form-content">
+      <ng-container *ngFor="let item of loadForm(domainObjectArray[pageNumber]);let i = index;">
+        <ng-container *ngIf="item?.domain_id">
+          <ng-container *ngIf="item.sub_question_id == 0">
+            <!--For Questions-->
+            <div class="mb-4">
+              <h3 class="title-black">
+                {{ item.indexNo }}. {{item.question}}<span *ngIf="item?.is_mandatory == 1">*</span>
+              </h3>
+              <!-- <p class="desc-black">
+                {{item.question}}<span *ngIf="item?.is_mandatory == 1">*</span>
+              </p> -->
+              <!-- <span *ngIf="item?.is_mandatory == 1" class="required-tex">Required</span> -->
+            </div>
+            <ng-container *ngIf="item">
+              <app-cmn-form [items]="item" [Index]="pageNumber" class="mb-2" [pageChange]="pageChange"
+                [disabled]="item?.is_third_party == 1 ? true : disabled" [deleteStatus]="deleteStatus" [resultData]="resultData"></app-cmn-form>
+            </ng-container>
+          </ng-container>
+
+
+          <!--For Child-->
+          <ng-container *ngIf="item.sub_question_id != 0 ">
+
+            <div class=" mb-2 mt-2">
+              <h3 class="title-black">
+                {{item.indexNo}}
+                {{item.question}}<span *ngIf="item?.is_mandatory == 1">*</span>
+                <!-- Sub Question  -->
+              </h3>
+              <!-- <p class="desc-black">
+                  {{item.question}}<span *ngIf="item?.is_mandatory == 1">*</span>
+                </p> -->
+            </div>
+            <ng-container *ngIf="item">
+              <app-cmn-form [items]="item" [Index]="pageNumber" [pageChange]="pageChange" [disabled]="item?.is_third_party == 1 ? true : disabled"
+                [deleteStatus]="deleteStatus" [resultData]="resultData"></app-cmn-form>
+            </ng-container>
+
+          </ng-container>
+
+        </ng-container>
+
+        <!--For Sub Questions  (delete)="deleteMediaFiles($event)"
+(delete)="deleteMediaFiles($event)"-->
+        <!-- <ng-container  *ngFor="let que of filterHeader(dataUniqueArray[pageNumber]);let i = index;let first = first;">
+            <ng-container *ngIf="filterHeader(dataUniqueArray[pageNumber])?.[0]?.question_id == que.question_id && !first">
+              <div class="mb-3">
+                <h3 class="title-black">
+                  {{pageNumber +1}}.{{i}}
+                  Sub Question <span class="char-red">*</span>
+                </h3>
+                <p class="desc-black">
+                  {{que?.question}} - {{que?.type}}
+                </p>
+              </div>
+
+              <div class="mb-3" *ngIf="que">
+                <app-cmn-form [items]="que" [Index]="i"></app-cmn-form>
+              </div>
+            </ng-container>
+          </ng-container> -->
+      </ng-container>
+
+      <!--For Single Questions-->
+
+    </div>
+  </div>
+</ng-container>
+<!-- <div class="alert" [class.visible]="isVisible"> {{msg}} </div> -->

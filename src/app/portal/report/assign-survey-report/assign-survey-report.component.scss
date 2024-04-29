@@ -1,0 +1,133 @@
+@import '../../../../assets/scss/variables';
+
+
+::ng-deep{
+    .mat-table-sticky .survey-name-cell {
+        position: sticky;
+        left: 0;
+        background-color: inherit;
+      }
+    .report-wrap{
+        .card{
+            &-wrap{
+                padding: 20px;
+                border: 1px solid rgba(112, 112, 112, 0.2);
+                border-radius: 10px;
+                background: $white;
+                font-family: "Montserrat", sans-serif;
+            }
+            &-table {
+                border: 1px solid $grey_10;
+                border-radius: 14px;
+                padding: 20px;
+                &-top {
+                    margin-bottom: 20px;
+                }
+            }
+        }
+        
+        .common-table{
+            .table{
+                margin: 0;
+                &-container {
+                    /* Track */
+                    &::-webkit-scrollbar-track {
+                        box-shadow: none;
+                        background: $grey_6;
+                    }
+            
+                    /* Handle */
+                    &::-webkit-scrollbar-thumb {
+                        background: $grey_7;
+                    }
+                }
+            }
+        
+            thead {
+                background: $dark-purple;
+                th {
+                    letter-spacing: 0.07px;
+                    color: $white;
+                    padding: 15px;
+                    border: 1px solid rgba(171, 171, 171, 0.4);
+                    font-size: 0.875em;
+                    font-weight: 600;
+                    white-space: nowrap;
+                    z-index: 9;
+                    vertical-align: middle;
+                    text-align: center;
+                }
+            }
+        
+            tbody {
+                border-top: 0;
+        
+                tr:nth-of-type(even)>* {
+                    box-shadow: inset 0 0 0 9999px $grey-background;
+                }
+        
+                tr:nth-of-type(odd)>* {
+                    box-shadow: none;
+                }
+        
+                td {
+                    letter-spacing: 0.07px;
+                    color: $dark-blue3;
+                    padding: 15px;
+                    font-size: 0.875em;
+                    vertical-align: middle;
+                    font-weight: 500;
+                    border: 1px solid rgba(171, 171, 171, 0.4);
+                    text-align: center;
+                    .td-link{
+                        letter-spacing: 0.07px;
+                        color: $td-link;
+                        padding: 0;
+                        font-size: 0.875em;
+                        font-weight: 500;
+                        text-decoration: underline;
+                    }
+                }
+            }
+        
+            .table-btn {
+                text-decoration: none;
+                border-radius: 5px;
+                font-weight: 600;
+                padding: 4px 10px;
+                cursor: pointer;
+                display: block;
+                font-size: 0.75em;
+                &:disabled {
+                    color: $white;
+                    background-color: $grey_14;
+                    border-color: $grey_14;
+                }
+        
+                &-org {
+                    background: $orange;
+                    color: $white;
+                    white-space: nowrap;
+                }
+            }
+        }
+
+        .export-wrap{
+            border: 1px solid rgba(112, 112, 112, 0.2);
+        }
+
+        @media (max-width: 767.98px) {
+            .common-form{
+                .search-wrap {
+                    flex-flow: wrap;
+                    justify-content: end;
+                }
+                .btn-wrap {
+                    margin-top: 15px;
+                }
+            }
+        }
+        
+    }    
+}
+

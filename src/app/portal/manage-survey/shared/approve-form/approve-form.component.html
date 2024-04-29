@@ -1,0 +1,177 @@
+<div *ngIf="domainObjectArray?.length > 0">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-wrap p-0 pt-4 border-0" [class.pt-4]="!popup">
+        <div class="card-form">
+          <h3 class="title-grey" *ngIf="!popup">Approve this Survey</h3>
+          <div class="scrollbar-y pe-3">
+            <div class="common-form survey-form">
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="form-content">
+                    <h3 class="title-black">Survey Name</h3>
+                    <p class="desc-black disabled">
+                      {{result?.result_head?.[0]?.survey_name}}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-content">
+                    <h3 class="title-black">Year Assigned On</h3>
+                    <p class="desc-black disabled">
+                      {{result?.result_head?.[0]?.start_date}}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-content">
+                    <h3 class="title-black">Active Upto</h3>
+                    <p class="desc-black disabled">
+                      {{result?.result_head?.[0]?.active_upto}}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <!--Export Button-->
+                  <div class="d-flex justify-content-end">
+                    <div class="export-wrap">
+                      <div class="btn-export me-3">
+                        Export
+                      </div>
+                      <button class="btn-xml" (click)="export.emit(true)">
+                        <img src="assets/images/adobe.svg" alt="xml" class="img-fluid" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-content">
+                    <h3 class="title-black">Description</h3>
+                    <p class="desc-black disabled">
+                      {{result?.result_head?.[0]?.survey_description}}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-list">
+                    <ol>
+                      <ng-container *ngFor="let question of domainObjectArray; let index = index">
+                        <li>
+                          <div class="form-list-content">
+                            <div class="row">
+                              <div class="col-md-12">
+                                <h2 class="heading-black">
+                                  {{ index + 1 }}.
+                                  {{ filterHeader(question)?.[0]?.domain_name}}
+                                  {{
+                                  filterHeader(question)?.[0]?.sub_domain_name? ('-' +
+                                  filterHeader(question)?.[0]?.sub_domain_name): ''}}
+                                </h2>
+                              </div>
+                            </div>
+
+                            <div class="row">
+
+                              <!--For Single Question-->
+                              <ng-container *ngFor="
+                                    let item of loadForm(domainObjectArray[index]);
+                                    let i = index
+                                  ">
+                                <ng-container *ngIf="item.sub_question_id == 0">
+                                  <!--For Questions-->
+                                  <div class="col-12 col-md-6 mb-4">
+                                    <div class="form-content">
+                                      <h3 class="title-black">
+                                        {{ item.indexNo }}. {{
+                                          isReview
+                                          ? item?.question_name
+                                          : item?.question
+                                          }}<span class="char-red">*</span>
+                                      </h3>
+                                      <!-- <p class="desc-black">
+                                        {{
+                                        isReview
+                                        ? item?.question_name
+                                        : item?.question
+                                        }}
+                                      </p> -->
+                                    </div>
+                                  </div>
+
+                                  <div class="col-12 col-md-6 mb-4">
+                                    <ng-container *ngIf="item && fieldShow">
+                                      <div class="d-flex justify-content-between">
+                                        <!-- <ng-container *ngFor="let items of calculation">
+                                        <app-calculation [calculation]="items"></app-calculation>
+                                        </ng-container> -->
+                                      </div>
+                                      <app-cmn-form [items]="item" [Index]="index" class="mb-2"
+                                        [disabled]="true"></app-cmn-form>
+                                    </ng-container>
+                                  </div>
+                                </ng-container>
+
+                                <!--For Child-->
+                                <ng-container *ngIf="item.sub_question_id != 0">
+                                  <div class="col-12 col-md-6 mb-4">
+                                    <div class="form-content">
+                                      <div class="mb-2">
+                                        <h3 class="title-black">
+                                          {{ item.indexNo }}
+                                          {{
+                                            isReview
+                                            ? item?.sub_question_name
+                                            : item?.question
+                                            }}
+                                          <span class="char-red">*</span>
+                                        </h3>
+                                        <!-- <p class="desc-black">
+                                          {{
+                                          isReview
+                                          ? item?.sub_question_name
+                                          : item?.question
+                                          }}
+                     
+                                        </p> -->
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-12 col-md-6 mb-4">
+                                    <ng-container *ngIf="item && fieldShow">
+                                      <app-cmn-form [items]="item" [Index]="index" class="mb-2"
+                                        [disabled]="true"></app-cmn-form>
+                                    </ng-container>
+                                  </div>
+                                </ng-container>
+                              </ng-container>
+                            </div>
+                          </div>
+                        </li>
+                      </ng-container>
+                    </ol>
+                  </div>
+                </div>
+                <!-- <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Remark <span class="char-red">*</span></label>
+                                        <textarea rows="4" placeholder="Enter Remark" class="form-control">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specime. industry's standard dummy text ever since the Ipsum has been ever since the Lorem Ipsum is simply dummy text of the printing and typesetting industry.</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="d-flex justify-content-end">
+                                        <div class="btn-wrap mt-30">
+                                            <button class="btn-org me-3">Approved</button>
+                                            <button class="btn-org me-3">Request To Edit</button>
+                                            <button class="btn-org-bdr">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

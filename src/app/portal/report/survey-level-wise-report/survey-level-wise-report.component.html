@@ -1,0 +1,232 @@
+<div class="report-wrap">
+    <div class="container-fluid p-4">
+        <div class="row">
+            <div class="col-md-12">
+                <app-breadcrumb [breadcrums]="breadcrums" (back)="backClickbutton()"
+                    [showBack]="surveyId != null"></app-breadcrumb>
+            </div>
+            <div class="col-md-12 my-4">
+                <div class="card-wrap">
+                    <div class="card-form">
+                        <h3 class="title-grey">Survey Details</h3>
+                        <div class="summary-wrap pt-4">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <h3 class="summary-title">Survey Name</h3>
+                                    <p [title]="surveyLevelData.survey_name" class="summary-desc">
+                                        {{surveyLevelData?.survey_name}}</p>
+                                </div>
+                                <div class="col-md-2">
+                                    <h3 class="summary-title">Year Assigned On</h3>
+                                    <p class="summary-desc">{{surveyLevelData?.year_code}}</p>
+                                </div>
+                                <div class="col-md-3">
+                                    <h3 class="summary-title">Active Duration</h3>
+                                    <p class="summary-desc">{{surveyLevelData?.active_duration}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-table m-0 my-4">
+                        <div class="card-table-top">
+                            <div class="common-form">
+                                <form>
+                                    <div class="row g-3">
+                                        <div class="col-md-3">
+                                            <div class="mb-lg-0 mb-md-3">
+                                                <input type="text" class="form-control"
+                                                    [value]="surveyLevelData?.assigned_level_name" disabled />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="mb-lg-0 mb-md-3">
+                                                <ng-select placeholder="Data Entry Level" name="levelModel"
+                                                    [(ngModel)]="levelModel" (change)="applyFilter($event)">
+                                                    <ng-option *ngFor="let level of levelArr"
+                                                        [value]="level?.levelId">{{level?.levelName}}</ng-option>
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="row g-3 my-4">
+                                    <div class="col-md-6">
+                                        <div class="search-wrap d-flex align-items-center">
+                                            <div class="input-group">
+                                                <span class="material-icons-round input-group-text">
+                                                    search
+                                                </span>
+                                                <input type="text" class="form-control" [(ngModel)]="searchValue"
+                                                    (keyup.enter)="filterData('filter')" placeholder="Enter Keyword"
+                                                    [minlength]="3" />
+                                            </div>
+                                            <div class="btn-wrap">
+                                                <button class="btn-org ms-3" (click)="filterData('filter')">
+                                                    Search
+                                                </button>
+                                                <button class="btn-org-bdr ms-3" (click)="filterData('clear')">
+                                                    Clear
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 d-flex align-items-center justify-content-end">
+                                        <div class="export-wrap">
+                                            <div class="btn-export me-3">Export</div>
+                                            <button class="btn-adobe me-3" (click)="printData('pdf')"
+                                                [disabled]="dataSource.filteredData.length == 0">
+                                                <img src="assets/images/adobe.svg" alt="adobe" class="img-fluid" />
+                                            </button>
+                                            <button class="btn-xml" (click)="printData('csv')"
+                                                [disabled]="dataSource.filteredData.length == 0">
+                                                <img src="assets/images/xml.svg" alt="xml" class="img-fluid" />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="common-table">
+                            <div class="table-container table-responsive">
+                                <table class="table table-striped" mat-table [dataSource]="dataSource">
+                                    <ng-container matColumnDef="sn">
+                                        <th mat-header-cell *matHeaderCellDef>S.No</th>
+                                        <td mat-cell *matCellDef="let element; let i = index">
+                                            {{ viewtable.pageIndex * viewtable.pageSize + (i + 1) }}
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="parent_path">
+                                        <th mat-header-cell *matHeaderCellDef>Parent Instance</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            {{ element?.parent_path }}
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="instance_name">
+                                        <th mat-header-cell *matHeaderCellDef>Name</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            {{ element?.instance_name }}
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="in_data_entry">
+                                        <th mat-header-cell *matHeaderCellDef>In Data Entry</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            {{ element?.in_data_entry }}
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="in_reveiw">
+                                        <th mat-header-cell *matHeaderCellDef>In Review</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            {{ element?.in_reveiw }}
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="in_approve">
+                                        <th mat-header-cell *matHeaderCellDef>In Approved</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            {{ element?.in_approve }}
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="completed">
+                                        <th mat-header-cell *matHeaderCellDef>Completed</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            {{ element?.completed }}
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="noRecord">
+                                        <td class="text-center" mat-footer-cell [attr.colspan]="10" *matFooterCellDef>
+                                            <app-no-record-found [height]="'400px'"></app-no-record-found>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="loading">
+                                        <td class="text-center" mat-footer-cell [attr.colspan]="10" *matFooterCellDef>
+                                            <app-loader [height]="'400px'"></app-loader>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                                    <tr mat-footer-row [hidden]="!isLoading" *matFooterRowDef="['loading']"></tr>
+                                    <tr mat-footer-row [hidden]="isLoading || dataSource.filteredData.length > 0"
+                                        *matFooterRowDef="['noRecord']"></tr>
+                                </table>
+                            </div>
+
+                            <mat-paginator [pageSize]="10" [showFirstLastButtons]="true" [length]="totalCount"
+                                [pageIndex]="pageNumber" (page)="handlePageEvent($event)" [hidePageSize]="true">
+                            </mat-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-----------------------------PDF Start Here=------------------------------------->
+<ng-container *ngIf="pdfOpen">
+    <div class="padding-main-divcls" id="print-pdf">
+        <table class="table table-bordered">
+            <thead>
+                <tr colspan="40">
+                    <th colspan="40">
+                        <header style="height: 80px">
+                            <div class="d-flex header-height justify-content-between align-items-center">
+                                <img src="assets/images/ministry-logo.svg" [height]="50" />
+                                <img src="assets/images/pgi-logo.svg" [height]="50" />
+                            </div>
+                        </header>
+                    </th>
+                </tr>
+                <tr colspan="40">
+                    <th colspan="40">
+                        <div class="d-flex">
+                            <ng-container *ngFor="let breadcrums of breadcrums.links; let last = last">
+                                <span class="bread-span">{{ breadcrums?.link }} {{ !last ? "/" : "" }}
+                                </span>
+                            </ng-container>
+                        </div>
+                    </th>
+                </tr>
+                <tr class="header-table">
+                    <ng-container>
+                        <th>S.No</th>
+                        <th>Survey Name</th>
+                        <th>Parent Instance</th>
+                        <th>Name</th>
+                        <th>In Data Entry</th>
+                        <th>In Review</th>
+                        <th>In Approved</th>
+                        <th>Completed</th>
+                    </ng-container>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let items of printDataSource; let i = index">
+                    <ng-container>
+                        <tr>
+                            <td>{{ i + 1 }}</td>
+                            <td>
+                                <span style="
+                      display: block;
+                      word-break: break-all;
+                      max-width: 200px;
+                      height: 100%;
+                    ">{{ items?.survey_name }}</span>
+                            </td>
+                            <td>{{ items?.parent_path }}</td>
+                            <td>{{ items?.instance_name }}</td>
+                            <td>{{ items?.in_data_entry }}</td>
+                            <td>{{ items?.in_reveiw }}</td>
+                            <td>{{ items?.in_approve }}</td>
+                            <td>{{ items?.completed }}</td>
+                        </tr>
+                    </ng-container>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+</ng-container>
+<ng-container *ngIf="isGenerating">
+    <div class="position-fixed full-page-loader h-100 d-flex justify-content-center align-items-center top-0 start-0">
+        <app-loader [height]="'400px'"></app-loader>
+    </div>
+</ng-container>

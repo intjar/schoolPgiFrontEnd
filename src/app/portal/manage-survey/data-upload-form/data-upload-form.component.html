@@ -1,0 +1,739 @@
+<ng-container *ngIf="isDataLoader">
+  <div class="position-fixed full-page-loader h-100 d-flex justify-content-center align-items-center top-0 start-0">
+    <app-loader [height]="'400px'"></app-loader>
+  </div>
+</ng-container>
+<div class="container-fluid p-4" *ngIf="!isDataLoader">
+  <div class="row">
+    <div class="col-md-12">
+      <app-breadcrumb [breadcrums]="breadcrums" (back)="back.emit(true)" [showBack]="true"></app-breadcrumb>
+    </div>
+    <div class="col-md-12 my-4">
+      <div class="card-wrap">
+        <div class="card-form">
+          <h3 class="title-grey">Survey Details</h3>
+          <div class="common-form survey-form py-4">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-content">
+                  <h3 class="title-black">Survey Name</h3>
+                  <p class="desc-black disabled">
+                    {{result?.result_head?.[0]?.survey_name}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-content">
+                  <h3 class="title-black">Year Assigned On</h3>
+                  <p class="desc-black disabled">
+                    {{result?.result_head?.[0]?.start_date}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-content">
+                  <h3 class="title-black">Active Upto</h3>
+                  <p class="desc-black disabled">
+                    {{result?.result_head?.[0]?.active_upto}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-content">
+                  <h3 class="title-black">Description</h3>
+                  <p class="desc-black disabled">
+                    {{result?.result_head?.[0]?.survey_description}}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="d-flex justify-content-end">
+                  <button class="btn-org me-3" *ngIf="!disabled" (click)="
+                      isOpenModal = true;
+                      isSelectedFile = true;
+                      uploadArr = []
+                    ">
+                    <!-- <button class="btn-org me-3" data-bs-toggle="modal" data-bs-target="#uploadButtonModal"> -->
+                    <img src="assets/images/upload.svg" alt="upload" class="img-fluid me-2" />
+                    Upload
+                    <img src="assets/images/xml.svg" alt="xml" class="img-fluid ms-2" />
+                  </button>
+                  <div class="export-wrap">
+                    <!-- <button class="btn-export" (click)="downLoadexcel()"> -->
+                    <button class="btn-export" (click)="isOpenDownloadModal = true;">
+                      <img src="assets/images/download.svg" alt="download" class="img-fluid me-2" />
+                      Survey
+                      <img src="assets/images/xml.svg" alt="xml" class="img-fluid ms-2" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <ng-container *ngFor="let question of domainObjectArray; let index = index">
+                  <div class="common-table common-table-survey my-3">
+                    <h2 class="heading-black common-table-heading">
+                      {{ index + 1 }}.
+                      {{ filterHeader(question)?.[0]?.domain_name}}
+                      {{
+                      filterHeader(question)?.[0]?.sub_domain_name? ('- '
+                      +
+                      filterHeader(question)?.[0]?.sub_domain_name): ''}}
+                    </h2>
+                    <div class="table-container table-responsive">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>
+                              S.no
+                            </th>
+                            <th>
+                              Instance Name
+                            </th>
+                            <th>
+                              Question
+                            </th>
+                            <th>
+                              Answer
+                            </th>
+                            <th>
+                              Weightage
+                            </th>
+                            <th>
+                              Max Value
+                            </th>
+                            <th>
+                              Max Pointers
+                            </th>
+                            <th>
+                              Data Source
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <ng-container *ngFor=" let item of loadForm(domainObjectArray[index]); let i = index">
+                            <tr>
+                              <ng-container *ngIf="item.sub_question_id == 0">
+                              <td>
+                                {{ item.sno }}
+                              </td>
+                              <td>
+                                {{ item?.instance_name }}
+                              </td>
+                              <td>
+                                <p class="mb-0">
+                                  {{ item?.question
+                                  }}<span class="char-red">*</span>
+                                </p>
+                              </td>
+                              <td>
+                                <p class="desc-black" *ngIf="item?.answers?.length > 0">
+                                  {{
+                                  replaceString(
+                                  item?.answers
+                                  ? item?.answers
+                                  : item?.answers
+                                  ) == true
+                                  ? item?.answers
+                                  ? (item?.answers
+                                  | date : "YYYY-MM-dd")
+                                  : (item?.answers
+                                  | date : "YYYY-MM-dd")
+                                  : replaceString(
+                                  item?.answers
+                                  ? item?.answers
+                                  : item?.answers
+                                  )
+                                  }}
+                                </p>
+                              </td>
+                              <td>
+                                {{ item.weightage }}
+                              </td>
+                              <td>
+                                {{ item.pointer_value }}
+                              </td>
+                              <td>
+                                {{ item.pointer }}
+                              </td>
+                              <td>
+                                <ng-container *ngIf="item?.data_source_name">
+                                  <p class="mb-0">
+                                    {{ item?.data_source_name }}
+                                  </p>
+                                </ng-container>
+                              </td>
+                            </ng-container>
+                            <ng-container *ngIf="item.sub_question_id != 0">
+                              <td>
+                                {{ item.indexNo }}
+                              </td>
+                              <td>
+                                {{ item?.instance_name }}
+                              </td>
+                              <td>
+                                <p class="mb-0">
+                                  {{ item?.question }}<span class="char-red">*</span>
+                                </p>
+                              </td>
+                              <td>
+                                <p class="desc-black" *ngIf="item?.answers?.length > 0">
+                                  {{
+                                  replaceString(
+                                  item?.answers
+                                  ? item?.answers
+                                  : item?.answers
+                                  ) == true
+                                  ? item?.answers
+                                  ? (item?.answers
+                                  | date : "YYYY-MM-dd")
+                                  : (item?.answers
+                                  | date : "YYYY-MM-dd")
+                                  : replaceString(
+                                  item?.answers
+                                  ? item?.answers
+                                  : item?.answers
+                                  )
+                                  }}
+                                </p>
+                              </td>
+                              <td>
+
+                              </td>
+                              <td>
+
+                              </td>
+                              <td>
+
+                              </td>
+                              <td>
+
+                              </td>
+                            </ng-container>
+                            </tr>
+                          </ng-container>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+              <!-- <div class="form-list">
+                <ol>
+                  <ng-container *ngFor="let question of domainObjectArray; let index = index">
+                    <li>
+                      <div class="form-list-content">
+                        <div class="row align-items-center">
+                          <div class="col-md-12">
+                            <h2 class="heading-black">
+                              {{ index + 1 }}.
+                              {{ filterHeader(question)?.[0]?.domain_name}}
+                              {{
+                              filterHeader(question)?.[0]?.sub_domain_name? ('- '
+                              +
+                              filterHeader(question)?.[0]?.sub_domain_name): ''}}
+                            </h2>
+                          </div>
+                          <ng-container *ngFor="
+                              let item of loadForm(domainObjectArray[index]);
+                              let i = index
+                            ">
+                            <ng-container *ngIf="item.sub_question_id == 0">
+                              <div class="col-md-6">
+                                <div class="form-content">
+                                  <h3 class="title-black">
+                                    {{ item.indexNo }}. {{ item?.question
+                                    }}<span class="char-red">*</span>
+                                  </h3>
+
+                                  <p class="desc-black" *ngIf="item?.answer?.length > 0">
+                                    <b class="pe-2">Answer:</b>
+                                    {{
+                                    replaceString(
+                                    item?.answers
+                                    ? item?.answers
+                                    : item?.answer
+                                    ) == true
+                                    ? item?.answers
+                                    ? (item?.answers
+                                    | date : "YYYY-MM-dd")
+                                    : (item?.answer
+                                    | date : "YYYY-MM-dd")
+                                    : replaceString(
+                                    item?.answers
+                                    ? item?.answers
+                                    : item?.answer
+                                    )
+                                    }}
+                                  </p>
+                                </div>
+                              </div>
+                              <div class="col-md-6" *ngIf="item?.data_source_name">
+                                <div class="form-content">
+                                  <div class="d-flex align-items-center justify-content-end">
+                                  
+                                    <h3 class="title-black">
+                                      Data Source Name:-
+                                    </h3>
+                                    <p class="desc-black p-0">
+                                      {{ item?.data_source_name }}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </ng-container>
+                            <ng-container *ngIf="item.sub_question_id != 0">
+                              <div class="col-md-12">
+                               
+                                <div class="form-content">
+                                  <div class="mb-2">
+                                    
+                                    <h3 class="title-black">
+                                      {{ item.indexNo }}
+                                      {{ item?.question }}
+                                      <span class="char-red">*</span>
+                                    </h3>
+
+                                    <p class="desc-black" *ngIf="item?.answer?.length > 0">
+                                      <b class="pe-2">Answer:</b>
+                                      {{
+                                      replaceString(
+                                      item?.answers
+                                      ? item?.answers
+                                      : item?.answer
+                                      ) == true
+                                      ? item?.answers
+                                      ? (item?.answers
+                                      | date : "YYYY-MM-dd")
+                                      : (item?.answer
+                                      | date : "YYYY-MM-dd")
+                                      : replaceString(
+                                      item?.answers
+                                      ? item?.answers
+                                      : item?.answer
+                                      )
+                                      }}
+                                    </p>
+                                    <p class="desc-black">
+                                      {{
+                                          item?.question
+                                      }}
+                                    </p> 
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-12" *ngIf="item?.data_source_name">
+                                <div class="form-content">
+                                  <div class="mb-2">
+                                    <h3 class="title-black">
+                                      <b> Data Source Name</b>
+                                    </h3>
+                                    <p class="desc-black">
+                                      {{ item?.data_source_name }}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </ng-container>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </li>
+                  </ng-container>
+                </ol>
+              </div> -->
+
+              <div class="col-md-12">
+                <div class="d-flex justify-content-end">
+                  <div class="btn-wrap mt-30">
+                    <button class="btn-org me-3" *ngIf="!disabled" (click)="
+                        isOpenModal = true;
+                        isSelectedFile = true;
+                        uploadArr = []
+                      ">
+                      <!-- <button class="btn-org me-3" data-bs-toggle="modal" data-bs-target="#uploadButtonModal"> -->
+                      <img src="assets/images/upload.svg" alt="upload" class="img-fluid me-2" />
+                      Upload
+                      <img src="assets/images/xml.svg" alt="xml" class="img-fluid ms-2" />
+                    </button>
+                    <!-- <button class="btn-org-bdr me-3" (back)="back.emit(true);">Back</button> -->
+                    <button class="btn-org-bdr" (click)="back.emit(true)">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="card-form mt-4">
+          <div class="common-form survey-form">
+            
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Modal Start-->
+
+<ng-container *ngIf="isOpenModal">
+  <div class="modal common-modal fade show" tabindex="-1" role="dialog" id="uploadButtonModal"
+    aria-labelledby="uploadButtonModalLabel" aria-hidden="true" [ngStyle]="{ display: displayStyle }">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Upload Data</h4>
+          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span class="material-icons-round">close</span>
+                </button> -->
+          <button type="button" class="btn-close" (click)="isOpenModal = false">
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="isSelectedFile" class="upload-container p-3 mb-2">
+            <div>
+              <button>
+                <img src="assets/images/upload-file.svg" alt="" />
+              </button>
+              <label for="file" class="btn-org ms-2">Browse File</label>
+            </div>
+            <input type="file" class="form-control" id="file" hidden #file (change)="selectFile($event)" />
+            <p class="mt-3 mb-0" style="color: #b8b5b5">
+              Maximum upload file size 25 MB, allowed files XLSX,XLS *
+            </p>
+          </div>
+          <div *ngIf="!isSelectedFile" class="file-name-wrap">
+            <span class="file-name-preview" [title]="uploadArr[0]?.name">{{
+              uploadArr[0]?.name
+              }}</span>
+            <button class="btn-remove" type="button" (click)="removefile()">
+              <img src="assets/images/remove.svg" alt="remove" />
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-end">
+          <div class="btn-wrap m-0">
+            <button type="button" class="btn-org me-3" (click)="uploadFile($event.target, 'file')">
+              Submit
+            </button>
+            <!-- <button type="button" class="btn-org-bdr" data-bs-dismiss="modal">Cancel</button> -->
+            <button type="button" class="btn-org-bdr" (click)="isOpenModal = false">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
+</ng-container>
+
+<ng-container *ngIf="isOpenModal2">
+  <div class="modal common-modal fade show" tabindex="-1" role="dialog" id="dd" aria-labelledby="uploadButtonModalLabel"
+    aria-hidden="true" [ngStyle]="{ display: displayStyle }">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Upload Data</h4>
+          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span class="material-icons-round">close</span>
+                </button> -->
+          <button type="button" class="btn-close" (click)="isOpenModal2 = false; isOpenModal = false">
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row align-items-center">
+            <div class="col-md-12">
+              <h6 class="modal-title-black">
+                Survey Id : {{result?.result_head?.[0].survey_id
+                }}<span class="seprator"></span>Survey Name :
+                {{result?.result_head?.[0]?.survey_name}}
+              </h6>
+            </div>
+          </div>
+
+          <div class="common-table">
+            <div class="table-container table-responsive">
+              <table class="table table-striped" mat-table [dataSource]="dataSource">
+                <ng-container matColumnDef="sn">
+                  <th mat-header-cell *matHeaderCellDef>S.No</th>
+                  <!-- <td mat-cell *matCellDef="let element; let i = index;"> {{ (viewtable?.pageIndex * viewtable?.pageSize)+
+                                    (i + 1) }} </td> -->
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ i + 1 }}
+                  </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="surveyId">
+                                            <th mat-header-cell *matHeaderCellDef> Survey <br>Id</th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <p [title]="element?.surveyId">{{element?.surveyId}}</p>
+                                            </td>
+                                        </ng-container>
+                                        > <ng-container matColumnDef="surveyname">
+                                            <th mat-header-cell *matHeaderCellDef>Survey <br> Name</th>
+
+                                            <td mat-cell *matCellDef="let element">{{element?.surveyName}}</td>
+                                        </ng-container> -->
+
+                <ng-container matColumnDef="domain">
+                  <th mat-header-cell *matHeaderCellDef>Domain</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.domain }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="subdomain">
+                  <th mat-header-cell *matHeaderCellDef>
+                    Sub<br />
+                    Domain
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.subdomain == "" ? "NA" : element?.subdomain }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="qusetiontype">
+                  <th mat-header-cell *matHeaderCellDef>
+                    Question<br />
+                    Type
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.questionType }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="qusetiontcode">
+                  <th mat-header-cell *matHeaderCellDef>
+                    Question<br />
+                    Code
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.questionCode }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="qusetiontname">
+                  <th mat-header-cell *matHeaderCellDef>
+                    Question<br />
+                    Name
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.questionName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="answertype">
+                  <th mat-header-cell *matHeaderCellDef>
+                    Answer<br />
+                    Type
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.answerType }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="answer">
+                  <th mat-header-cell *matHeaderCellDef>Answer</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.answer }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="Errors">
+                  <th mat-header-cell *matHeaderCellDef>Errors</th>
+                  <td mat-cell *matCellDef="let element" class="text-danger">
+                    {{ element?.error }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="noRecord">
+                  <td class="text-center" mat-footer-cell [attr.colspan]="10" *matFooterCellDef>
+                    <app-no-record-found [height]="'400px'"></app-no-record-found>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="loading">
+                  <td class="text-center" mat-footer-cell [attr.colspan]="10" *matFooterCellDef>
+                    <app-loader [height]="'600px'"></app-loader>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                <tr mat-footer-row [hidden]="!isLoading" *matFooterRowDef="['loading']"></tr>
+                <tr mat-footer-row [hidden]="isLoading || dataSource.filteredData.length > 0"
+                  *matFooterRowDef="['noRecord']"></tr>
+              </table>
+            </div>
+            <!-- <mat-paginator [pageSize]="10" [hidePageSize]="true" [hidden]="dataSource.filteredData.length == 0"
+                        [showFirstLastButtons]="true" [length]="totalCount" [pageIndex]="pageNumber" (page)="handlePageEvent($event)">
+                    </mat-paginator>    -->
+          </div>
+        </div>
+        <div class="modal-footer justify-content-end">
+          <div class="btn-wrap m-0 btn-wrap-disable">
+            <!-- <button type="button" data-bs-dismiss="modal" class="btn-org me-3"
+                       (click)="uploadFile($event.target, 'table')">Submit</button> -->
+            <!-- <button type="button" class="btn-org-bdr" data-bs-dismiss="modal">Cancel</button> -->
+            <button type="button" class="btn-org me-3" [disabled]="isShowButton"
+              (click)="uploadFile($event.target, 'table')">
+              Submit
+            </button>
+            <button type="button" class="btn-org-bdr" (click)="isOpenModal2 = false; isOpenModal = false">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
+</ng-container>
+
+
+<!--Download survey based on instances-->
+<ng-container *ngIf="isOpenDownloadModal">
+  <div class="modal common-modal fade show" tabindex="-1" role="dialog" id="dd" aria-labelledby="uploadButtonModalLabel"
+    aria-hidden="true" [ngStyle]="{ display: displayStyle }">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Download</h4>
+          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span class="material-icons-round">close</span>
+                </button> -->
+          <button type="button" class="btn-close" (click)="isOpenDownloadModal = false; isOpenModal = false">
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- <div class="row align-items-center">
+            <div class="col-md-12">
+              <h6 class="modal-title-black">
+                Survey Id : {{result?.result_head?.[0].survey_id
+                }}<span class="seprator"></span>Survey Name :
+                {{result?.result_head?.[0]?.survey_name}}
+              </h6>
+            </div>
+          </div> -->
+
+          <div class="col-md-12">
+            <ng-container *ngFor="let question of domainObjectArray; let index = index">
+              <div class="common-table common-table-survey my-3">
+                <h2 class="heading-black common-table-heading">
+                  {{ index + 1 }}.
+                  {{ filterHeader(question)?.[0]?.domain_name}}
+                  {{
+                  filterHeader(question)?.[0]?.sub_domain_name? ('- '
+                  +
+                  filterHeader(question)?.[0]?.sub_domain_name): ''}}
+                </h2>
+                <div class="table-container table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>
+                          <div class="common-form">
+                            <div class="form-check map-check">
+                              <input type="checkbox" class="form-check-input"
+                                (change)="toggleAllSelection($event, index)" />
+                            </div>
+                          </div>
+                        </th>
+                        <th>
+                          Instance Name
+                        </th>
+                        <th>
+                          Question
+                        </th>
+                        <th>
+                          Data Source
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let item of loadForm(domainObjectArray[index]); let i = index">
+                        <tr>
+                          <ng-container *ngIf="item.sub_question_id == 0">
+                            <td>
+                              <div class="common-form">
+                                <div class="form-check map-check">
+                                  <input type="checkbox" class="form-check-input" [checked]="item.isChecked"
+                                    (change)="toggleSelection($event, index, i)" />
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              {{ item?.instance_name }}
+                            </td>
+                            <td>
+                              <p class="mb-0">
+                                {{ item?.question
+                                }}<span class="char-red">*</span>
+                              </p>
+                            </td>
+                            <td>
+                              <ng-container *ngIf="item?.data_source_name">
+                                <p class="mb-0">
+                                  {{ item?.data_source_name }}
+                                </p>
+                              </ng-container>
+                            </td>
+                          </ng-container>
+                          <ng-container *ngIf="item.sub_question_id != 0">
+                            <td>
+                              <div class="common-form">
+                                <div class="form-check map-check">
+                                  <input type="checkbox" class="form-check-input" [checked]="item.isChecked"
+                                    (change)="toggleSelection($event, index, i)" />
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              {{ item?.instance_name }}
+                            </td>
+                            <td>
+                              <p class="mb-0">
+                                {{ item?.question }}<span class="char-red">*</span>
+                              </p>
+                            </td>
+                            <td>
+
+                            </td>
+
+                          </ng-container>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-end">
+          <div class="btn-wrap m-0 btn-wrap-disable">
+            <!-- <button type="button" data-bs-dismiss="modal" class="btn-org me-3"
+                       (click)="uploadFile($event.target, 'table')">Submit</button> -->
+            <!-- <button type="button" class="btn-org-bdr" data-bs-dismiss="modal">Cancel</button> -->
+            <button type="button" class="btn-org me-3">
+              Download
+            </button>
+            <button type="button" class="btn-org-bdr"
+              (click)="isOpenModal2 = false; isOpenModal = false; isOpenDownloadModal = false">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
+</ng-container>
+<ng-container *ngIf="isload">
+  <div class="position-fixed full-page-loader h-100 d-flex justify-content-center align-items-center top-0 start-0">
+    <app-loader [height]="'400px'"></app-loader>
+  </div>
+</ng-container>
+
+<!-- Upload Modal End-->
+<ng-container *ngIf="isLoader">
+  <div class="position-fixed full-page-loader h-100 d-flex justify-content-center align-items-center top-0 start-0">
+    <app-loader [height]="'400px'"></app-loader>
+  </div>
+</ng-container>

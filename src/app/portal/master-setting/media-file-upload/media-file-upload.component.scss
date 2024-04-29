@@ -1,0 +1,78 @@
+@import '../../../../assets/scss/variables';
+
+.upload-wrap{
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    p{
+        text-align: left;
+        font-size: 0.625em;
+    }
+    .btn{
+        &-upload{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 120px;
+            font-size: 0.75em;
+            padding: 18px;
+            position: relative;
+            img{
+                height: 18px;
+                position: absolute;
+                left: 10px;
+                top: 50%;
+                transform: translate(0%, -50%);
+            }
+            label{
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%,-50%);
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 10px 0 35px;
+            }
+        }
+        &-disable{
+            background-color: $disableBtn;
+            &:hover{
+                background-color: $disableBtn;
+            }
+        }
+    }
+}
+
+.file{
+    &-name{
+        &-wrap{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .btn-remove{
+                img{
+                    height: 15px;
+                }
+            }
+        }
+        &-preview{
+            display: block;
+            max-width: 330px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            letter-spacing: 0px;
+            color: $black;
+            font-size: 0.75em;
+            font-weight: 500;
+        }
+    }
+}
+
+.btn-disable{
+        background-color: $disableBtn;
+}
+

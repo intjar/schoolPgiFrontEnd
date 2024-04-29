@@ -1,0 +1,18 @@
+<div class="main-wrapper" [ngClass]="isShow  ? 'toggle' : ''" id="commonScrollTo">
+    <!-- Sidebar Start -->
+    <app-sidebar></app-sidebar>
+
+    <!-- Sidebar End -->
+    <!-- Content Start -->
+    <div class="main-content">
+        <!-- Navbar Start -->
+        <app-header></app-header>
+        <!-- Navbar End -->
+        <router-outlet></router-outlet>
+        <!-- Footer Start -->
+        <app-footer></app-footer>
+        <!-- Footer End -->
+    </div>
+    <!-- Content End -->
+
+</div>

@@ -1,0 +1,1370 @@
+<div class="container-fluid p-lg-4 p-3">
+  <div class="row" id="focusForm">
+    <div class="col-md-12">
+      <app-breadcrumb
+        [breadcrums]="breadcrums"
+        (back)="isSubquestion = false; viewQuestionReport(); backButtonClick()"
+        [showBack]="isSubquestion"
+      ></app-breadcrumb>
+    </div>
+    <div class="col-md-12 my-4" *ngIf="!isSubquestion">
+      <div class="card-wrap">
+        <div
+          class="card-form"
+          *appShowRoleBaseActions="[
+            'Question Master',
+            ['create', 'edit', 'view']
+          ]"
+        >
+          <h3 class="title-grey">{{ questionMSG }}</h3>
+          <div class="common-form py-lg-4 py-3">
+            <form [formGroup]="questionForm">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Question <span class="char-red">*</span></label
+                    >
+                    <textarea
+                      class="form-control"
+                      formControlName="question"
+                      rows="5"
+                      placeholder="Enter Question"
+                      maxlength="500"
+                    ></textarea>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmitted && (questionForm.controls['question']?.errors?.['required'] || this.questionForm?.get('question')?.value?.trim().length == 0)"
+                    >
+                      Please Enter Question
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="
+                        questionForm.get('question')?.errors?.question ||
+                        questionForm?.get('question')?.errors?.pattern
+                      "
+                    >
+                      Please Enter Valid Question Name.
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="
+                        questionForm.get('question')?.errors?.question ||
+                        questionForm?.get('question')?.errors?.minlength
+                      "
+                    >
+                      Please enter atleast 3 characters
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <label class="form-label"
+                          >Select Question Type<span class="char-red"
+                            >*</span
+                          ></label
+                        >
+                        <ng-select
+                          placeholder="Select Question Type"
+                          formControlName="questionType"
+                          (change)="onSelectChange($event)"
+                        >
+                          <ng-option
+                            *ngFor="let item of questionTypeArr"
+                            [value]="item"
+                            >{{ item?.answerType }}</ng-option
+                          >
+                        </ng-select>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="isSubmitted && (questionForm.controls['questionType']?.errors?.['required'] )"
+                        >
+                          Please Select Question Type
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <label class="form-label"
+                          >Question Code<span class="char-red">*</span></label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="questionCode"
+                          placeholder="Enter Question Code"
+                          OnlyNumber
+                          maxlength="6"
+                        />
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="isSubmitted && (questionForm.controls['questionCode']?.errors?.['required'])"
+                        >
+                          Please Enter Question Code
+                        </div>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="
+                            questionForm.get('questionCode')?.errors
+                              ?.questionCode ||
+                            questionForm?.get('questionCode')?.errors?.minlength
+                          "
+                        >
+                          Please enter atleast 3 character code
+                        </div>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="
+                            questionForm.get('questionCode')?.errors
+                              ?.questionCode ||
+                            questionForm?.get('questionCode')?.errors?.maxlength
+                          "
+                        >
+                          Only 6 character allowed
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12" *ngIf="isShowCheckbox">
+                      <div class="form-check map-check">
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          formControlName="numericCheckbox"
+                          (click)="questionCheckbox($event)"
+                        />
+                        <label class="form-check-label">
+                          Only Numeric Value Allow
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 mt-0" *ngIf="isShowOption">
+                      <div class="mb-3">
+                        <label class="form-label"
+                          >{{ levelName }}<span class="char-red">*</span></label
+                        >
+                        <div class="d-flex name-lbl">
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="{{ placeholder }}"
+                            (keyup.enter)="addLabel('questionForm', $event)"
+                            formControlName="questionLabel"
+                            maxlength="50"
+                          />
+                          <!-- <mat-form-field class="w-100" appearance="outline">
+                            <input matInput placeholder="Enter Label Name" [matChipInputFor]="chipGrid"
+                               [matChipInputAddOnBlur]="addOnBlur" (keyup.enter)="addLabel('questionForm',$event)" formControlName="questionLabel">
+                          </mat-form-field> -->
+                          <button
+                            class="btn-add-label"
+                            (click)="addLabel('questionForm')"
+                          >
+                            <img
+                              src="assets/images/add.svg"
+                              alt="plus"
+                              class="img-fluid"
+                            />
+                          </button>
+                        </div>
+                        <!-- <div class="invalid-feedback"
+                            *ngIf="isSubmitted &&  chipsArr.length == 0">
+                            Please Enter {{ placeholder }}
+                          </div> -->
+                        <div
+                          class="d-flex align-item-center chip-label-data flex-wrap"
+                        >
+                          <div
+                            class="label-list"
+                            *ngFor="let chip of chipsArr"
+                            title="{{ chip }}"
+                          >
+                            <span class="chip-label">{{ chip }}</span>
+                            <span
+                              class="material-icons-round"
+                              *ngIf="!isViewClick"
+                              (click)="removeChip(chip)"
+                            >
+                              clear</span
+                            >
+                            <!-- <mat-icon *ngIf="removable" (click)="removeChip(chip)">cancel</mat-icon> -->
+                          </div>
+                        </div>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="
+                            chipsArr.length == 0 &&
+                            showQuestionValidationMessage
+                          "
+                        >
+                          Please Enter Label Name
+                        </div>
+                      </div>
+                      <!-- <div class="label-list">
+                          <ul>
+                            <li>
+                              Admin
+                              <a>
+                                <span class="material-icons-round">
+                                  clear
+                                </span>
+                              </a>
+                            </li>
+                            <li>
+                              Super Admin
+                              <a>
+                                <span class="material-icons-round">
+                                  clear
+                                </span>
+                              </a>
+                            </li>
+                            <li>
+                              Lorem Ipsum
+                              <a>
+                                <span class="material-icons-round">
+                                  clear
+                                </span>
+                              </a>
+                            </li>
+                            <li>
+                              +4 More
+                              <a>
+                                <span class="material-icons-round">
+                                  clear
+                                </span>
+                              </a>
+                            </li>
+                          </ul>
+                        </div> -->
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label"
+                    >Status<span class="char-red">*</span></label
+                  >
+                  <ng-select
+                    placeholder="Select Status"
+                    formControlName="status"
+                  >
+                    <ng-option *ngFor="let val of statusValue" [value]="val">{{
+                      val
+                    }}</ng-option>
+                  </ng-select>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="isSubmitted && questionForm.controls['status']?.errors?.['required'] "
+                  >
+                    Please Enter Status
+                  </div>
+                </div>
+                <div
+                  class="col-md-9"
+                  *appShowRoleBaseActions="[
+                    'Question Master',
+                    ['create', 'edit']
+                  ]"
+                >
+                  <div class="d-flex justify-content-end">
+                    <div class="btn-wrap btn-wrap-disable mt-30">
+                      <ng-container *ngIf="!isViewClick">
+                        <ng-container *ngIf="isShowButton">
+                          <ng-container
+                            *appShowRoleBaseActions="[
+                              'Question Master',
+                              'create'
+                            ]"
+                          >
+                            <button
+                              [disabled]="questionForm.invalid || updating"
+                              class="btn-org me-3"
+                              (click)="
+                                onSubmit(isShowButton ? 'save' : 'update')
+                              "
+                            >
+                              <div
+                                class="d-flex justify-content-center align-items-center"
+                              >
+                                <div
+                                  class="spinner-border text-light me-2"
+                                  role="status"
+                                  *ngIf="updating"
+                                ></div>
+                                <span>
+                                  {{ isShowButton ? "Save" : "Update" }}</span
+                                >
+                              </div>
+                            </button>
+
+                            <button
+                              type="button"
+                              class="btn-org-bdr"
+                              (click)="onCancle(); isShowButton = true"
+                            >
+                              Reset
+                            </button>
+                          </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="!isShowButton">
+                          <ng-container
+                            *appShowRoleBaseActions="[
+                              'Question Master',
+                              'edit'
+                            ]"
+                          >
+                            <button
+                              [disabled]="questionForm.invalid || updating"
+                              class="btn-org me-3"
+                              (click)="
+                                onSubmit(isShowButton ? 'save' : 'update')
+                              "
+                            >
+                              <div
+                                class="d-flex justify-content-center align-items-center"
+                              >
+                                <div
+                                  class="spinner-border text-light me-2"
+                                  role="status"
+                                  *ngIf="updating"
+                                ></div>
+                                <span>
+                                  {{ isShowButton ? "Save" : "Update" }}</span
+                                >
+                              </div>
+                            </button>
+
+                            <button
+                              type="button"
+                              class="btn-org-bdr"
+                              (click)="onCancle(); isShowButton = true"
+                            >
+                              Reset
+                            </button>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                      <ng-container *ngIf="isViewClick">
+                        <button
+                          type="button"
+                          class="btn-org-bdr"
+                          (click)="onCancle()"
+                          *appShowRoleBaseActions="['Question Master', 'view']"
+                        >
+                          Close
+                        </button>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div
+          class="card-table"
+          *appShowRoleBaseActions="[
+            'Question Master',
+            ['edit', 'view', 'delete']
+          ]"
+        >
+          <div class="card-table-top">
+            <div class="row">
+              <div class="col-md-7">
+                <div class="common-form">
+                  <div class="row g-3">
+                    <div class="col-md-7">
+                      <div class="search-wrap">
+                        <div class="input-group">
+                          <span class="material-icons-round input-group-text">
+                            search
+                          </span>
+                          <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="searchFilter"
+                            (keyup.enter)="applyFilter($event, 'question')"
+                            placeholder="Enter Keyword"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <div class="advance-filter">
+                        <div class="btn-wrap">
+                          <button
+                            class="btn-org"
+                            [disabled]="!searchFilter"
+                            (click)="applyFilter(searchFilter, 'question')"
+                          >
+                            Search
+                          </button>
+                          <button
+                            class="btn-org-bdr ms-3"
+                            (click)="
+                              searchFilter = '';
+                              applyFilter(searchFilter, 'question')
+                            "
+                          >
+                            Clear
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <div class="col-auto">
+                      <div class="advance-filter">
+                        <div class="btn-wrap">
+                          <button class="btn-org-bdr">Advance Filter</button>
+                        </div>
+                      </div>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="view-wrap">
+                  <div class="row g-3 justify-content-end">
+                    <div class="col-auto">
+                      <div class="export-wrap">
+                        <div class="btn-export me-3">Export</div>
+                        <button
+                          class="btn-adobe me-3"
+                          (click)="printPDF()"
+                          [disabled]="dataSource.filteredData.length == 0"
+                        >
+                          <img
+                            src="assets/images/adobe.svg"
+                            alt="adobe"
+                            class="img-fluid"
+                          />
+                        </button>
+                        <button
+                          class="btn-xml"
+                          (click)="exportExcel()"
+                          [disabled]="dataSource.filteredData.length == 0"
+                        >
+                          <img
+                            src="assets/images/xml.svg"
+                            alt="xml"
+                            class="img-fluid"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                    <!-- <div class="col-auto">
+                      <div class="btn-wrap">
+                        <button class="btn-org">View All</button>
+                      </div>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="common-table">
+            <div class="table-container table-responsive">
+              <table
+                class="table table-striped"
+                matSort
+                mat-table
+                [dataSource]="dataSource"
+              >
+                <ng-container matColumnDef="sn">
+                  <th mat-header-cell *matHeaderCellDef>S.No</th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ viewtable.pageIndex * viewtable.pageSize + (i + 1) }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="question">
+                  <th mat-header-cell *matHeaderCellDef>Question</th>
+                  <td mat-cell *matCellDef="let element" class="word-break">
+                    {{ element?.question }}
+                    <ng-container
+                      *ngIf="
+                        element.questionTypeMaster.answerType ===
+                        'Add Sub Question'
+                      "
+                    >
+                      <button
+                        [disabled]="!element?.isEditable"
+                        type="button"
+                        (click)="
+                          subQuestion(element);
+                          scroll($event, 'commonScrollTo');
+                          isShowButton = true
+                        "
+                        class="table-btn table-btn-org mt-2"
+                      >
+                        Add Sub Question
+                      </button>
+                    </ng-container>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="type">
+                  <th mat-header-cell *matHeaderCellDef>Type</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.questionTypeMaster?.answerType }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="questionCode">
+                  <th mat-header-cell *matHeaderCellDef>Code</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.questionCode }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap" *ngIf="element.status == true">
+                      <a class="table-btn table-btn-active">Active</a>
+                    </div>
+                    <div class="btn-wrap" *ngIf="element.status == false">
+                      <a class="table-btn table-btn-inactive">Inactive</a>
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>Action</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap">
+                      <button
+                        id="edit"
+                        class="me-3"
+                        (click)="
+                          edit(element, 'edit');
+                          scroll($event, 'commonScrollTo')
+                        "
+                        [disabled]="!element?.isEditable"
+                        *appShowRoleBaseActions="['Question Master', 'edit']"
+                      >
+                        <img
+                          src="assets/images/edit-user.svg"
+                          alt="icon"
+                          class="img-fluid"
+                          *appShowRoleBaseActions="['Question Master', 'edit']"
+                        />
+                      </button>
+                      <button
+                        id="edit"
+                        class="me-3"
+                        (click)="
+                          edit(element, 'view');
+                          scroll($event, 'commonScrollTo')
+                        "
+                        *appShowRoleBaseActions="['Question Master', 'view']"
+                      >
+                        <img
+                          src="assets/images/view-user.svg"
+                          alt="icon"
+                          class="img-fluid"
+                          *appShowRoleBaseActions="['Question Master', 'view']"
+                        />
+                      </button>
+                      <button
+                        id="remove"
+                        [disabled]="!element.status || !element?.isEditable"
+                        (click)="remove(element)"
+                        type="button"
+                        *appShowRoleBaseActions="['Question Master', 'delete']"
+                      >
+                        <img
+                          src="assets/images/remove.svg"
+                          alt="icon"
+                          class="img-fluid"
+                        />
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="noRecord">
+                  <td
+                    class="text-center"
+                    mat-footer-cell
+                    [attr.colspan]="7"
+                    *matFooterCellDef
+                  >
+                    <app-no-record-found
+                      [height]="'400px'"
+                    ></app-no-record-found>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="loading">
+                  <td
+                    class="text-center"
+                    mat-footer-cell
+                    [attr.colspan]="10"
+                    *matFooterCellDef
+                  >
+                    <app-loader [height]="'400px'"></app-loader>
+                  </td>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedColumns; sticky: true"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                ></tr>
+                <tr
+                  mat-footer-row
+                  [hidden]="!isLoading"
+                  *matFooterRowDef="['loading']"
+                ></tr>
+                <tr
+                  mat-footer-row
+                  [hidden]="isLoading || dataSource.filteredData.length > 0"
+                  *matFooterRowDef="['noRecord']"
+                ></tr>
+              </table>
+            </div>
+            <mat-paginator
+              #viewtable
+              [pageSizeOptions]="[10, 20]"
+              hidePageSize="true"
+              [hidden]="dataSource.filteredData.length == 0"
+              aria-label="Select page of periodic elements"
+              showFirstLastButtons
+            >
+            </mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--  ************************************** SUB QUESTION SECTION *****************************************
+    ************************************************************************************************************ -->
+
+    <div class="col-md-12 my-4" *ngIf="isSubquestion">
+      <div class="card-wrap">
+        <div
+          class="card-form"
+          *appShowRoleBaseActions="[
+            'Sub-Question Master',
+            ['create', 'edit', 'view']
+          ]"
+        >
+          <h3 class="title-grey">{{ subQuestionMSG }}</h3>
+          <div class="common-form py-lg-4 py-3">
+            <form [formGroup]="subQuestionForm">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Question <span class="char-red">*</span></label
+                    >
+                    <textarea
+                      type="textarea"
+                      class="form-control"
+                      formControlName="question"
+                      rows="6"
+                      readonly
+                      placeholder="Average number of days taken by State Govt/UT Administration to release total Central share of funds to societies(during the current finacial year)* Note down the number of days taken for each release of central share to the societies. Then add all the number of days."
+                    ></textarea>
+                    <!-- <div class="invalid-feedback"
+                      *ngIf="isSubmittedSubQue && (subQuestionForm.controls['question']?.errors?.['required'] || this.subQuestionForm?.get('question')?.value?.trim().length == 0)">
+                       Please Enter Question
+                    </div> -->
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Sub Question <span class="char-red">*</span></label
+                    >
+                    <textarea
+                      rows="6"
+                      class="form-control"
+                      formControlName="subQuestion"
+                      placeholder="Enter Sub Question"
+                      maxlength="500"
+                    ></textarea>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmittedSubQue && (subQuestionForm.controls['subQuestion']?.errors?.['required'] || this.subQuestionForm?.get('subQuestion')?.value?.trim().length == 0)"
+                    >
+                      Please Enter SUb Question
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="
+                        subQuestionForm.get('subQuestion')?.errors
+                          ?.subQuestion ||
+                        subQuestionForm?.get('subQuestion')?.errors?.pattern
+                      "
+                    >
+                      Please Enter Valid Sub Question Name.
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="
+                        subQuestionForm.get('subQuestion')?.errors
+                          ?.subQuestion ||
+                        subQuestionForm?.get('subQuestion')?.errors?.minlength
+                      "
+                    >
+                      Please enter atleast 3 characters
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Select Sub Question Type
+                      <span class="char-red">*</span></label
+                    >
+                    <ng-select
+                      placeholder="Select Sub Question Type"
+                      formControlName="subQuestionType"
+                      (change)="onSelectChange($event)"
+                    >
+                      <ng-container
+                        *ngFor="let item of questionTypeArr; let i = index"
+                      >
+                        <ng-option
+                          *ngIf="i != questionTypeArr?.length"
+                          [value]="item"
+                          >{{ item?.answerType }}</ng-option
+                        >
+                      </ng-container>
+                    </ng-select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmittedSubQue && (subQuestionForm.controls['subQuestionType']?.errors?.['required'] )"
+                    >
+                      Please Select Question Type
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >Sub Question Code <span class="char-red">*</span></label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      formControlName="subQuestionCode"
+                      placeholder="Enter Sub Question code"
+                      OnlyNumber
+                      maxlength="6"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="isSubmittedSubQue && (subQuestionForm.controls['subQuestionCode']?.errors?.['required'])"
+                    >
+                      Please Enter Question Code
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="
+                        subQuestionForm.get('subQuestionCode')?.errors
+                          ?.subQuestionCode ||
+                        subQuestionForm?.get('subQuestionCode')?.errors
+                          ?.minlength
+                      "
+                    >
+                      Please enter atleast 3 character code
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="
+                        subQuestionForm.get('subQuestionCode')?.errors
+                          ?.subQuestionCode ||
+                        subQuestionForm?.get('subQuestionCode')?.errors
+                          ?.maxlength
+                      "
+                    >
+                      Only 6 character allowed
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label"
+                    >Status<span class="char-red">*</span></label
+                  >
+                  <ng-select
+                    placeholder="Select Status"
+                    formControlName="status"
+                  >
+                    <ng-option *ngFor="let val of statusValue" [value]="val">{{
+                      val
+                    }}</ng-option>
+                  </ng-select>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="isSubmitted && subQuestionForm.controls['status']?.errors?.['required'] "
+                  >
+                    Please Enter Status
+                  </div>
+                </div>
+                <div class="col-md-6" *ngIf="isShowOption">
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >{{ levelName }}<span class="char-red">*</span></label
+                    >
+                    <div class="d-flex name-lbl">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="{{ placeholder }}"
+                        (keyup.enter)="addLabel('subquestionForm', $event)"
+                        formControlName="questionLabel"
+                        maxlength="50"
+                      />
+                      <!-- <mat-form-field class="w-100" appearance="outline">
+                        <input matInput placeholder="Enter Label Name" [matChipInputFor]="chipGrid"
+                           [matChipInputAddOnBlur]="addOnBlur" (keyup.enter)="addLabel('questionForm',$event)" formControlName="questionLabel">
+                    </mat-form-field> -->
+                      <button
+                        class="btn-add-label"
+                        (click)="addLabel('subquestionForm')"
+                      >
+                        <img
+                          src="assets/images/add.svg"
+                          alt="plus"
+                          class="img-fluid"
+                        />
+                      </button>
+                    </div>
+
+                    <div
+                      class="d-flex align-item-center chip-label-data flex-wrap"
+                    >
+                      <div
+                        class="label-list"
+                        *ngFor="let chip of chipsArr"
+                        title="{{ chip }}"
+                      >
+                        <span class="chip-label">{{ chip }}</span>
+                        <span
+                          class="material-icons-round"
+                          *ngIf="!isSubViewClick"
+                          (click)="removeChip(chip)"
+                        >
+                          clear</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="
+                        chipsArr.length == 0 && showQuestionValidationMessage
+                      "
+                    >
+                      Please Enter Label Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12" *ngIf="isShowCheckbox">
+                <div class="form-check map-check">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    (click)="questionCheckbox($event)"
+                    formControlName="numericCheckbox"
+                  />
+                  <label class="form-check-label">
+                    Only Numeric Value Allow
+                  </label>
+                </div>
+              </div>
+              <div
+                class="row"
+                *appShowRoleBaseActions="[
+                  'Sub-Question Master',
+                  ['create', 'edit']
+                ]"
+              >
+                <div class="col-md-12">
+                  <div class="d-flex justify-content-end">
+                    <div class="btn-wrap btn-wrap-disable mt-30">
+                      <ng-container *ngIf="!isSubViewClick">
+                        <ng-container *ngIf="isShowSubButton">
+                          <ng-container
+                            *appShowRoleBaseActions="[
+                              'Sub-Question Master',
+                              'create'
+                            ]"
+                          >
+                            <button
+                              class="btn-org me-3"
+                              [disabled]="subQuestionForm.invalid || updating"
+                              (click)="
+                                onSubmitSubQuestion(
+                                  isShowSubButton ? 'save' : 'update'
+                                )
+                              "
+                            >
+                              <div
+                                class="d-flex justify-content-center align-items-center"
+                              >
+                                <div
+                                  class="spinner-border text-light me-2"
+                                  role="status"
+                                  *ngIf="updating"
+                                ></div>
+                                <span>
+                                  {{ isShowButton ? "Save" : "Update" }}</span
+                                >
+                              </div>
+                            </button>
+
+                            <button
+                              type="button"
+                              class="btn-org-bdr"
+                              (click)="cancleSubQuestion(); isShowButton = true"
+                            >
+                              Reset
+                            </button>
+                          </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="!isShowSubButton">
+                          <ng-container
+                            *appShowRoleBaseActions="[
+                              'Sub-Question Master',
+                              'edit'
+                            ]"
+                          >
+                            <button
+                              class="btn-org me-3"
+                              [disabled]="subQuestionForm.invalid || updating"
+                              (click)="
+                                onSubmitSubQuestion(
+                                  isShowSubButton ? 'save' : 'update'
+                                )
+                              "
+                            >
+                              <div
+                                class="d-flex justify-content-center align-items-center"
+                              >
+                                <div
+                                  class="spinner-border text-light me-2"
+                                  role="status"
+                                  *ngIf="updating"
+                                ></div>
+                                <span>
+                                  {{ isShowButton ? "Save" : "Update" }}</span
+                                >
+                              </div>
+                            </button>
+
+                            <button
+                              type="button"
+                              class="btn-org-bdr"
+                              (click)="cancleSubQuestion(); isShowButton = true"
+                            >
+                              Reset
+                            </button>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                      <ng-container *ngIf="isSubViewClick">
+                        <button
+                          type="button"
+                          class="btn-org-bdr"
+                          (click)="cancleSubQuestion()"
+                          *appShowRoleBaseActions="[
+                            'Sub-Question Master',
+                            'view'
+                          ]"
+                        >
+                          Close
+                        </button>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div
+          class="card-table"
+          *appShowRoleBaseActions="[
+            'Sub-Question Master',
+            ['edit', 'view', 'delete']
+          ]"
+        >
+          <div class="card-table-top">
+            <div class="row">
+              <div class="col-md-7">
+                <div class="common-form">
+                  <div class="row g-3">
+                    <div class="col-md-7">
+                      <div class="search-wrap">
+                        <div class="input-group">
+                          <span class="material-icons-round input-group-text">
+                            search
+                          </span>
+                          <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="searchSubFilter"
+                            (keyup.enter)="applyFilter($event, 'subquestion')"
+                            placeholder="Enter Keyword"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <div class="advance-filter">
+                        <div class="btn-wrap">
+                          <button
+                            class="btn-org"
+                            [disabled]="!searchSubFilter"
+                            (click)="
+                              applyFilter(searchSubFilter, 'subquestion')
+                            "
+                          >
+                            Search
+                          </button>
+                          <button
+                            class="btn-org-bdr ms-2"
+                            (click)="
+                              searchSubFilter = '';
+                              applyFilter(searchSubFilter, 'subquestion')
+                            "
+                          >
+                            Clear
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <div class="col-auto">
+                      <div class="advance-filter">
+                        <div class="btn-wrap">
+                          <button class="btn-org-bdr">Advance Filter</button>
+                        </div>
+                      </div>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="view-wrap">
+                  <div class="row g-3 justify-content-end">
+                    <div class="col-auto">
+                      <div class="export-wrap">
+                        <div class="btn-export me-3">Export</div>
+                        <button
+                          class="btn-adobe me-3"
+                          (click)="printPDF()"
+                          [disabled]="
+                            dataSourceSubQuestion.filteredData.length == 0
+                          "
+                        >
+                          <img
+                            src="assets/images/adobe.svg"
+                            alt="adobe"
+                            class="img-fluid"
+                          />
+                        </button>
+                        <button
+                          class="btn-xml"
+                          (click)="exportExcel()"
+                          [disabled]="
+                            dataSourceSubQuestion.filteredData.length == 0
+                          "
+                        >
+                          <img
+                            src="assets/images/xml.svg"
+                            alt="xml"
+                            class="img-fluid"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                    <!-- <div class="col-auto">
+                      <div class="btn-wrap">
+                        <button class="btn-org">View All</button>
+                      </div>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="common-table">
+            <div class="table-container table-responsive">
+              <table
+                class="table table-striped"
+                matSort
+                mat-table
+                [dataSource]="dataSourceSubQuestion"
+              >
+                <ng-container matColumnDef="sn">
+                  <th mat-header-cell *matHeaderCellDef>S.No</th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{
+                      viewsubtable.pageIndex * viewsubtable.pageSize + (i + 1)
+                    }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="question">
+                  <th mat-header-cell *matHeaderCellDef>Question</th>
+                  <td mat-cell *matCellDef="let element" class="word-break">
+                    {{ element?.questionMaster?.question }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="subQuestion">
+                  <th mat-header-cell *matHeaderCellDef>Sub Question</th>
+                  <td mat-cell *matCellDef="let element" class="word-break">
+                    {{ element?.subQuestion }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="type">
+                  <th mat-header-cell *matHeaderCellDef>Type</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.questionTypeMaster?.answerType }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="subQuestionCode">
+                  <th mat-header-cell *matHeaderCellDef>Code</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.subQuestionCode }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap" *ngIf="element.status == true">
+                      <a class="table-btn table-btn-active">Active</a>
+                    </div>
+                    <div class="btn-wrap" *ngIf="element.status == false">
+                      <a class="table-btn table-btn-inactive">Inactive</a>
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>Action</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap">
+                      <button
+                        id="edit"
+                        class="me-3"
+                        (click)="
+                          edit(element, 'subedit');
+                          scroll($event, 'commonScrollTo')
+                        "
+                        *appShowRoleBaseActions="[
+                          'Sub-Question Master',
+                          'edit'
+                        ]"
+                      >
+                        <img
+                          src="assets/images/edit-user.svg"
+                          alt="icon"
+                          class="img-fluid"
+                        />
+                      </button>
+                      <button
+                        id="edit"
+                        class="me-3"
+                        (click)="
+                          edit(element, 'subview');
+                          scroll($event, 'commonScrollTo')
+                        "
+                        *appShowRoleBaseActions="[
+                          'Sub-Question Master',
+                          'view'
+                        ]"
+                      >
+                        <img
+                          src="assets/images/view-user.svg"
+                          alt="icon"
+                          class="img-fluid"
+                        />
+                      </button>
+                      <button
+                        id="remove"
+                        [disabled]="!element.status"
+                        (click)="remove(element)"
+                        type="button"
+                        *appShowRoleBaseActions="[
+                          'Sub-Question Master',
+                          'delete'
+                        ]"
+                      >
+                        <img
+                          src="assets/images/remove.svg"
+                          alt="icon"
+                          class="img-fluid"
+                        />
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="noRecord">
+                  <td
+                    class="text-center"
+                    mat-footer-cell
+                    [attr.colspan]="7"
+                    *matFooterCellDef
+                  >
+                    <app-no-record-found
+                      [height]="'400px'"
+                    ></app-no-record-found>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="loading">
+                  <td
+                    class="text-center"
+                    mat-footer-cell
+                    [attr.colspan]="10"
+                    *matFooterCellDef
+                  >
+                    <app-loader [height]="'400px'"></app-loader>
+                  </td>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="SubdisplayedColumns; sticky: true"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: SubdisplayedColumns"
+                ></tr>
+                <tr
+                  mat-footer-row
+                  [hidden]="!isLoading"
+                  *matFooterRowDef="['loading']"
+                ></tr>
+                <tr
+                  mat-footer-row
+                  [hidden]="
+                    isLoading || dataSourceSubQuestion.filteredData.length > 0
+                  "
+                  *matFooterRowDef="['noRecord']"
+                ></tr>
+
+                <!-- <ng-container matColumnDef="noRecord">
+                <td class="text-center" mat-footer-cell [attr.colspan]="7" *matFooterCellDef>No records found.</td>
+              </ng-container >
+
+              <tr mat-header-row *matHeaderRowDef="SubdisplayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: SubdisplayedColumns;"></tr>
+              <tr mat-footer-row [hidden]="dataSourceSubQuestion.filteredData.length >0" *matFooterRowDef="['noRecord']"></tr> -->
+              </table>
+            </div>
+            <mat-paginator
+              #viewsubtable
+              [pageSizeOptions]="[10, 20]"
+              hidePageSize="true"
+              [hidden]="dataSourceSubQuestion.filteredData.length == 0"
+              aria-label="Select page of periodic elements"
+              showFirstLastButtons
+            >
+            </mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-popup *ngIf="isShowPopup" (popup)="removeRecord($event)"></app-popup>
+<app-confirm
+  *ngIf="isConfirmPopup"
+  (confirm)="changeQuestion($event)"
+></app-confirm>
+
+<!-- <div class="alert" [class.visible]="isVisible">{{ msg }}</div> -->
+
+<!-----------------------------PDF Start Here=------------------------------------->
+<ng-container *ngIf="pdfOpen">
+  <div class="padding-main-divcls" id="print-pdf">
+    <table class="table table-bordered">
+      <thead>
+        <tr colspan="40">
+          <th colspan="40">
+            <header style="height: 80px">
+              <div
+                class="d-flex header-height justify-content-between align-items-center"
+              >
+                <img src="assets/images/ministry-logo.svg" [height]="50" />
+                <img src="assets/images/pgi-logo.svg" [height]="50" />
+              </div>
+            </header>
+          </th>
+        </tr>
+        <tr colspan="40">
+          <th colspan="40">
+            <div class="d-flex">
+              <ng-container
+                *ngFor="let breadcrums of breadcrums.links; let last = last"
+              >
+                <span class="bread-span"
+                  >{{ breadcrums?.link }} {{ !last ? "/" : "" }}
+                </span>
+              </ng-container>
+            </div>
+          </th>
+        </tr>
+        <tr class="header-table">
+          <ng-container *ngIf="!isSubquestion">
+            <th>S.No</th>
+            <th>Question</th>
+            <th>Type</th>
+            <th>Code</th>
+            <th>Status</th>
+          </ng-container>
+          <ng-container *ngIf="isSubquestion">
+            <th>S.No</th>
+            <th>Question</th>
+            <th>Sub Question</th>
+            <th>AnswerType</th>
+            <th>Code</th>
+            <th>Status</th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container
+          *ngFor="
+            let items of isSubquestion
+              ? dataSourceSubQuestion.filteredData
+              : dataSource.filteredData;
+            let i = index
+          "
+        >
+          <ng-container *ngIf="!isSubquestion">
+            <tr>
+              <td>{{ i + 1 }}</td>
+              <td>{{ items?.question }}</td>
+              <td>{{ items?.questionTypeMaster.answerType }}</td>
+              <td>{{ items?.questionCode }}</td>
+              <td>{{ items?.status ? "Active" : "Inactive" }}</td>
+            </tr>
+          </ng-container>
+
+          <ng-container *ngIf="isSubquestion">
+            <tr>
+              <td>{{ i + 1 }}</td>
+              <td>{{ items?.questionMaster?.question }}</td>
+              <td>{{ items?.subQuestion }}</td>
+              <td>{{ items?.questionTypeMaster?.answerType }}</td>
+              <td>{{ items?.subQuestionCode }}</td>
+              <td>{{ items?.status ? "Active" : "Inactive" }}</td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
+<ng-container *ngIf="isGenerating">
+  <div
+    class="position-fixed full-page-loader h-100 d-flex justify-content-center align-items-center top-0 start-0"
+  >
+    <app-loader [height]="'400px'"></app-loader>
+  </div>
+</ng-container>

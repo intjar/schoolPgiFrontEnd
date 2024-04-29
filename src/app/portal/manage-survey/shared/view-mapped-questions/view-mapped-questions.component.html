@@ -1,0 +1,270 @@
+<div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-wrap p-0 pt-4 border-0" [class.pt-4]="!popup">
+                <h3 class="title-grey" *ngIf="!popup">Approve this Survey</h3>
+                <div class="scrollbar-y pe-3">
+                    <div class="common-form survey-form">
+                        <div class="row">
+                            <!-- <div class="col-md-3">
+                                    <div class="form-content">
+                                        <h3 class="title-black">
+                                            Survey Name
+                                        </h3>
+                                        <p class="desc-black disabled">
+                                            {{result?.result_head?.[0]?.survey_name}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-content">
+                                        <h3 class="title-black">
+                                            Year Assigned On
+                                        </h3>
+                                        <p class="desc-black disabled">
+                                            {{result?.result_head?.[0]?.start_date}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-content">
+                                        <h3 class="title-black">
+                                            Active Upto
+                                        </h3>
+                                        <p class="desc-black disabled">
+                                            {{result?.result_head?.[0]?.active_upto}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-content">
+                                        <h3 class="title-black">
+                                            Description
+                                        </h3>
+                                        <p class="desc-black disabled">
+                                            {{result?.result_head?.[0]?.survey_description}}
+                                        </p>
+                                    </div>
+                                </div> -->
+                            <!-- <div class="col-md-12">
+                                <div class="card-table-top mb-0">
+                                    <div class="view-wrap">
+                                        <div class="export-wrap">
+                                            <div class="btn-export me-3">Export</div>
+                                            <button class="btn-adobe me-3">
+                                                <img src="assets/images/adobe.svg" alt="adobe" class="img-fluid" />
+                                            </button>
+                                            <button class="btn-xml">
+                                                <img src="assets/images/xml.svg" alt="xml" class="img-fluid" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <div class="col-md-12">
+                                <ng-container *ngFor="let question of domainObjectArray;let index = index;">
+                                    <div class="common-table common-table-survey my-3">
+                                        <h2 class="heading-black common-table-heading">
+                                            {{index + 1}}.
+                                            <ng-container *ngIf="!formDataEntry">
+                                                {{
+                                                filterHeader(question)?.[0]?.domainName }} {{
+                                                filterHeader(question)?.[0]?.subDomainName? ('-'
+                                                +
+                                                filterHeader(question)?.[0]?.subDomainName):
+                                                ''}}
+                                            </ng-container>
+                                            <ng-container *ngIf="formDataEntry">
+                                                {{ filterHeader(question)?.[0]?.domain_name}} {{
+                                                filterHeader(question)?.[0]?.sub_domain_name?
+                                                ('-' +
+                                                filterHeader(question)?.[0]?.sub_domain_name):
+                                                ''}}
+                                            </ng-container>
+                                        </h2>
+                                        <div class="table-container table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            S.No
+                                                        </th>
+                                                        <th>
+                                                            Question
+                                                        </th>
+                                                        <th>
+                                                            Weightage
+                                                        </th>
+                                                        <th>
+                                                            Value
+                                                        </th>
+                                                        <th>
+                                                            Pointer
+                                                        </th>
+                                                        <th>
+                                                            Data Source
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <ng-container
+                                                        *ngFor="let item of loadForm(domainObjectArray[index]);let i = index;">
+                                                        <tr>
+                                                            <ng-container *ngIf="item.sub_question_id == 0">
+                                                                <td>
+                                                                    {{ item.indexNo }}
+                                                                </td>
+                                                                <td>
+                                                                    <p class="mb-0">
+                                                                        {{item.question}}<span class="char-red">*</span>
+                                                                    </p>
+                                                                </td>
+                                                                <td>
+                                                                    {{item?.weightage}}
+                                                                </td>
+                                                                <td>
+                                                                    {{item?.pointer_value}}
+                                                                </td>
+                                                                <td>
+                                                                    {{item?.pointer}}
+                                                                </td>
+                                                                <td>
+                                                                    {{item?.data_source_name}}
+                                                                </td>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="item.sub_question_id != 0">
+                                                                <td>
+                                                                    {{ item.indexNo }}
+                                                                </td>
+                                                                <td>
+                                                                    <p class="mb-0">
+                                                                        {{item?.question}}<span class="char-red">*</span>
+                                                                    </p>
+                                                                </td>
+                                                                <td>
+                                                                    {{item?.weightage}}
+                                                                </td>
+                                                                <td>
+                                                                    {{item?.pointer_value}}
+                                                                </td>
+                                                                <td>
+                                                                    {{item?.pointer}}
+                                                                </td>
+                                                                <td>
+                                                                    
+                                                                </td>
+                                                            </ng-container>
+                                                        </tr>
+                                                    </ng-container>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+
+                                <!-- <div class="modal-body-content">
+                                        <div class="form-list">
+                                            <ol>
+                                                <ng-container *ngFor="let question of domainObjectArray;let index = index;">
+                                                    <li>
+                                                        <div class="form-list-content">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <h2 class="heading-black">
+                                                                        {{index + 1}}.
+                                                                        <ng-container *ngIf="!formDataEntry">
+                                                                            {{
+                                                                            filterHeader(question)?.[0]?.domainName }} {{
+                                                                            filterHeader(question)?.[0]?.subDomainName? ('-'
+                                                                            +
+                                                                            filterHeader(question)?.[0]?.subDomainName):
+                                                                            ''}}
+                                                                        </ng-container>
+                                                                        <ng-container *ngIf="formDataEntry">
+                                                                            {{ filterHeader(question)?.[0]?.domain_name}} {{
+                                                                            filterHeader(question)?.[0]?.sub_domain_name?
+                                                                            ('-' +
+                                                                            filterHeader(question)?.[0]?.sub_domain_name):
+                                                                            ''}}
+                                                                        </ng-container>
+                                                                    </h2>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                For Single Question
+                                                                <ng-container
+                                                                    *ngFor="let item of loadForm(domainObjectArray[index]);let i = index;">
+                                                                    <ng-container>
+                                                                        For Questions
+                                                                        <ng-container *ngIf="item.sub_question_id == 0">
+                                                                            <div class="col-md-6 mb-3">
+                                                                                <div class="form-content mb-0">
+                                                                                    <h3 class="title-black">
+                                                                                        {{ item.indexNo }}.  {{item.question}}<span
+                                                                                            class="char-red">*</span>
+                                                                                    </h3>
+                                                                                    <p class="desc-black">
+                                                                                        {{item.question}}
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-2 mb-3">
+                                                                                <h3 class="modal-title-grey">
+                                                                                  Value
+                                                                                </h3>
+                                                                                <p class="modal-desc-black">
+                                                                                  1
+                                                                                </p>
+                                                                              </div>
+                                                                              <div class="col-md-2 mb-3">
+                                                                                <h3 class="modal-title-grey">
+                                                                                  Pointer
+                                                                                </h3>
+                                                                                <p class="modal-desc-black">
+                                                                                  2
+                                                                                </p>
+                                                                              </div>
+                                                                              <div class="col-md-2 mb-3">
+                                                                                <h3 class="modal-title-grey">
+                                                                                  Weightage
+                                                                                </h3>
+                                                                                <p class="modal-desc-black">
+                                                                                  3
+                                                                                </p>
+                                                                              </div>
+                                                                        </ng-container>
+                                                                    </ng-container>
+                                                                    For Child
+                                                                    <ng-container *ngIf="item.sub_question_id != 0">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-content">
+                                                                                <div class="mb-4">
+                                                                                    <h3 class="title-black">
+                                                                                        {{ item.indexNo }}
+                                                                                        {{item.question}}<span
+                                                                                            class="char-red">*</span>
+                                                                                    </h3>
+                                                                                    <p class="desc-black">
+                                                                                        {{item.question}}
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </ng-container>
+                                                                </ng-container>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ng-container>
+                                            </ol>
+                                        </div>
+                                    </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

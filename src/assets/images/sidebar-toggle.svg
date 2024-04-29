@@ -1,0 +1,13 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 46" width="45" height="46">
+	<title>sidebar-toggle-svg</title>
+	<style>
+		.s0 { fill: #ffffff } 
+		.s1 { fill: none;stroke: #61346b;stroke-linecap: round;stroke-linejoin: round;stroke-width: 2 } 
+	</style>
+	<g id="Group_49675">
+		<g id="Layer">
+			<path id="Path_103607-2" class="s0" d="m22.5 0.5c12.2 0 22.1 10.1 22.1 22.6 0 12.4-9.9 22.6-22.1 22.6-12.1 0-22-10.2-22-22.6 0-12.5 9.9-22.6 22-22.6z"/>
+		</g>
+		<path id="Path_183" class="s1" d="m26 29.4l-6.9-6.4 6.9-6.3"/>
+	</g>
+</svg>

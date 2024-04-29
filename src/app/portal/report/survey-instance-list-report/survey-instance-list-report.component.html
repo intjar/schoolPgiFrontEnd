@@ -1,0 +1,223 @@
+<ng-container *ngIf="!showSurveyLevelReport">
+  <div class="report-wrap">
+    <div class="container-fluid p-4">
+      <div class="row">
+        <div class="col-md-12">
+          <app-breadcrumb [breadcrums]="breadcrums" (back)="backClickbutton()"
+            [showBack]="surveyId != null"></app-breadcrumb>
+        </div>
+        <div class="col-md-12 my-4">
+          <div class="card-wrap">
+            <div class="card-table m-0">
+              <div class="card-table-top">
+                <div class="common-form">
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <div class="search-wrap d-flex align-items-center">
+                        <div class="input-group">
+                          <span class="material-icons-round input-group-text">
+                            search
+                          </span>
+                          <input type="text" class="form-control" [(ngModel)]="searchValue"
+                            (keyup.enter)="filterData('filter')" placeholder="Enter Keyword" [minlength]="3" />
+                        </div>
+                        <div class="btn-wrap">
+                          <button class="btn-org ms-3" (click)="filterData('filter')">
+                            Search
+                          </button>
+                          <button class="btn-org-bdr ms-3" (click)="filterData('clear')">
+                            Clear
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6 d-flex align-items-center justify-content-end">
+                      <div class="export-wrap">
+                        <div class="btn-export me-3">Export</div>
+                        <button class="btn-adobe me-3" (click)="printData('pdf')"
+                          [disabled]="dataSource.filteredData.length == 0">
+                          <img src="assets/images/adobe.svg" alt="adobe" class="img-fluid" />
+                        </button>
+                        <button class="btn-xml" (click)="printData('csv')"
+                          [disabled]="dataSource.filteredData.length == 0">
+                          <img src="assets/images/xml.svg" alt="xml" class="img-fluid" />
+                        </button>
+                      </div>
+                    </div>
+  
+                  </div>
+                </div>
+              </div>
+              <div class="common-table survey-list-table">
+                <div class="table-container table-responsive">
+                  <table class="table table-striped" mat-table [dataSource]="dataSource">
+                    <ng-container matColumnDef="sn">
+                      <th mat-header-cell *matHeaderCellDef>S.No</th>
+                      <td mat-cell *matCellDef="let element; let i = index">
+                        {{ viewtable.pageIndex * viewtable.pageSize + (i + 1) }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="survey_name">
+                      <th mat-header-cell *matHeaderCellDef>Survey Name</th>
+                      <td mat-cell *matCellDef="let element" class="cursor-pointer">
+                        <button class="td-link text-start" (click)="getLevelWiseSurveyList(element)">{{element.survey_name}}</button>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="survey_level_name">
+                      <th mat-header-cell *matHeaderCellDef>Survey Level</th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.survey_level_name }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="survey_instance_name">
+                      <th mat-header-cell *matHeaderCellDef>Survey Instance</th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.survey_instance_name }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="reviewer_level_name">
+                      <th mat-header-cell *matHeaderCellDef>Reviewer Level</th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.reviewer_level_name }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="reviewer_instance_name">
+                      <th mat-header-cell *matHeaderCellDef>Reviewer Instance</th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.reviewer_instance_name }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="approver_level_name">
+                      <th mat-header-cell *matHeaderCellDef>Approver Level</th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.approver_level_name }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="approver_instance_name">
+                      <th mat-header-cell *matHeaderCellDef>Approver Instance</th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element?.approver_instance_name }}
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="status">
+                      <th mat-header-cell *matHeaderCellDef>Status</th>
+                      <td mat-cell *matCellDef="let element">
+                        <div class="btn-wrap">
+                          <a class="table-btn" [ngClass]="{
+                                              'table-btn-brown': element?.status == 'Notified to TPD',
+                                              'table-btn-yellow': element?.status == 'Pending for Data Entry',
+                                              'table-btn-blue': element?.status == 'Completed',
+                                              'table-btn-sage': element?.status == 'Created',
+                                              'table-btn-purple': element?.status == 'Pending for Review',
+                                              'table-btn-green': element?.status == 'Pending for Approver',
+                                              'table-btn-red': element?.status == 'Expired'
+                                            }">{{ element?.status }}</a>
+                        </div>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="noRecord">
+                      <td class="text-center" mat-footer-cell [attr.colspan]="10" *matFooterCellDef>
+                        <app-no-record-found [height]="'400px'"></app-no-record-found>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="loading">
+                      <td class="text-center" mat-footer-cell [attr.colspan]="10" *matFooterCellDef>
+                        <app-loader [height]="'400px'"></app-loader>
+                      </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                    <tr mat-footer-row [hidden]="!isLoading" *matFooterRowDef="['loading']"></tr>
+                    <tr mat-footer-row [hidden]="isLoading || dataSource.filteredData.length > 0"
+                      *matFooterRowDef="['noRecord']"></tr>
+                  </table>
+                </div>
+  
+                <mat-paginator [pageSize]="10" [showFirstLastButtons]="true" [length]="totalCount"
+                  [pageIndex]="pageNumber" (page)="handlePageEvent($event)" [hidePageSize]="true">
+                </mat-paginator>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+
+<!-----------------------------PDF Start Here=------------------------------------->
+<ng-container *ngIf="pdfOpen">
+  <div class="padding-main-divcls" id="print-pdf">
+    <table class="table table-bordered">
+      <thead>
+        <tr colspan="40">
+          <th colspan="40">
+            <header style="height: 80px">
+              <div class="d-flex header-height justify-content-between align-items-center">
+                <img src="assets/images/ministry-logo.svg" [height]="50" />
+                <img src="assets/images/pgi-logo.svg" [height]="50" />
+              </div>
+            </header>
+          </th>
+        </tr>
+        <tr colspan="40">
+          <th colspan="40">
+            <div class="d-flex">
+              <ng-container *ngFor="let breadcrums of breadcrums.links; let last = last">
+                <span class="bread-span">{{ breadcrums?.link }} {{ !last ? "/" : "" }}
+                </span>
+              </ng-container>
+            </div>
+          </th>
+        </tr>
+        <tr class="header-table">
+          <ng-container>
+            <th>S.No</th>
+            <th>Survey Name</th>
+            <th>Survey Level</th>
+            <th>Survey Instance</th>
+            <th>Reviewer Level</th>
+            <th>Reviewer Instance</th>
+            <th>Approver Level</th>
+            <th>Approver Instance</th>
+            <th>Status</th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let items of printDataSource; let i = index">
+          <ng-container>
+            <tr>
+              <td>{{ i + 1 }}</td>
+              <td>
+                <span style="
+                      display: block;
+                      word-break: break-all;
+                      max-width: 200px;
+                      height: 100%;
+                    ">{{ items?.survey_name }}</span>
+              </td>
+              <td>{{ items?.survey_level_name }}</td>
+              <td>{{ items?.survey_instance_name }}</td>
+              <td>{{ items?.reviewer_level_name }}</td>
+              <td>{{ items?.reviewer_instance_name }}</td>
+              <td>{{ items?.approver_level_name }}</td>
+              <td>{{ items?.approver_instance_name }}</td>
+              <td>{{ items?.status }}</td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
+<ng-container *ngIf="isGenerating">
+  <div class="position-fixed full-page-loader h-100 d-flex justify-content-center align-items-center top-0 start-0">
+    <app-loader [height]="'400px'"></app-loader>
+  </div>
+</ng-container>
+
+<survey-level-wise-report [surveyLevelData]="surveyData" *ngIf="showSurveyLevelReport"
+  (backClick)="showSurveyLevelReport = false; backButtonClick()">
+</survey-level-wise-report>

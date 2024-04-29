@@ -1,0 +1,880 @@
+<div class="container-fluid p-lg-4 p-3">
+  <div class="row">
+    <div class="col-md-12">
+      <app-breadcrumb
+        [breadcrums]="breadcrums"
+        (back)="backToLevel($event)"
+        [showBack]="ismanageMenu"
+      ></app-breadcrumb>
+    </div>
+    <div class="col-md-12 my-4" *ngIf="!ismanageMenu">
+      <div class="card-wrap" id="focusForm">
+        <div
+          class="card-form"
+          *appShowRoleBaseActions="['Role Master', ['create', 'edit', 'view']]"
+        >
+          <h3 class="title-grey">
+            {{ roleMSG }}
+          </h3>
+          <!-- <button appRoleBasedDisable="create">Create</button> -->
+          <div class="common-form py-lg-4 py-3">
+            <ng-container>
+              <form #f="ngForm" [formGroup]="roleForm">
+                <div class="row g-3">
+                  <div class="col-md-5">
+                    <div class="mb-lg-0 mb-3">
+                      <label class="form-label"
+                        >Role Name <span class="char-red">*</span></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="rolename"
+                        placeholder="Enter Role Name"
+                        alphaNumericSearch
+                        maxlength="100"
+                        minlength="3"
+                      />
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="isSubmitted && (roleForm.controls['rolename']?.errors?.['required'] || this.roleForm?.get('rolename')?.value?.trim().length == 0)"
+                      >
+                        Please Enter Role Name
+                      </div>
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="
+                          roleForm.get('rolename')?.errors?.rolename ||
+                          roleForm?.get('rolename')?.errors?.invalidInput
+                        "
+                      >
+                        Please Enter Valid Role Name.
+                      </div>
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="
+                          roleForm.get('rolename')?.errors?.rolename ||
+                          roleForm?.get('rolename')?.errors?.startwithSpaceError
+                        "
+                      >
+                        Starting Space is not allowed.
+                      </div>
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="
+                          roleForm.get('rolename')?.errors?.rolename ||
+                          roleForm?.get('rolename')?.errors?.minlength
+                        "
+                      >
+                        Minimum length should be 3
+                      </div>
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="
+                          roleForm.get('rolename')?.errors?.rolename ||
+                          roleForm?.get('rolename')?.errors?.maxlength
+                        "
+                      >
+                        Maximum length should be 100
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="mb-lg-0 mb-3">
+                      <label class="form-label"
+                        >Code <span class="char-red">*</span></label
+                      >
+                      <!-- <input type="text"  class="form-control" formControlName="code" placeholder="Enter Code"
+                                           oninput="if(!this.value.match('^[1-9][0-9]*$'))this.value='';" maxlength ="6" minlength="3"> -->
+                      <!-- <input type="text"  class="form-control" formControlName="code" placeholder="Enter Code"
+                                           oninput="if(!this.value.match('^[0-9][0-9]*$'))this.value='';(parseInt(this.value) <= 0 && this.value.length > 2) ? this.value='00' : ''" maxlength ="6" minlength="3"> -->
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="code"
+                        placeholder="Enter Code"
+                        OnlyNumber
+                        maxlength="6"
+                        minlength="3"
+                      />
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="isSubmitted && roleForm.controls['code']?.errors?.['required'] "
+                      >
+                        Please Enter Code
+                      </div>
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="
+                          roleForm.get('code')?.errors?.code ||
+                          roleForm?.get('code')?.errors?.minlength
+                        "
+                      >
+                        Minimum length should be 3
+                      </div>
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="
+                          roleForm.get('code')?.errors?.code ||
+                          roleForm?.get('code')?.errors?.maxlength
+                        "
+                      >
+                        Maximum length should be 6
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="mb-lg-0 mb-3">
+                      <label class="form-label"
+                        >Status <span class="char-red">*</span></label
+                      >
+                      <ng-select
+                        formControlName="status"
+                        placeholder="Select Status"
+                      >
+                        <ng-option
+                          *ngFor="let val of statusValue"
+                          [value]="val"
+                          >{{ val }}</ng-option
+                        >
+                      </ng-select>
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="isSubmitted && roleForm.controls['status']?.errors?.['required'] "
+                      >
+                        Please Select Status
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="d-flex justify-content-end">
+                      <div class="btn-wrap mt-30 btn-wrap-disable">
+                        <ng-container *ngIf="!isViewClick">
+                          <ng-container *ngIf="isShowButton">
+                            <button
+                              class="btn-org me-3"
+                              (click)="
+                                onSubmit(isShowButton ? 'save' : 'update')
+                              "
+                              [disabled]="roleForm.invalid"
+                              *appShowRoleBaseActions="[
+                                'Role Master',
+                                'create'
+                              ]"
+                            >
+                              <div
+                                class="d-flex justify-content-center align-items-center"
+                              >
+                                <div
+                                  class="spinner-border text-light me-2"
+                                  role="status"
+                                  *ngIf="updating"
+                                ></div>
+                                <span>
+                                  {{ isShowButton ? "Save" : "Update" }}</span
+                                >
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn-org-bdr"
+                              (click)="onCancle()"
+                              *appShowRoleBaseActions="[
+                                'Role Master',
+                                'create'
+                              ]"
+                            >
+                              Reset
+                            </button>
+                          </ng-container>
+                          <ng-container *ngIf="!isShowButton">
+                            <button
+                              class="btn-org me-3"
+                              (click)="
+                                onSubmit(isShowButton ? 'save' : 'update')
+                              "
+                              [disabled]="roleForm.invalid"
+                              *appShowRoleBaseActions="['Role Master', 'edit']"
+                            >
+                              <div
+                                class="d-flex justify-content-center align-items-center"
+                              >
+                                <div
+                                  class="spinner-border text-light me-2"
+                                  role="status"
+                                  *ngIf="updating"
+                                ></div>
+                                <span>
+                                  {{ isShowButton ? "Save" : "Update" }}</span
+                                >
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn-org-bdr"
+                              (click)="onCancle()"
+                              *appShowRoleBaseActions="['Role Master', 'edit']"
+                            >
+                              Reset
+                            </button>
+                          </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="isViewClick">
+                          <button
+                            type="button"
+                            class="btn-org-bdr"
+                            (click)="onCancle()"
+                            *appShowRoleBaseActions="['Role Master', 'view']"
+                          >
+                            Close
+                          </button>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </ng-container>
+          </div>
+        </div>
+        <div
+          class="card-table"
+          *appShowRoleBaseActions="['Role Master', ['edit', 'view', 'delete']]"
+        >
+          <div class="card-table-top">
+            <div class="row">
+              <div class="col-md-7">
+                <div class="common-form">
+                  <div class="row g-3">
+                    <div class="col-md-7">
+                      <div class="search-wrap">
+                        <div class="input-group">
+                          <span class="material-icons-round input-group-text"
+                            >search</span
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            (keyup.enter)="applyFilter($event, 'role')"
+                            placeholder="Enter Keyword"
+                            [(ngModel)]="roleSearch"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <div class="advance-filter">
+                        <div class="btn-wrap">
+                          <button
+                            class="btn-org"
+                            [disabled]="!roleSearch"
+                            (click)="applyFilter(roleSearch, 'role')"
+                          >
+                            Search
+                          </button>
+                          <button
+                            class="btn-org-bdr ms-3"
+                            (click)="
+                              roleSearch = ''; applyFilter(roleSearch, 'role')
+                            "
+                          >
+                            Clear
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="view-wrap">
+                  <div class="row g-3 justify-content-end">
+                    <div class="col-auto">
+                      <div class="export-wrap">
+                        <div class="btn-export me-3">Export</div>
+                        <button
+                          class="btn-adobe me-3"
+                          (click)="printPDF()"
+                          [disabled]="dataSource.filteredData.length == 0"
+                        >
+                          <img
+                            src="assets/images/adobe.svg"
+                            alt="adobe"
+                            class="img-fluid"
+                          />
+                        </button>
+                        <button
+                          class="btn-xml"
+                          (click)="exportExcel('role')"
+                          [disabled]="dataSource.filteredData.length == 0"
+                        >
+                          <img
+                            src="assets/images/xml.svg"
+                            alt="xml"
+                            class="img-fluid"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                    <!-- <div class="col-auto">
+                                            <div class="btn-wrap">
+                                                <button class="btn-org">View All</button>
+                                            </div>
+                                        </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="common-table">
+            <div class="table-container table-responsive">
+              <table
+                class="table table-striped"
+                mat-table
+                [dataSource]="dataSource"
+              >
+                <ng-container matColumnDef="sn">
+                  <th mat-header-cell *matHeaderCellDef>S.No</th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    {{ viewtable.pageIndex * viewtable.pageSize + (i + 1) }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>Role Name</th>
+                  <td mat-cell *matCellDef="let element" class="word-break">
+                    {{ element?.name }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="code">
+                  <th mat-header-cell *matHeaderCellDef>Code</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element?.code }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="menu">
+                  <th mat-header-cell *matHeaderCellDef>Assign Menu</th>
+                  <td mat-cell *matCellDef="let element">
+                    <ng-container
+                      *appShowRoleBaseActions="[
+                        'Manage Menu',
+                        ['edit', 'view']
+                      ]"
+                    >
+                      <button
+                        id="manageMenuButton"
+                        (click)="
+                          manageMenu(element); scroll($event, 'commonScrollTo')
+                        "
+                        class="table-btn table-btn-org"
+                      >
+                        Manage Menu
+                      </button>
+                    </ng-container>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap" *ngIf="element.status == true">
+                      <a class="table-btn table-btn-active">Active</a>
+                    </div>
+                    <div class="btn-wrap" *ngIf="element.status == false">
+                      <a class="table-btn table-btn-inactive">Inactive</a>
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>Action</th>
+                  <td mat-cell *matCellDef="let element">
+                    <div class="btn-wrap">
+                      <button
+                        id="edit"
+                        class="me-3"
+                        *appShowRoleBaseActions="['Role Master', 'edit']"
+                        (click)="
+                          edit(element, 'edit');
+                          scroll($event, 'commonScrollTo')
+                        "
+                        [disabled]="!element?.isEditable"
+                        type="button"
+                      >
+                        <img
+                          src="assets/images/edit-user.svg"
+                          alt="Edit"
+                          class="img-fluid"
+                        />
+                      </button>
+                      <button
+                        id="view"
+                        class="me-3"
+                        *appShowRoleBaseActions="['Role Master', 'view']"
+                        (click)="
+                          edit(element, 'view');
+                          scroll($event, 'commonScrollTo')
+                        "
+                        type="button"
+                      >
+                        <img
+                          src="assets/images/view-user.svg"
+                          alt="View"
+                          class="img-fluid"
+                        />
+                      </button>
+                      <button
+                        id="remove"
+                        [disabled]="!element.status || !element?.isEditable"
+                        (click)="remove(element)"
+                        type="button"
+                        *appShowRoleBaseActions="['Role Master', 'delete']"
+                      >
+                        <img
+                          src="assets/images/remove.svg"
+                          alt="icon"
+                          class="img-fluid"
+                        />
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="noRecord">
+                  <td
+                    class="text-center"
+                    mat-footer-cell
+                    [attr.colspan]="10"
+                    *matFooterCellDef
+                  >
+                    <app-no-record-found
+                      [height]="'400px'"
+                    ></app-no-record-found>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="loading">
+                  <td
+                    class="text-center"
+                    mat-footer-cell
+                    [attr.colspan]="10"
+                    *matFooterCellDef
+                  >
+                    <app-loader [height]="'400px'"></app-loader>
+                  </td>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedColumns; sticky: true"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                ></tr>
+                <tr
+                  mat-footer-row
+                  [hidden]="!isLoading"
+                  *matFooterRowDef="['loading']"
+                ></tr>
+                <tr
+                  mat-footer-row
+                  [hidden]="isLoading || dataSource.filteredData.length > 0"
+                  *matFooterRowDef="['noRecord']"
+                ></tr>
+              </table>
+            </div>
+            <mat-paginator
+              #viewtable
+              [pageSizeOptions]="[10, 20]"
+              hidePageSize="true"
+              aria-label="Select page of periodic elements"
+              [hidden]="dataSource.filteredData.length == 0"
+              showFirstLastButtons
+            >
+            </mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assign Menu Start -->
+    <div class="col-md-12 my-4" *ngIf="ismanageMenu">
+      <div class="card-wrap">
+        <div class="card-form">
+          <h3 class="title-grey">Assign Menu</h3>
+          <div class="common-form py-lg-4 py-3">
+            <div class="row align-items-end">
+              <div class="col-md-5">
+                <div class="mb-md-0 mb-3">
+                  <label class="form-label"
+                    >Role Name <span class="char-red">*</span></label
+                  >
+                  <ng-select
+                    placeholder="Select Role Name"
+                    (change)="onSelectChange($event)"
+                    [(ngModel)]="assignRole"
+                  >
+                    <ng-option
+                      *ngFor="let role of manageMenuRole"
+                      [value]="role"
+                      >{{ role?.name }}</ng-option
+                    >
+                  </ng-select>
+                </div>
+              </div>
+              <div
+                class="col-md-7"
+                *appShowRoleBaseActions="['Manage Menu', 'edit']"
+              >
+                <div class="d-flex justify-content-end">
+                  <div
+                    class="btn-wrap justify-content-end mt-30 btn-wrap-disable"
+                  >
+                    <button
+                      class="btn-org me-3"
+                      (click)="assignMenu('save')"
+                      [disabled]="!assignRole || linkIds.length == 0"
+                      type="button"
+                      *appShowRoleBaseActions="['Manage Menu', 'edit']"
+                    >
+                      <div
+                        class="d-flex justify-content-center align-items-center"
+                      >
+                        <div
+                          class="spinner-border text-light me-2"
+                          role="status"
+                          *ngIf="updatingMenu"
+                        ></div>
+                        <span> Save</span>
+                      </div>
+                    </button>
+                    <button
+                      class="btn-org-bdr"
+                      type="button"
+                      (click)="assignMenu('cancel')"
+                    >
+                      Reset
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-table">
+          <div class="card-table-top">
+            <div class="row">
+              <div class="col-md-7">
+                <div class="common-form">
+                  <div class="row g-3">
+                    <div class="col-md-7">
+                      <div class="search-wrap">
+                        <div class="input-group">
+                          <span class="material-icons-round input-group-text">
+                            search
+                          </span>
+                          <input
+                            type="text"
+                            class="form-control"
+                            (keyup.enter)="applyFilter($event, 'subMenu')"
+                            placeholder="Enter Keyword"
+                            [(ngModel)]="menuSearch"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <div class="advance-filter">
+                        <div class="btn-wrap">
+                          <button
+                            class="btn-org"
+                            [disabled]="!menuSearch"
+                            (click)="applyFilter(menuSearch, 'subMenu')"
+                          >
+                            Search
+                          </button>
+                          <button
+                            class="btn-org-bdr ms-3"
+                            (click)="
+                              menuSearch = '';
+                              applyFilter(menuSearch, 'subMenu')
+                            "
+                          >
+                            Clear
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="view-wrap">
+                  <div class="row g-3 justify-content-end">
+                    <div class="col-auto">
+                      <div class="export-wrap">
+                        <div class="btn-export me-3">Export</div>
+                        <button
+                          class="btn-adobe me-3"
+                          (click)="printPDF()"
+                          [disabled]="dataSource.filteredData.length == 0"
+                        >
+                          <img
+                            src="assets/images/adobe.svg"
+                            alt="adobe"
+                            class="img-fluid"
+                          />
+                        </button>
+                        <button
+                          class="btn-xml"
+                          (click)="exportExcel('managemenu')"
+                          [disabled]="dataSource.filteredData.length == 0"
+                        >
+                          <img
+                            src="assets/images/xml.svg"
+                            alt="xml"
+                            class="img-fluid"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                    <!-- <div class="col-auto">
+                                            <div class="btn-wrap">
+                                                <button class="btn-org">View All</button>
+                                            </div>
+                                        </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="common-table">
+            <div class="table-container table-responsive">
+              <table
+                class="table table-striped"
+                matSort
+                mat-table
+                [dataSource]="dataSourceMenu"
+              >
+                <ng-container matColumnDef="orderId">
+                  <th mat-header-cell *matHeaderCellDef>Order ID</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element[0]?.orderId }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="type">
+                  <th mat-header-cell *matHeaderCellDef>Type</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element[0]?.type }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="title">
+                  <th mat-header-cell *matHeaderCellDef>Name</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element[0]?.title }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>Action</th>
+
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    <div class="common-form">
+                      <div class="form-check me-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [checked]="isMenuChecked(element, 'create')"
+                          [disabled]="isMenuDisabled(element, 'create')"
+                          (click)="clickCheckbox($event, element, 'create')"
+                        />
+                        <label class="form-check-label"> Create </label>
+                      </div>
+                      <div class="form-check me-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [checked]="isMenuChecked(element, 'edit')"
+                          [disabled]="isMenuDisabled(element, 'edit')"
+                          (click)="clickCheckbox($event, element, 'edit')"
+                        />
+                        <label class="form-check-label"> Edit </label>
+                      </div>
+                      <div class="form-check me-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [checked]="isMenuChecked(element, 'view')"
+                          [disabled]="isMenuDisabled(element, 'view')"
+                          (click)="clickCheckbox($event, element, 'view')"
+                        />
+                        <label class="form-check-label"> View </label>
+                      </div>
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [checked]="isMenuChecked(element, 'delete')"
+                          [disabled]="isMenuDisabled(element, 'delete')"
+                          (click)="clickCheckbox($event, element, 'delete')"
+                        />
+                        <label class="form-check-label"> Delete </label>
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="noRecord">
+                  <td
+                    class="text-center"
+                    mat-footer-cell
+                    [attr.colspan]="4"
+                    *matFooterCellDef
+                  >
+                    <app-no-record-found
+                      [height]="'400px'"
+                    ></app-no-record-found>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="loading">
+                  <td
+                    class="text-center"
+                    mat-footer-cell
+                    [attr.colspan]="10"
+                    *matFooterCellDef
+                  >
+                    <app-loader [height]="'400px'"></app-loader>
+                  </td>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="SubdisplayedColumns; sticky: true"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: SubdisplayedColumns"
+                ></tr>
+                <tr
+                  mat-footer-row
+                  [hidden]="!isMenuLoading"
+                  *matFooterRowDef="['loading']"
+                ></tr>
+                <tr
+                  mat-footer-row
+                  [hidden]="
+                    isMenuLoading || dataSourceMenu.filteredData.length > 0
+                  "
+                  *matFooterRowDef="['noRecord']"
+                ></tr>
+              </table>
+            </div>
+            <mat-paginator
+              #viewmenutable
+              [pageSizeOptions]="[10, 20]"
+              hidePageSize="true"
+              aria-label="Select page of periodic elements"
+              [hidden]="dataSourceMenu.filteredData.length == 0"
+              showFirstLastButtons
+            >
+            </mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Assign Menu End -->
+  </div>
+</div>
+
+<app-popup *ngIf="isShowPopup" (popup)="removeRecord($event)"></app-popup>
+
+<!-- <div class="alert" [class.visible]="isVisible"> {{msg}} </div> -->
+
+<ng-container *ngIf="pdfOpen">
+  <div class="padding-main-divcls" id="print-pdf">
+    <table class="table table-bordered">
+      <thead>
+        <tr colspan="40">
+          <th colspan="40">
+            <header style="height: 80px">
+              <div
+                class="d-flex header-height justify-content-between align-items-center"
+              >
+                <img src="assets/images/ministry-logo.svg" [height]="50" />
+                <img src="assets/images/pgi-logo.svg" [height]="50" />
+              </div>
+            </header>
+          </th>
+        </tr>
+        <tr colspan="40">
+          <th colspan="40">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex">
+                <ng-container
+                  *ngFor="let breadcrums of breadcrums.links; let last = last"
+                >
+                  <span class="bread-span"
+                    >{{ breadcrums?.link }} {{ !last ? "/" : "" }}
+                  </span>
+                </ng-container>
+              </div>
+
+              <div class="role-container" *ngIf="!isRolePdf">
+                Role Name : {{ assignRole }}
+              </div>
+            </div>
+          </th>
+        </tr>
+        <tr class="header-table">
+          <ng-container *ngIf="isRolePdf">
+            <th>S.No</th>
+            <th>Role Name</th>
+            <th>Code</th>
+            <th>Status</th>
+          </ng-container>
+
+          <ng-container *ngIf="!isRolePdf">
+            <th>Order ID</th>
+            <th>Type</th>
+            <th>Name</th>
+            <th>Action</th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container
+          *ngFor="
+            let items of isRolePdf
+              ? dataSource.filteredData
+              : dataSourceMenu.filteredData;
+            let i = index
+          "
+        >
+          <ng-container *ngIf="isRolePdf">
+            <tr>
+              <td>{{ i + 1 }}</td>
+              <td>{{ items?.name }}</td>
+              <td>{{ items?.code }}</td>
+              <td>{{ items?.status ? "Active" : "Inactive" }}</td>
+            </tr>
+          </ng-container>
+
+          <ng-container *ngIf="!isRolePdf">
+            <tr>
+              <td>{{ items[0]?.orderId }}</td>
+              <td>{{ items[0]?.type }}</td>
+              <td>{{ items[0]?.title }}</td>
+              <td>{{ newActionArr[i] }}</td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
+<ng-container *ngIf="isGenerating">
+  <div
+    class="position-fixed full-page-loader h-100 d-flex justify-content-center align-items-center top-0 start-0"
+  >
+    <app-loader [height]="'400px'"></app-loader>
+  </div>
+</ng-container>

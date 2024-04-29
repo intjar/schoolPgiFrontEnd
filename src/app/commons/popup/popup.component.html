@@ -1,0 +1,25 @@
+
+
+<div [@slideInOut] class="modal common-modal fade show" tabindex="-1" role="dialog" data-backdrop="true"  aria-hidden="true" style="display: block;">
+    <div class="modal-dialog modal-dialog-centered" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closePopup()">
+                    <span class="material-icons-round">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure want to delete?</p>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-wrap m-0 col-md-5">
+                    <button type="button" class="btn-org me-3" data-bs-dismiss="modal" (click)="removeRecord()">Yes</button>
+                    <button type="button" class="btn-org-bdr" data-bs-dismiss="modal" (click)="closePopup()" >No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade show"></div>
+
